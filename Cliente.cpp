@@ -238,27 +238,30 @@ vector<vector<int>>* Cliente::getIndiceID() {
 	}
 
 	return aux;
-
 }
 
-long Cliente::searchPosicion(int _id) {
+vector<int> Cliente::searchProducto(int _id) {
 	
 	vector<vector<int>>* _datos = getIndiceID();
 
-	int derecha = _datos->size() - 1;
-	int izquierda = 0;
-	int centro;
+	if (_datos != nullptr) {
 
-	while (izquierda <= derecha)
-	{
-		centro = (derecha + izquierda) / 2;
-		if (_datos->at(centro).at(0) == _id)
-			return _datos->at(centro).at(1);
-		else
-			if (_id < _datos->at(centro).at(0))
-				derecha = centro - 1;
+		int derecha = _datos->size() - 1;
+		int izquierda = 0;
+		int centro;
+
+		while (izquierda <= derecha)
+		{
+			centro = (derecha + izquierda) / 2;
+			if (_datos->at(centro).at(0) == _id)
+				return _datos->at(centro);
 			else
-				izquierda = centro + 1;
+				if (_id < _datos->at(centro).at(0))
+					derecha = centro - 1;
+				else
+					izquierda = centro + 1;
+		}
 	}
-	return -1;
+
+	return;
 }

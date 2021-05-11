@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+
 using namespace std;
 
 class Cliente {
@@ -22,7 +23,7 @@ public:
 	void guardar_en_indices(Cliente*);
 
 	//Obtener la posicion del cliente en el indice
-	long searchPosicion(int);
+	vector<int> searchProducto(int);
 	long searchByCodigo(const char*);
 	long searchByNombre(const char*);
 
@@ -49,7 +50,6 @@ public:
 	char* get_pais();
 	long get_posicion();
 	long get_size();
-
 
 private:
 	int id;

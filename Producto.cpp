@@ -153,7 +153,7 @@ void Producto::setNextId(int _lastId) {
 	indiceIds.close();
 }
 
-long Producto::searchPosicion(int _id) {
+long Producto::searchProducto(int _id) {
 	ifstream indiceIds("indiceIdProduct.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
@@ -179,10 +179,11 @@ long Producto::searchPosicion(int _id) {
 		}
 		else {
 			indiceIds.close();
-			return posicion;
+			return _posicionAux;
 		}
 	}
 
 	indiceIds.close();
 	return -1;
 }
+
