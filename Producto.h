@@ -11,7 +11,7 @@ public:
 	//Constructores
 	
 	//codigo, categoria, sub_categoria, nombre, descripcion, precio_actual
-	Producto(char*, char*, char*, char*, char*, float);
+	Producto(const char*, const char*, const char*, const char*, const char*, float);
 	Producto();
 
 
@@ -24,11 +24,11 @@ public:
 	long searchPosicion(int);
 	
 	
-	void set_codigo(char*);
-	void set_categoria(char*);
-	void set_sub_categoria(char*);
-	void set_nombre(char*);
-	void set_descripcion(char*);
+	void set_codigo(const char*);
+	void set_categoria(const char*);
+	void set_sub_categoria(const char*);
+	void set_nombre(const char*);
+	void set_descripcion(const char*);
 	void set_precio_actual(float);
 	void set_posicion(long);
 	void set_size(long);

@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 using namespace std;
 
 class Cliente {
@@ -11,27 +12,29 @@ public:
 	//Constructores
 
 	//codigo, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, genero, ciudad, region, pais
-	Cliente(char*, char*, char*, char*, char*, char*, char*, char*, char*);
+	Cliente(const char*, const char*, const char*, const char*, const char*, const char*, const char*, const char*, const char*);
 	Cliente();
 
 
 	//Guardar cliente en el archivo principal
-	void guardar_en_archivo(Cliente*);
+	void pack(const char*, int);
 	//Guardar cliente en los archivos de Indices
 	void guardar_en_indices(Cliente*);
 
 	//Obtener la posicion del cliente en el indice
 	long searchPosicion(int);
+	long searchByCodigo(const char*);
+	long searchByNombre(const char*);
 
-	void set_codigo(char*);
-	void set_primer_nombre(char*);
-	void set_segundo_nombre(char*);
-	void set_primer_apellido(char*);
-	void set_segundo_apellido(char*);
-	void set_genero(char*);
-	void set_ciudad(char*);
-	void set_region(char*);
-	void set_pais(char*);
+	void set_codigo(const char*);
+	void set_primer_nombre(const char*);
+	void set_segundo_nombre(const char*);
+	void set_primer_apellido(const char*);
+	void set_segundo_apellido(const char*);
+	void set_genero(const char*);
+	void set_ciudad(const char*);
+	void set_region(const char*);
+	void set_pais(const char*);
 	void set_posicion(long);
 	void set_size(long);
 
@@ -61,11 +64,13 @@ private:
 	char* pais;
 
 	long posicion;
-	long size;
+	int size;
 
 	//Obtener siguiente id autoIncremental
 	int getNextId();
 	void setNextId(int);
+
+	vector<vector<int>>* getIndiceID();
 };
 
 #endif // !CLIENTE_H

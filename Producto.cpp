@@ -4,7 +4,7 @@ Producto::Producto() : codigo(nullptr), categoria(nullptr), sub_categoria(nullpt
 
 }
 
-Producto::Producto(char* _codigo, char* _categoria, char* _sub_categoria, char* _nombre, char* _descripcion, float _precio_actual) {
+Producto::Producto(const char* _codigo, const char* _categoria, const char* _sub_categoria, const char* _nombre, const char* _descripcion, float _precio_actual) {
 
 	codigo = new char[strlen(_codigo)];
 	strcpy_s(codigo, strlen(_codigo) + 1, _codigo);
@@ -28,7 +28,7 @@ Producto::Producto(char* _codigo, char* _categoria, char* _sub_categoria, char* 
 	size = 0;
 }
 
-void Producto::set_codigo(char* _codigo) {
+void Producto::set_codigo(const char* _codigo) {
 	if (codigo != nullptr)
 		delete codigo;
 
@@ -37,7 +37,7 @@ void Producto::set_codigo(char* _codigo) {
 	strcpy_s(codigo, strlen(_codigo) + 1, _codigo);
 }
 
-void Producto::set_categoria(char* _categoria) {
+void Producto::set_categoria(const char* _categoria) {
 	if (categoria != nullptr)
 		delete categoria;
 
@@ -46,7 +46,7 @@ void Producto::set_categoria(char* _categoria) {
 	strcpy_s(categoria, strlen(_categoria) + 1, _categoria);
 }
 
-void Producto::set_sub_categoria(char* _sub_categoria) {
+void Producto::set_sub_categoria(const char* _sub_categoria) {
 	if (sub_categoria != nullptr)
 		delete sub_categoria;
 
@@ -55,7 +55,7 @@ void Producto::set_sub_categoria(char* _sub_categoria) {
 	strcpy_s(sub_categoria, strlen(_sub_categoria) + 1, _sub_categoria);
 }
 
-void Producto::set_nombre(char* _nombre) {
+void Producto::set_nombre(const char* _nombre) {
 	if (nombre != nullptr)
 		delete nombre;
 
@@ -64,7 +64,7 @@ void Producto::set_nombre(char* _nombre) {
 	strcpy_s(nombre, strlen(_nombre) + 1, _nombre);
 }
 
-void Producto::set_descripcion(char* _descripcion) {
+void Producto::set_descripcion(const char* _descripcion) {
 	if (descripcion != nullptr)
 		delete descripcion;
 
