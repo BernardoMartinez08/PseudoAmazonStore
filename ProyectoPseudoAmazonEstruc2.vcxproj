@@ -141,10 +141,12 @@
   <ItemGroup>
     <ClInclude Include="Amazon.h" />
     <ClInclude Include="Cliente.h" />
+    <ClInclude Include="DelimTextBuffer.h" />
     <ClInclude Include="Producto.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cliente.cpp" />
+    <ClCompile Include="DelimTextBuffer.cpp" />
     <ClCompile Include="Producto.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-
+#include "DelimTextBuffer.h"
 using namespace std;
 
 class Cliente {
@@ -16,28 +16,17 @@ public:
 	Cliente(const char*, const char*, const char*, const char*, const char*, const char*, const char*, const char*, const char*);
 	Cliente();
 
-
-	//Guardar cliente en el archivo principal
-	void pack(const char*, int);
-	//Guardar cliente en los archivos de Indices
-	void guardar_en_indices(Cliente*);
-
-	//Obtener la posicion del cliente en el indice
-	vector<int> searchProducto(int);
-	long searchByCodigo(const char*);
-	long searchByNombre(const char*);
-
-	void set_codigo(const char*);
-	void set_primer_nombre(const char*);
-	void set_segundo_nombre(const char*);
-	void set_primer_apellido(const char*);
-	void set_segundo_apellido(const char*);
-	void set_genero(const char*);
-	void set_ciudad(const char*);
-	void set_region(const char*);
-	void set_pais(const char*);
-	void set_posicion(long);
-	void set_size(long);
+	bool set_codigo(const char*);
+	bool set_primer_nombre(const char*);
+	bool set_segundo_nombre(const char*);
+	bool set_primer_apellido(const char*);
+	bool set_segundo_apellido(const char*);
+	bool set_genero(const char*);
+	bool set_ciudad(const char*);
+	bool set_region(const char*);
+	bool set_pais(const char*);
+	bool set_posicion(long);
+	bool set_size(long);
 
 	char* get_codigo();
 	char* get_primer_nombre();
@@ -51,7 +40,23 @@ public:
 	long get_posicion();
 	long get_size();
 
+	//Obtener la posicion del cliente en el indice
+	vector<int> searchCliente(int);
+
+	bool WriteDataonIndex(ofstream& fileIndex);
+	bool WriteDataonIndexByCode();
+	bool WriteDataonIndexByName();
+
+	int Write(DelimTextBuffer&);
+	int Read(DelimTextBuffer&, int posicion);
+	int Pack(DelimTextBuffer&);
+	int Unpack(DelimTextBuffer&);
+
+	int searchClienteByCode(int);
+	int searchClienteByName(const char*);
+
 private:
+	bool set_id(int);
 	int id;
 	char* codigo;
 	char* primer_nombre;
@@ -63,7 +68,7 @@ private:
 	char* region;
 	char* pais;
 
-	long posicion;
+	int posicion;
 	int size;
 
 	//Obtener siguiente id autoIncremental
