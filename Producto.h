@@ -43,6 +43,13 @@ public:
 	long get_size();
 
 
+	//Funciones de Lectura y Escritura con Buffers
+	int Write(DelimTextBuffer&);
+	int Read(DelimTextBuffer&, int posicion);
+	int Pack(DelimTextBuffer&);
+	int Unpack(DelimTextBuffer&);
+
+
 private:
 	int id;
 	char* codigo;

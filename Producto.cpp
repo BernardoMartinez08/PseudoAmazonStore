@@ -188,3 +188,20 @@ long Producto::searchProducto(int _id) {
 }
 
 //Trabajare aqui 
+
+
+int Producto::Pack(DelimTextBuffer& _buffer)
+{
+	int resultado;
+
+	resultado = _buffer.Pack((char*)id);
+	resultado = resultado && _buffer.Pack(codigo);
+	resultado = resultado && _buffer.Pack(categoria)
+	resultado = resultado && _buffer.Pack(sub_categoria);
+	resultado = resultado && _buffer.Pack(nombre);
+	resultado = resultado && _buffer.Pack(descripcion);
+	resultado = resultado && _buffer.Pack(precio_actual);
+
+
+	return resultado;
+}
