@@ -52,6 +52,7 @@ public:
 	int Pack(DelimTextBuffer&);
 	int Unpack(DelimTextBuffer&);
 
+	//Buscar en los indices por codigo y por nombre.
 	int searchClienteByCode(int);
 	int searchClienteByName(const char*);
 
