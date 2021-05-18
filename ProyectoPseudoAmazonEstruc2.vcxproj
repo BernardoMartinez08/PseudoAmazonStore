@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="DelimTextBuffer.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Producto.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
