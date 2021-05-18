@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 using namespace std;
 
 class Producto {
@@ -23,6 +24,8 @@ public:
 	//Obtener la posicion del producto en el indice
 	long searchPosicion(int);
 	
+	//Obtener la posicion del producto en el indice
+	vector<int> searchProducto(int);
 	
 	void set_codigo(const char*);
 	void set_categoria(const char*);

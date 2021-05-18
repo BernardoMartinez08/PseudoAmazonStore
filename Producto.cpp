@@ -221,3 +221,28 @@ int Producto::Unpack(DelimTextBuffer& _buffer)
 
 
 }
+
+int Producto::Read(DelimTextBuffer& _delim, int _id)
+{
+	//Revision->
+	vector<int> _datos = searchProducto(_id);
+
+	int resultado = 0;
+
+	if (_datos.size() != 0)
+	{
+		int posicion = _datos[1];
+
+		//Revision ->
+		ifstream file("indiceIdProduct.data", ios::in | ios::binary);
+
+		vector<int> _datos = searchProducto(_id);
+
+		resultado = _delim.Read(file, posicion);
+		resultado = resultado && this->Upack(_delim);
+
+		file.close();
+	}
+
+	return resultado;
+}
