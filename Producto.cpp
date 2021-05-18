@@ -268,3 +268,32 @@ int Producto::Write(DelimTextBuffer& _delim)
 
 	return resultado;
 }
+
+
+bool Producto::WriteDataonIndex(ofstream& fileIndex)
+{
+	int resultado;
+	//Revision && doble 
+	resultado = resultado &fileIndex << "|";
+	resultado = resultado & fileIndex << id;
+	resultado = resultado & fileIndex << "|";
+	resultado = resultado & fileIndex << posicion;
+
+	resultado = resultado & WriteDataonIndexByCode();
+	resultado = resultado & WriteDataonIndexByName();
+	return resultado;
+
+}
+
+bool Producto::WriteDataonIndexByCode()
+{
+	ofstream fileIndex("indiceIdProduct.index", ios::out | ios::app | ios::binary);
+
+	fileIndex << (char)codigo;
+	fileIndex << "|";
+	fileIndex << id;
+	fileIndex << "|";
+
+	fileIndex.close();
+	return fileIndex.good();
+}
