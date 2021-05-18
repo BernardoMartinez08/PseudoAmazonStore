@@ -47,6 +47,7 @@ public:
 	bool WriteDataonIndexByCode();
 	bool WriteDataonIndexByName();
 
+	//Funciones de Lectura y Escritura con Buffers
 	int Write(DelimTextBuffer&);
 	int Read(DelimTextBuffer&, int posicion);
 	int Pack(DelimTextBuffer&);
