@@ -205,3 +205,19 @@ int Producto::Pack(DelimTextBuffer& _buffer)
 
 	return resultado;
 }
+
+int Producto::Unpack(DelimTextBuffer& _buffer)
+{
+	int resultado = 1;
+	resultado = set_size(_ buffer.BufferSize);
+	resultado = resultado && set_codigo(_buffer.Unpack(codigo));
+	resultado = resultado && set_categoria(_buffer.Unpack(categoria));
+	resultado = resultado && set_sub_categoria(_buffer.Unpack(sub_categoria));
+	resultado = resultado && set_nombre(_buffer.Unpack(nombre));
+	resultado = resultado && set_descripcion(_ buffer.Unpack(descripcion));
+	resultado = resultado && set_precio_actual(_buffer.Unpack(precio_actual));
+
+	return resultado;
+
+
+}
