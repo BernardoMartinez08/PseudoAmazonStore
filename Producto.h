@@ -27,6 +27,10 @@ public:
 	//Obtener la posicion del producto en el indice
 	vector<int> searchProducto(int);
 	
+	bool WriteDataonIndex(ofstream& fileIndex);
+	bool WriteDataonIndexByCode();
+	bool WriteDataonIndexByName();
+
 	void set_codigo(const char*);
 	void set_categoria(const char*);
 	void set_sub_categoria(const char*);

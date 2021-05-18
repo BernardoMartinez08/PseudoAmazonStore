@@ -246,3 +246,25 @@ int Producto::Read(DelimTextBuffer& _delim, int _id)
 
 	return resultado;
 }
+
+int Producto::Write(DelimTextBuffer& _delim)
+{
+	int resultado = 0;
+
+	ofstream file("indiceIdProduct.data", ios::out | ios::app | ios::binary);
+	ofstream fileIndex("indiceProduct.index", ios::out | ios::app | ios::binary);
+
+
+	resultado = this->Pack(_delim);
+	posicion = file.tellp();
+	resultado = resultado && _delim.Write(file);
+
+	//Revision -> me salio bien solo con &
+	resultado = resultado & WriteDataonIndex(fileIndex);
+
+	fill.close();
+
+	fileIndex.close();
+
+	return resultado;
+}
