@@ -138,7 +138,110 @@ void Amazon::consultarCliente() {
 	file.close();
 }
 
-void Amazon::modificarCliente() {
+void Amazon::navegacionClientes() {
+	ifstream file("clientes.bin", ios::in | ios::binary);
+	file.seekg(0, ios::beg);
+
+	Cliente actual;
+	long posAnterior = 0;
+
+	while (!file.eof()) {
+		DelimTextBuffer delim('^', 300);
+		Cliente actual;
+
+		actual.Read(file, delim);
+		actual.print();
+
+		if (file.tellg() == 0) {
+			int opc = 0;
+			cout << "1. Regresar al menu anterior.\n2. Modificar Registro.\n3. Eliminar Registro.\n4. Siguiente Registro.\n5. Salir al menu.\n";
+			cin >> opc;
+
+			switch (opc) {
+			case 1:
+				cout << "Regresando......";
+				return;
+				break;
+
+			case 2:
+				modificarCliente();
+				file.close();
+				break;
+
+			case 3:
+				//Pendiente.
+				file.close();
+				break;
+
+			case 4:
+				posAnterior = file.tellg();
+				break;
+
+			case 5:
+				return;
+				break;
+			}
+
+		}else if (file.tellg() != 0 && file.tellg() != file.eof()) {
+			int opc = 0;
+			cout << "1. Registro anterior.\n2. Modificar Registro.\n3. Eliminar Registro.\n4. Siguiente Registro.\n5. Salir al menu.\n";
+			cin >> opc;
+
+			switch (opc) {
+			case 1:
+				file.seekg(posAnterior);
+				break;
+
+			case 2:
+				modificarCliente();
+				file.close();
+				break;
+
+			case 3:
+				posAnterior = file.tellg();
+				//Pendiente.
+				file.close();
+				break;
+
+			case 4:
+				posAnterior = file.tellg();
+				break;
+
+			case 5:
+				return;
+				break;
+			}
+		}
+		else if (file.tellg() == file.eof()) {
+			int opc = 0;
+			cout << "1. Registro anterior.\n2. Modificar Registro.\n3. Eliminar Registro.\n4. Salir al menu.\n";
+			cin >> opc;
+
+			switch (opc) {
+			case 1:
+				file.seekg(posAnterior);
+				break;
+
+			case 2:
+				modificarCliente();
+				file.close();
+				break;
+
+			case 3:
+				posAnterior = file.tellg();
+				//Pendiente.
+				file.close();
+				break;
+
+			case 4:
+				return;
+				break;
+			}
+		}
+	}
+}
+
+void Amazon::modificarCliente(const char* _codigoAux) {
 	ifstream file("clientes.bin", ios::in | ios::binary);
 
 	if (!file) {
@@ -149,8 +252,12 @@ void Amazon::modificarCliente() {
 	cout << " ***** M O D I F I C A R  C L I E N T E S ***** \n\n";
 
 	char _code[13];
-	cout << "\nIngrese el Codigo del Cliente: ";
-	cin >> _code;
+	if (_codigoAux == nullptr) {
+		cout << "\nIngrese el Codigo del Cliente: ";
+		cin >> _code;
+	}
+	else
+		_code == _codigoAux;
 
 	Cliente actual;
 	int posicion = -1;
