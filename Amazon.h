@@ -14,6 +14,7 @@ class Amazon {
 public:
 	static void agregarCliente();
 	static void consultarCliente();
+	static void modificarCliente();
 
 private:
 	static bool buscarClienteCodigo(istream&, const char* _codigo);
