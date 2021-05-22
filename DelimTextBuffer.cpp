@@ -10,7 +10,7 @@ DelimTextBuffer::DelimTextBuffer(char _delim = '|', int _maxBytes) {
 	this->NextByte = 0;
 }
 
-int DelimTextBuffer::Read(istream& file, int _posicion) {
+int DelimTextBuffer::Read(istream& file) {
 	Clear();
 	file.read((char*)&BufferSize, sizeof(BufferSize));
 
@@ -19,8 +19,6 @@ int DelimTextBuffer::Read(istream& file, int _posicion) {
 
 	if (BufferSize > MaxBytes)
 		return false;
-
-	file.seekg(_posicion);
 
 	file.read(Buffer, BufferSize);
 	return file.good();
@@ -58,7 +56,7 @@ int DelimTextBuffer::Pack(const char* _cadena, int _size) {
 	if (NextByte > MaxBytes)
 		return false;
 
-	strncpy(&Buffer[start], _cadena , tamanio);
+	memcpy(&Buffer[start], _cadena, tamanio);
 	Buffer[start + tamanio] = Delim;
 
 	BufferSize = NextByte;
