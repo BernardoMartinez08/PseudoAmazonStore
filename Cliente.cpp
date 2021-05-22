@@ -1,7 +1,9 @@
 #include "Cliente.h"
 
 Cliente::Cliente() : codigo(nullptr), primer_nombre(nullptr), segundo_nombre(nullptr), primer_apellido(nullptr), segundo_apellido(nullptr), genero(nullptr), pais(nullptr), region(nullptr), ciudad(nullptr) {
-
+	size = 0;
+	posicion = 0;
+	id = -1;
 }
 
 Cliente::Cliente(const char* _codigo, const char* _primer_nombre, const char* _segundo_nombre, const char* _primer_apellido, const char* _segundo_apellido, const char* _genero, const char* _ciudad, const char* _region, const char* _pais) {
@@ -44,9 +46,8 @@ bool Cliente::set_primer_nombre(const char* _primer_nombre) {
 }
 
 bool Cliente::set_segundo_nombre(const char* _segundo_nombre) {
-	if (_segundo_nombre != nullptr)
+	if (segundo_nombre != nullptr)
 		delete segundo_nombre;
-
 
 	segundo_nombre = new char[strlen(_segundo_nombre)];
 	return strcpy_s(segundo_nombre, strlen(_segundo_nombre) + 1, _segundo_nombre);
@@ -139,7 +140,7 @@ int Cliente::Unpack(DelimTextBuffer& _buffer) {
 	return resultado;
 }
 
-int Cliente::Read(istream& file, DelimTextBuffer& _delim, int _id) {
+int Cliente::Read(istream& file, DelimTextBuffer& _delim) {
 	int resultado = 0;
 	resultado = _delim.Read(file);
 	resultado = resultado && this->Unpack(_delim);
@@ -148,12 +149,23 @@ int Cliente::Read(istream& file, DelimTextBuffer& _delim, int _id) {
 
 int Cliente::Write(ostream& file, ostream& fileIndex, DelimTextBuffer& _delim) {
 	int resultado = 0;
-	resultado = this->Pack(_delim);
 	posicion = file.tellp();
+	resultado = this->Pack(_delim);
 	resultado = resultado && _delim.Write(file);
 	resultado = resultado && WriteDataonIndex(fileIndex);
 	return resultado;
 }
+
+void Cliente::print() {
+	cout << "\nId: " << id 
+		 << "\nCodigo: " << codigo
+		 << "\Nombre: " << primer_nombre << " " << segundo_nombre << " " << primer_apellido << " " << segundo_apellido
+	     << "\nGenero: " << genero
+		 << "\nCiudad: " << ciudad
+		 << "\nRegion: " << region
+		 << "\nPais: " << pais << "\n";
+}
+
 
 
 
@@ -167,7 +179,7 @@ int Cliente::getNextId() {
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
-		return;
+		return -1;
 	}
 
 	indiceIds.seekg(0, ios::beg);
@@ -210,11 +222,11 @@ vector<vector<int>>* Cliente::getIndiceID() {
 
 	int _id = 0;
 	long _posicion = 0;
-	vector<vector<int>>* aux;
 
 	indiceIds.read(reinterpret_cast<char*>(&_id), 4);
 
 	while (!indiceIds.eof()) {
+		vector<vector<int>>* aux = new vector<vector<int>>;
 		indiceIds.read(reinterpret_cast<char*>(&_id), 4);
 		indiceIds.read(reinterpret_cast<char*>(&_posicion), 8);
 
@@ -225,7 +237,7 @@ vector<vector<int>>* Cliente::getIndiceID() {
 		aux->push_back(auxDato);
 	}
 
-	return aux;
+	return nullptr;
 }
 
 vector<int> Cliente::searchCliente(int _id) {
@@ -256,21 +268,21 @@ vector<int> Cliente::searchCliente(int _id) {
 }
 
 bool Cliente::WriteDataonIndex(ostream& fileIndex) {
-	int resultado;
+	int resultado = 0;
 	resultado = resultado && fileIndex << "|";
 	resultado = resultado && fileIndex << id;
 	resultado = resultado && fileIndex << "|";
 	resultado = resultado && fileIndex << posicion;
 
-	resultado = resultado && WriteDataonIndexByCode();
-	resultado = resultado && WriteDataonIndexByName();
+	//resultado = resultado && WriteDataonIndexByCode();
+	//resultado = resultado && WriteDataonIndexByName();
 	return resultado;
 }
 
 bool Cliente::WriteDataonIndexByCode() {
 	ofstream fileIndex("clientesCode.index", ios::out | ios::app | ios::binary);
 
-	fileIndex << (char)codigo;
+	fileIndex << (char*)codigo;
 	fileIndex << "|";
 	fileIndex << id;
 	fileIndex << "|";
@@ -282,13 +294,13 @@ bool Cliente::WriteDataonIndexByCode() {
 bool Cliente::WriteDataonIndexByName() {
 	ofstream fileIndex("clientesName.index", ios::out | ios::app | ios::binary);
 
-	fileIndex << (char)primer_nombre;
+	fileIndex << primer_nombre;
 	fileIndex << "|";
-	fileIndex << (char)segundo_nombre;
+	fileIndex << segundo_nombre;
 	fileIndex << "|";
-	fileIndex << (char)primer_apellido;
+	fileIndex << primer_apellido;
 	fileIndex << "|";
-	fileIndex << (char)segundo_apellido;
+	fileIndex << segundo_apellido;
 	fileIndex << "|";
 	fileIndex << id;
 	fileIndex << "|";

@@ -35,7 +35,7 @@ public:
 
 	//Funciones de Lectura y Escritura con Buffers
 	int Write(ostream&, ostream&, DelimTextBuffer&);
-	int Read(istream&, DelimTextBuffer&, int posicion);
+	int Read(istream&, DelimTextBuffer&);
 	int Pack(DelimTextBuffer&);
 	int Unpack(DelimTextBuffer&);
 
@@ -43,6 +43,7 @@ public:
 	int searchClienteByCode(int);
 	int searchClienteByName(const char*);
 
+	void print();
 	//Atributos
 	int id;
 	char* codigo;
@@ -57,10 +58,11 @@ public:
 
 	int posicion;
 	int size;
+
+	int getNextId();
 private:
 	bool set_id(int);
 	//Obtener siguiente id autoIncremental
-	int getNextId();
 	void setNextId(int);
 
 	vector<vector<int>>* getIndiceID();

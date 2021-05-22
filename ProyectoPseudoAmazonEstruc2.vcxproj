@@ -145,6 +145,7 @@
     <ClInclude Include="Producto.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Amazon.cpp" />
     <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="DelimTextBuffer.cpp" />
     <ClCompile Include="main.cpp" />

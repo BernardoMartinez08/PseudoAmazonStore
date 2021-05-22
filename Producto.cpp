@@ -66,7 +66,7 @@ int Producto::Pack(DelimTextBuffer& _buffer){
 	resultado = resultado && _buffer.Pack(sub_categoria);
 	resultado = resultado && _buffer.Pack(nombre);
 	resultado = resultado && _buffer.Pack(descripcion);
-	resultado = resultado && _buffer.Pack((char*)precio_actual);
+	//resultado = resultado && _buffer.Pack((char*)precio_actual);
 
 	return resultado;
 }
@@ -80,7 +80,7 @@ int Producto::Unpack(DelimTextBuffer& _buffer)
 	resultado = resultado && set_sub_categoria(_buffer.Unpack(sub_categoria));
 	resultado = resultado && set_nombre(_buffer.Unpack(nombre));
 	resultado = resultado && set_descripcion(_buffer.Unpack(descripcion));
-	precio_actual = (_buffer.Unpack((char*)precio_actual));
+	//precio_actual = (_buffer.Unpack((char*)precio_actual));
 
 	return resultado;
 
@@ -116,7 +116,7 @@ int Producto::getNextId() {
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
-		return;
+		return -1;
 	}
 
 	indiceIds.seekg(0, ios::beg);
@@ -152,7 +152,7 @@ long Producto::searchProducto(int _id) {
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
-		return;
+		return -1;
 	}
 
 	indiceIds.seekg(0, ios::beg);
@@ -183,15 +183,15 @@ long Producto::searchProducto(int _id) {
 
 bool Producto::WriteDataonIndex(ostream& fileIndex)
 {
-	int resultado;
+	int resultado = 0;
 	//Revision && doble 
 	resultado = resultado && fileIndex << "|";
 	resultado = resultado && fileIndex << id;
 	resultado = resultado && fileIndex << "|";
 	resultado = resultado && fileIndex << posicion;
 
-	resultado = resultado & WriteDataonIndexByCode();
-	resultado = resultado & WriteDataonIndexByName();
+	//resultado = resultado && WriteDataonIndexByCode();
+	//resultado = resultado && WriteDataonIndexByName();
 	return resultado;
 
 }
@@ -200,7 +200,7 @@ bool Producto::WriteDataonIndexByCode()
 {
 	ofstream fileIndex("indiceIdProduct.index", ios::out | ios::app | ios::binary);
 
-	fileIndex << (char)codigo;
+	fileIndex << codigo;
 	fileIndex << "|";
 	fileIndex << id;
 	fileIndex << "|";
