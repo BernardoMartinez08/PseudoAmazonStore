@@ -208,3 +208,18 @@ bool Producto::WriteDataonIndexByCode()
 	fileIndex.close();
 	return fileIndex.good();
 }
+
+bool Producto::WriteDataonIndexByName()
+{
+	ofstream fileIndex("indiceProduct.index", ios:out | ios::app | ios::binary);
+
+
+	fileIndex << (char)categoria;
+	fileIndex << "|";
+	fileIndex << (char)nombre;
+	fileIndex << "|";
+	fileIndex.close();
+	return fileIndex.good();
+
+
+}
