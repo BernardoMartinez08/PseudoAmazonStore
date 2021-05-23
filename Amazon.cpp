@@ -73,6 +73,11 @@ void Amazon::agregarCliente() {
 	fileIndex.close();
 }
 
+void Amazon::agregarProducto()
+{
+
+}
+
 void Amazon::consultarCliente() {
 	ifstream file("clientes.bin", ios::in | ios::binary);
 
@@ -132,6 +137,45 @@ void Amazon::consultarCliente() {
 		break;
 	default:
 		cout << "\nOPCION INCORRECTA.\n";
+		break;
+	}
+
+	file.close();
+}
+
+void Amazon::consultarProducto()
+{
+	ifstream file("productos.bin", ios::in | ios::binary);
+
+	if (!file)
+	{
+		cout << "Error al intentar abrir el archivo .bin \n\n";
+		return;
+	}
+
+	cout << " ****** C O N S U L T A  D E  P R O D U C T O S **** \n\n";
+
+	int menu;
+
+	cout << "Elige la forma de busqueda :"
+		<< "\n 1.Buscar por Nombre  \n2.Buscar por codigo";
+
+
+
+	switch (menu)
+	{
+
+	case 1:
+
+		char _nombre[30];
+		cout << "\n Ingrese el Nombre del Producto: ";
+		cin >> _nombre;
+
+		if()
+	case 2:
+	case 3:
+	case 4:
+		cout << "\n Saliendo ...\n";
 		break;
 	}
 
@@ -274,7 +318,7 @@ void Amazon::modificarCliente(const char* _codigoAux) {
 	}
 
 	int opc = 0;
-	cout << "Elige un paramtro a editar: "
+	cout << "Elige un parametro a editar: "
 		<< "\n1. Modificar Codigo. \n2. Modificar Primer Nombre. \n3. Modificar Segundo Nombre. \n4. Modificar Primer Apellido." 
 		<< " \n5. Modificar Segundo Apellido. \n6. Modificar Genero. \n7. Modificar Ciudad. \n8. Modificar Region. \n9. Modificar Pais. \n10.Salir.";
 
@@ -452,6 +496,31 @@ bool Amazon::buscarClienteCodigo(istream& file, const char* _codigo) {
 			return true;
 		}
 	}
+	return false;
+}
+
+bool Amazon::buscarProductoCodigo(istream& file, const char* _codigo)
+{
+	file.seekg(0, ios::beg);
+
+	while (!file.eof())
+	{
+		DelimTextBuffer delim('^', 300);
+
+		Producto actual;
+
+		int posicion = -1;
+		posicion = file.tellg();
+
+		actual.Read(file, delim);
+
+		if (actual.codigo == _codigo)
+		{
+			file.seekg(ios::beg, posicion);
+			return true;
+		}
+	}
+
 	return false;
 }
 
