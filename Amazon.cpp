@@ -550,6 +550,34 @@ bool Amazon::buscarClienteNombre(istream& file, const char* _nombre) {
 	return false;
 }
 
+bool Amazon::buscarProductoNombre(ifstream& file ,const char* _nombre)
+{
+	file.seekg(0, ios::beg);
+
+	while (!file.eof())
+	{
+		DelimTextBuffer delim('^', 300);
+		Producto actual;
+
+		int posicion = -1;
+		posicion = file.tellg();
+
+		actual.Read(file, delim);
+		//----
+		char* nombre = actual.nombre;
+
+		if (_nombre == nombre)
+		{
+			file.seekg(ios::beg, posicion);
+
+			return true;
+		}
+
+	
+	}
+
+	return false;
+}
 bool Amazon::listarClientes(istream& file) {
 	cout << " ***** L I S T A  D E  C L I E N T E S ***** \n\n";
 	file.seekg(0, ios::beg);
