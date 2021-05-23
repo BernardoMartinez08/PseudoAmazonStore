@@ -31,6 +31,7 @@ public:
 	bool WriteDataonIndexByCode();
 	bool WriteDataonIndexByName();
 
+
 	void set_codigo(const char*);
 	void set_categoria(const char*);
 	void set_sub_categoria(const char*);
