@@ -1,7 +1,7 @@
 #include "DelimTextBuffer.h"
 
 
-DelimTextBuffer::DelimTextBuffer(char _delim = '|', int _maxBytes) {
+DelimTextBuffer::DelimTextBuffer(char _delim, int _maxBytes) {
 	this->Delim = _delim;
 	this->MaxBytes = _maxBytes;
 
@@ -10,7 +10,7 @@ DelimTextBuffer::DelimTextBuffer(char _delim = '|', int _maxBytes) {
 	this->NextByte = 0;
 }
 
-int DelimTextBuffer::Read(istream& file, int _posicion) {
+int DelimTextBuffer::Read(istream& file) {
 	Clear();
 	file.read((char*)&BufferSize, sizeof(BufferSize));
 
@@ -19,8 +19,6 @@ int DelimTextBuffer::Read(istream& file, int _posicion) {
 
 	if (BufferSize > MaxBytes)
 		return false;
-
-	file.seekg(_posicion);
 
 	file.read(Buffer, BufferSize);
 	return file.good();
@@ -46,6 +44,7 @@ int DelimTextBuffer::Pack(const char* _cadena, int _size) {
 	int tamanio = -1;
 	int start = NextByte;
 
+	cout << "\n\nTo Pack: " << _cadena;
 	if (_size >= 0)
 		tamanio = _size;
 	else
@@ -58,7 +57,7 @@ int DelimTextBuffer::Pack(const char* _cadena, int _size) {
 	if (NextByte > MaxBytes)
 		return false;
 
-	strncpy(&Buffer[start], _cadena , tamanio);
+	memcpy(&Buffer[start], _cadena, tamanio);
 	Buffer[start + tamanio] = Delim;
 
 	BufferSize = NextByte;
@@ -92,6 +91,5 @@ char* DelimTextBuffer::Unpack(char* _cadena) {
 	strncpy(_cadena, &Buffer[start], tamanio);
 	_cadena[tamanio] = '\0';
 	
-	cout << "\n" << _cadena;
 	return _cadena;
 }

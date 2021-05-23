@@ -25,31 +25,17 @@ public:
 	bool set_ciudad(const char*);
 	bool set_region(const char*);
 	bool set_pais(const char*);
-	bool set_posicion(long);
-	bool set_size(long);
-
-	char* get_codigo();
-	char* get_primer_nombre();
-	char* get_segundo_nombre();
-	char* get_primer_apellido();
-	char* get_segundo_apellido();
-	char* get_genero();
-	char* get_ciudad();
-	char* get_region();
-	char* get_pais();
-	long get_posicion();
-	long get_size();
 
 	//Obtener la posicion del cliente en el indice
 	vector<int> searchCliente(int);
 
-	bool WriteDataonIndex(ofstream& fileIndex);
+	bool WriteDataonIndex(ostream& fileIndex);
 	bool WriteDataonIndexByCode();
 	bool WriteDataonIndexByName();
 
 	//Funciones de Lectura y Escritura con Buffers
-	int Write(DelimTextBuffer&);
-	int Read(DelimTextBuffer&, int posicion);
+	int Write(ostream&, ostream&, DelimTextBuffer&);
+	int Read(istream&, DelimTextBuffer&);
 	int Pack(DelimTextBuffer&);
 	int Unpack(DelimTextBuffer&);
 
@@ -57,8 +43,8 @@ public:
 	int searchClienteByCode(int);
 	int searchClienteByName(const char*);
 
-private:
-	bool set_id(int);
+	void print();
+	//Atributos
 	int id;
 	char* codigo;
 	char* primer_nombre;
@@ -73,8 +59,10 @@ private:
 	int posicion;
 	int size;
 
-	//Obtener siguiente id autoIncremental
 	int getNextId();
+private:
+	bool set_id(int);
+	//Obtener siguiente id autoIncremental
 	void setNextId(int);
 
 	vector<vector<int>>* getIndiceID();

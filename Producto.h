@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include "DelimTextBuffer.h"
 using namespace std;
 
 class Producto {
@@ -14,19 +15,11 @@ public:
 	//codigo, categoria, sub_categoria, nombre, descripcion, precio_actual
 	Producto(const char*, const char*, const char*, const char*, const char*, float);
 	Producto();
-
-
-	//Guardar producto en el archivo principal
-	void guardar_en_archivo(Producto*);
-	//Guardar producto en los archivos de Indices
-	void guardar_en_indices(Producto*);
-
-	//Obtener la posicion del producto en el indice
-	long searchPosicion(int);
 	
 	//Obtener la posicion del producto en el indice
-	vector<int> searchProducto(int);
+	long searchProducto(int);
 	
+<<<<<<< HEAD
 	bool WriteDataonIndex(ofstream& fileIndex);
 	bool WriteDataonIndexByCode();
 	bool WriteDataonIndexByName();
@@ -50,15 +43,25 @@ public:
 	long get_posicion();
 	long get_size();
 
+=======
+	bool set_codigo(const char*);
+	bool set_categoria(const char*);
+	bool set_sub_categoria(const char*);
+	bool set_nombre(const char*);
+	bool set_descripcion(const char*);
+>>>>>>> 2ef60607093f4c544f315757db9de91a8a7cc04a
 
 	//Funciones de Lectura y Escritura con Buffers
-	int Write(DelimTextBuffer&);
-	int Read(DelimTextBuffer&, int posicion);
+	int Write(ostream&, ostream&, DelimTextBuffer&);
+	int Read(istream& file,DelimTextBuffer&, int posicion);
 	int Pack(DelimTextBuffer&);
 	int Unpack(DelimTextBuffer&);
 
+	bool WriteDataonIndex(ostream& fileIndex);
+	bool WriteDataonIndexByCode();
+	bool WriteDataonIndexByName();
 
-private:
+	//Atributos de la clase
 	int id;
 	char* codigo;
 	char* categoria;
@@ -70,6 +73,7 @@ private:
 	long posicion;
 	long size;
 
+private:
 	//Obtener siguiente id autoIncremental
 	int getNextId();
 	void setNextId(int);

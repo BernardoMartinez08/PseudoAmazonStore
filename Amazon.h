@@ -3,26 +3,24 @@
 #define AMAZON_H
 
 #include <iostream>
+#include <fstream>
 #include "Producto.h"
+#include "Cliente.h"
+#include "DelimTextBuffer.h"
 using namespace std;
 
 
 class Amazon {
+public:
+	static void agregarCliente();
+	static void consultarCliente();
+	static void modificarCliente(const char* = nullptr);
+	static void navegacionClientes();
 
-
-	//id, codigo, categoria, sub_categoria, nombre, descripcion, precio_actual
-	bool agregar_producto(int, char*, char*, char*, char*, char*, float);
-	//Busquera por id
-	Producto* consultar_productoId(int);
-	//Busqueda por codigo
-	Producto* consultar_productoCode(char*);
-	//Busqueda por nombre
-	Producto* consultar_productoName(char*);
-	//Modificar producto
-	bool modificar_producto(Producto*);
-	//Eliminar producto
-	bool eliminar_producto(Producto*);
-
+private:
+	static bool buscarClienteCodigo(istream&, const char* _codigo);
+	static bool buscarClienteNombre(istream&, const char* _nombreCompleto);
+	static bool listarClientes(istream&);
 };
 
 #endif // !AMAZON_H

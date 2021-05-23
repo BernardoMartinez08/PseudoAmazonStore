@@ -1,37 +1,22 @@
 #include "Cliente.h"
 
 Cliente::Cliente() : codigo(nullptr), primer_nombre(nullptr), segundo_nombre(nullptr), primer_apellido(nullptr), segundo_apellido(nullptr), genero(nullptr), pais(nullptr), region(nullptr), ciudad(nullptr) {
-
+	size = 0;
+	posicion = 0;
+	id = -1;
 }
 
 Cliente::Cliente(const char* _codigo, const char* _primer_nombre, const char* _segundo_nombre, const char* _primer_apellido, const char* _segundo_apellido, const char* _genero, const char* _ciudad, const char* _region, const char* _pais) {
 
-	codigo = new char[strlen(_codigo)];
-	strcpy_s(codigo, strlen(_codigo) + 1, _codigo);
-
-	primer_nombre = new char[strlen(_primer_nombre)];
-	strcpy_s(primer_nombre, strlen(_primer_nombre) + 1, _primer_nombre);
-
-	segundo_nombre = new char[strlen(_segundo_nombre)];
-	strcpy_s(segundo_nombre, strlen(_segundo_nombre) + 1, _segundo_nombre);
-
-	primer_apellido = new char[strlen(_primer_apellido)];
-	strcpy_s(primer_apellido, strlen(_primer_apellido) + 1, _primer_apellido);
-
-	segundo_apellido = new char[strlen(_segundo_apellido)];
-	strcpy_s(segundo_apellido, strlen(_segundo_apellido) + 1, _segundo_apellido);
-
-	genero = new char[strlen(_genero)];
-	strcpy_s(genero, strlen(_genero) + 1, _genero);
-
-	ciudad = new char[strlen(_ciudad)];
-	strcpy_s(ciudad, strlen(_ciudad) + 1, _ciudad);
-
-	region = new char[strlen(_region)];
-	strcpy_s(region, strlen(_region) + 1, _region);
-
-	pais = new char[strlen(_pais)];
-	strcpy_s(pais, strlen(_pais) + 1, _pais);
+	set_codigo(_codigo);
+	set_primer_nombre(_primer_nombre);
+	set_segundo_nombre(segundo_nombre);
+	set_primer_apellido(primer_apellido);
+	set_segundo_apellido(_segundo_apellido);
+	set_genero(_genero);
+	set_ciudad(_ciudad);
+	set_region(_region);
+	set_pais(_pais);
 
 	id = getNextId();
 	posicion = 0;
@@ -61,9 +46,8 @@ bool Cliente::set_primer_nombre(const char* _primer_nombre) {
 }
 
 bool Cliente::set_segundo_nombre(const char* _segundo_nombre) {
-	if (_segundo_nombre != nullptr)
+	if (segundo_nombre != nullptr)
 		delete segundo_nombre;
-
 
 	segundo_nombre = new char[strlen(_segundo_nombre)];
 	return strcpy_s(segundo_nombre, strlen(_segundo_nombre) + 1, _segundo_nombre);
@@ -123,64 +107,79 @@ bool Cliente::set_ciudad(const char* _ciudad) {
 	return strcpy_s(ciudad, strlen(_ciudad) + 1, _ciudad);
 }
 
-bool Cliente::set_posicion(long _posicion) {
-	return this->posicion = _posicion;
+int Cliente::Pack(DelimTextBuffer& _buffer) {
+	int resultado;
+	resultado = _buffer.Pack((char*)id);
+	resultado = resultado && _buffer.Pack(codigo);
+	resultado = resultado && _buffer.Pack(primer_nombre);
+	resultado = resultado && _buffer.Pack(segundo_nombre);
+	resultado = resultado && _buffer.Pack(primer_apellido);
+	resultado = resultado && _buffer.Pack(segundo_apellido);
+	resultado = resultado && _buffer.Pack(genero);
+	resultado = resultado && _buffer.Pack(ciudad);
+	resultado = resultado && _buffer.Pack(region);
+	resultado = resultado && _buffer.Pack(pais);
+
+	return resultado;
 }
 
-bool Cliente::set_size(long _size) {
-	return this->size = _size;
+int Cliente::Unpack(DelimTextBuffer& _buffer) {
+	int resultado = 1;
+	resultado = this->size = (int)_buffer.Unpack((char*)size);
+	resultado = resultado && set_id((int)_buffer.Unpack((char*)id));
+	resultado = resultado && set_codigo(_buffer.Unpack(codigo));
+	resultado = resultado && set_primer_nombre(_buffer.Unpack(primer_nombre));
+	resultado = resultado && set_segundo_nombre(_buffer.Unpack(segundo_nombre));
+	resultado = resultado && set_primer_apellido(_buffer.Unpack(primer_apellido));
+	resultado = resultado && set_segundo_apellido(_buffer.Unpack(segundo_apellido));
+	resultado = resultado && set_genero(_buffer.Unpack(genero));
+	resultado = resultado && set_ciudad(_buffer.Unpack(ciudad));
+	resultado = resultado && set_region(_buffer.Unpack(region));
+	resultado = resultado && set_pais(_buffer.Unpack(pais));
+
+	return resultado;
 }
 
-char* Cliente::get_codigo() {
-	return this->codigo;
+int Cliente::Read(istream& file, DelimTextBuffer& _delim) {
+	int resultado = 0;
+	resultado = _delim.Read(file);
+	resultado = resultado && this->Unpack(_delim);
+	return resultado;
 }
 
-char* Cliente::get_primer_nombre() {
-	return this->primer_nombre;
+int Cliente::Write(ostream& file, ostream& fileIndex, DelimTextBuffer& _delim) {
+	int resultado = 0;
+	posicion = file.tellp();
+	resultado = this->Pack(_delim);
+	resultado = resultado && _delim.Write(file);
+	resultado = resultado && WriteDataonIndex(fileIndex);
+	return resultado;
 }
 
-char* Cliente::get_segundo_nombre() {
-	return this->segundo_nombre;
+void Cliente::print() {
+	cout << "\nId: " << id 
+		 << "\nCodigo: " << codigo
+		 << "\Nombre: " << primer_nombre << " " << segundo_nombre << " " << primer_apellido << " " << segundo_apellido
+	     << "\nGenero: " << genero
+		 << "\nCiudad: " << ciudad
+		 << "\nRegion: " << region
+		 << "\nPais: " << pais << "\n";
 }
 
-char* Cliente::get_primer_apellido() {
-	return this->primer_apellido;
-}
 
-char* Cliente::get_segundo_apellido() {
-	return this->segundo_apellido;
-}
 
-char* Cliente::get_genero() {
-	return this->genero;
-}
 
-char* Cliente::get_region() {
-	return this->region;
-}
 
-char* Cliente::get_pais() {
-	return this->pais;
-}
 
-char* Cliente::get_ciudad() {
-	return this->ciudad;
-}
 
-long Cliente::get_posicion() {
-	return this->posicion;
-}
-
-long Cliente::get_size() {
-	return this->size;
-}
+//Funciones Prototipo de funciones mas avanzadas.
 
 int Cliente::getNextId() {
 	ifstream indiceIds("clientes.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
-		return;
+		return -1;
 	}
 
 	indiceIds.seekg(0, ios::beg);
@@ -223,11 +222,11 @@ vector<vector<int>>* Cliente::getIndiceID() {
 
 	int _id = 0;
 	long _posicion = 0;
-	vector<vector<int>>* aux;
 
 	indiceIds.read(reinterpret_cast<char*>(&_id), 4);
 
 	while (!indiceIds.eof()) {
+		vector<vector<int>>* aux = new vector<vector<int>>;
 		indiceIds.read(reinterpret_cast<char*>(&_id), 4);
 		indiceIds.read(reinterpret_cast<char*>(&_posicion), 8);
 
@@ -238,7 +237,7 @@ vector<vector<int>>* Cliente::getIndiceID() {
 		aux->push_back(auxDato);
 	}
 
-	return aux;
+	return nullptr;
 }
 
 vector<int> Cliente::searchCliente(int _id) {
@@ -268,92 +267,22 @@ vector<int> Cliente::searchCliente(int _id) {
 	return aux;
 }
 
-int Cliente::Pack(DelimTextBuffer& _buffer) {
-	int resultado;
-	resultado = _buffer.Pack((char*)id);
-	resultado = resultado && _buffer.Pack(codigo);
-	resultado = resultado && _buffer.Pack(primer_nombre);
-	resultado = resultado && _buffer.Pack(segundo_nombre);
-	resultado = resultado && _buffer.Pack(primer_apellido);
-	resultado = resultado && _buffer.Pack(segundo_apellido);
-	resultado = resultado && _buffer.Pack(genero);
-	resultado = resultado && _buffer.Pack(ciudad);
-	resultado = resultado && _buffer.Pack(region);
-	resultado = resultado && _buffer.Pack(pais);
-
-	return resultado;
-}
-
-int Cliente::Unpack(DelimTextBuffer& _buffer) {
-	int resultado = 1;
-	resultado = set_size(_buffer.BufferSize);
-	resultado = resultado && set_id((int)_buffer.Unpack((char*)id));
-	resultado = resultado && set_codigo(_buffer.Unpack(codigo));
-	resultado = resultado && set_primer_nombre(_buffer.Unpack(primer_nombre));
-	resultado = resultado && set_segundo_nombre(_buffer.Unpack(segundo_nombre));
-	resultado = resultado && set_primer_apellido(_buffer.Unpack(primer_apellido));
-	resultado = resultado && set_segundo_apellido(_buffer.Unpack(segundo_apellido));
-	resultado = resultado && set_genero(_buffer.Unpack(genero));
-	resultado = resultado && set_ciudad(_buffer.Unpack(ciudad));
-	resultado = resultado && set_region(_buffer.Unpack(region));
-	resultado = resultado && set_pais(_buffer.Unpack(pais));
-
-	return resultado;
-}
-
-int Cliente::Read(DelimTextBuffer& _delim, int _id) {
-	vector<int> _datos = searchCliente(_id);
-
+bool Cliente::WriteDataonIndex(ostream& fileIndex) {
 	int resultado = 0;
-	if (_datos.size()!=0) {
-		int posicion = _datos[1];
-
-		ifstream file("clientes.data", ios::in | ios::binary);
-
-		vector<int> _datos = searchCliente(_id);
-
-		resultado = _delim.Read(file, posicion);
-		resultado = resultado && this->Unpack(_delim);
-
-		file.close();
-	}
-
-	return resultado;
-}
-
-int Cliente::Write(DelimTextBuffer& _delim) {
-	int resultado = 0;
-	
-	ofstream file("clientes.data", ios::out | ios::app |ios::binary);
-	ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary);
-
-	resultado = this->Pack(_delim);
-	posicion = file.tellp();
-	resultado = resultado && _delim.Write(file);
-
-	resultado = resultado && WriteDataonIndex(fileIndex);
-	file.close();
-	fileIndex.close();
-
-	return resultado;
-}
-
-bool Cliente::WriteDataonIndex(ofstream& fileIndex) {
-	int resultado;
 	resultado = resultado && fileIndex << "|";
 	resultado = resultado && fileIndex << id;
 	resultado = resultado && fileIndex << "|";
 	resultado = resultado && fileIndex << posicion;
 
-	resultado = resultado && WriteDataonIndexByCode();
-	resultado = resultado && WriteDataonIndexByName();
+	//resultado = resultado && WriteDataonIndexByCode();
+	//resultado = resultado && WriteDataonIndexByName();
 	return resultado;
 }
 
 bool Cliente::WriteDataonIndexByCode() {
 	ofstream fileIndex("clientesCode.index", ios::out | ios::app | ios::binary);
 
-	fileIndex << (char)codigo;
+	fileIndex << (char*)codigo;
 	fileIndex << "|";
 	fileIndex << id;
 	fileIndex << "|";
@@ -365,13 +294,13 @@ bool Cliente::WriteDataonIndexByCode() {
 bool Cliente::WriteDataonIndexByName() {
 	ofstream fileIndex("clientesName.index", ios::out | ios::app | ios::binary);
 
-	fileIndex << (char)primer_nombre;
+	fileIndex << primer_nombre;
 	fileIndex << "|";
-	fileIndex << (char)segundo_nombre;
+	fileIndex << segundo_nombre;
 	fileIndex << "|";
-	fileIndex << (char)primer_apellido;
+	fileIndex << primer_apellido;
 	fileIndex << "|";
-	fileIndex << (char)segundo_apellido;
+	fileIndex << segundo_apellido;
 	fileIndex << "|";
 	fileIndex << id;
 	fileIndex << "|";
