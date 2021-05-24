@@ -23,6 +23,7 @@ public:
 	static void agregarProducto();
 	static void consultarProducto();
 	static void modificarProducto(const char* = nullptr);
+	static void navegacionProductos();
 	
 private:
 	//Seccion Clientes
@@ -34,6 +35,7 @@ private:
 
 	static bool buscarProductoCodigo(ifstream&, const char* _codigo);
 	static bool buscarProductoNombre(ifstream&, const char* _nombre);
+	static bool listarProductos(ifstream&);
 };
 
 #endif // !AMAZON_H

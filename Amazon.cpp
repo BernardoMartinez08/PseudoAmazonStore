@@ -75,6 +75,67 @@ void Amazon::agregarCliente() {
 
 void Amazon::agregarProducto()
 {
+	ofstream file("productos.bin", ios::out | ios::app | ios::binary);
+	ofstream fileIndex("productos.index", ios::out | ios::app | ios::binary);
+
+
+	if (!file)
+	{
+		cout << "Error al intentar abrir el archivo .bin de productos\n"
+			return;
+	}
+
+	cout << " ***** I N G R E S O  D E  P R O D U C T O S ***** \n\n";
+	
+	Producto nuevo;
+	
+	DelimTextBuffer delim('^', 300);
+
+	int id = nuevo.getNextId();
+
+	char codigo[10];
+	char categoria[25];
+	char _sub_categoria[25];
+	char nombre[200];
+	char descripcion[2000];
+	float precio_actual;
+
+	cout << "INGRESE LOS DATOS PARA EL PRODUCTO:\nIngrese  codigo: ";
+	cin >> codigo;
+	
+	nuevo.set_codigo(codigo);
+	//cout << "\nCodigo: " << nuevo.codigo << endl;
+	
+	cout << "Ingrese Categoria: ";
+	cin >> categoria;
+	nuevo.set_categoria(categoria);
+
+	cout << "Ingrese Sub-Categoria: ";
+	cin >> sub_categoria(_sub_categoria);
+	nuevo.set_sub_categoria(_sub_categoria);
+
+	cout << "Ingese Nombre: ";
+	cin >> nombre;
+	nuevo.set_nombre(nombre);
+	
+
+	cout << "Ingrese Descripcion: ",
+	cin >> descripcion;
+	nuevo.set_descripcion(descripcion);
+
+	cout << "Ingrese el Precio del Producto: ";
+	cin >> precio_actual;
+	nuevo.set_precio_actual(precio_actual);
+
+
+	nuevo.posicion = 0;
+	nuevo.size = 0;
+	nuevo.Write(file, fileIndex, delim);
+
+	file.close();
+	fileIndex.close();
+
+
 
 }
 
@@ -167,13 +228,45 @@ void Amazon::consultarProducto()
 
 	case 1:
 
-		char _nombre[30];
+		char _nombre[200];
 		cout << "\n Ingrese el Nombre del Producto: ";
 		cin >> _nombre;
 
-		if()
+		if (buscarProductoNombre(file, _nombre))
+		{
+			DelimTextBuffer delim('^', 300);
+			Producto actual;
+
+			actual.Read(file, delim);
+			actual.print();
+		}
+		else
+			cout << "\nNo se encontro el producto que buscaba \n";
+		break;
 	case 2:
+
+		char codigo[10];
+		cout << "\n Ingrese el Codigo de Producto: ";
+		cin >> codigo;
+
+
+		if (buscarProductoCodigo(file, codigo))
+		{
+			DelimTextBuffer delim('^', 300);
+			Producto actual;
+
+			actual.Read(file, delim);
+			actual.print();
+		}
+
+		else
+			cout << "\nNo se encontro el producto  que buscaba \n";
+
+		break;
 	case 3:
+
+		listarProductos(file);
+		break;
 	case 4:
 		cout << "\n Saliendo ...\n";
 		break;
@@ -280,6 +373,88 @@ void Amazon::navegacionClientes() {
 			case 4:
 				return;
 				break;
+			}
+		}
+	}
+}
+
+void Amazon::navegacionProductos()
+{
+	ifstream file("productos.bin", ios::in | ios::binary);
+	file.seekg(0,ios::beg);
+
+	Producto actual;
+
+	long posAnterior = 0;
+
+	while (!file.eof())
+	{
+		DelimTextBuffer delim('^', 300);
+
+		Producto actual;
+
+		actual.Read(file, delim);
+		actual.print();
+
+		if (file.tellg() == 0)
+		{
+			int opcion = 0;
+
+			cout << "1. Regresar al menu anterior.\n2. Modificar Registro.\n3. Eliminar Registro.\n4. Siguiente Registro.\n5. Salir al menu.\n";
+
+			cin >> opcion;
+
+			switch (opcion)
+			{
+			case 1:
+				cout << "Regresando......";
+				return;
+				break;
+			case 2:
+				modificarProducto();
+				file.close();
+				break;
+			case 3:
+
+				file.close();
+			case 4:
+				posAnterior = file.tellg();
+			case 5:
+
+				return;
+				break;
+			}
+
+		else if (file.tellg() == file.eof())
+		{
+			int opcion = 0;
+
+			cout << "1. Registro anterior.\n2. Modificar Registro.\n3. Eliminar Registro.\n4. Salir al menu.\n";
+			cin >> opcion;
+
+			switch (opcion)
+			{
+			case 1:
+				file.seekg(posAnterior);
+				break;
+
+			case 2:
+				modificarProducto();
+				file.close();
+				break;
+
+
+			case 3:
+				postAnterior = file.tellg();
+
+				file.close();
+				break;
+
+			case 4:
+				return break;
+			}
+
+
 			}
 		}
 	}
@@ -479,6 +654,17 @@ void Amazon::modificarCliente(const char* _codigoAux) {
 	}
 }
 
+void Amazon::modificarProducto(const char* _codigoAux)
+{
+	ifstream file("productos.bin",ios::in | ios::binary);
+
+	if (!file)
+	{
+		cout << "Error al intentar abrir el archivo .bin \n\n";
+		return;
+	}
+}
+
 bool Amazon::buscarClienteCodigo(istream& file, const char* _codigo) {
 	file.seekg(0, ios::beg);
 
@@ -588,6 +774,31 @@ bool Amazon::listarClientes(istream& file) {
 		Cliente actual;
 
 		actual.Read(file, delim);
+		actual.print();
+	}
+
+	return true;
+}
+
+bool Amazon::listarProductos(ifstream& file)
+{
+	cout << "*** L I S T A D O   D E  P R O D U C T O S ** \n\n";
+
+
+	file.seekg(0, ios::beg);
+
+
+	Producto actual;
+
+
+	while (!file.eof())
+	{
+		DelimTextBuffer delim('^', 300);
+
+		Producto actual;
+
+		actual.Read(file, delim);
+
 		actual.print();
 	}
 
