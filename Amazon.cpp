@@ -663,6 +663,171 @@ void Amazon::modificarProducto(const char* _codigoAux)
 		cout << "Error al intentar abrir el archivo .bin \n\n";
 		return;
 	}
+
+
+	cout << "*** M O D I F I C A R   P R O D U C T O S *** \n\n";
+
+	char code[10];
+
+	if (_codigoAux == nullptr)
+	{
+		cout << "\n Ingrese el Codigo del Producto: ";
+		cin >> code;
+	}
+
+	else 
+	{
+		code = _codigoAux;
+	}
+
+
+	Producto actual;
+
+	int posicion = -1;
+	if (buscarProductoCodigo(file, code))
+	{
+		DelimTextBuffer delim('^', 300);
+		posicion = file.tellg();
+		actual.Read(file, delim);
+		file.close();
+	}
+	else
+	{
+		cout << "No se encontro el producto que buscaba \n";
+		return;
+	}
+
+	//codigo=10, categoria 25  subcategoria 25 , nombre 200 
+	//descripcion-  2000 precio float
+
+	int opcion = 0;
+
+	cout << "Elige un numero para editar: "
+		<< "\n1.Modificar Codigo \n2.Modificar Categoria \n3.Modificar Sub-Categoria "
+		<< "\n4.Modificar Nombre \n5.Modificar Descripcion  \n6.Modificar Precio Actual \n.7 Salir";
+
+	ofstream fileE("productos.bin", ios::out | ios::binary | ios::app);
+	ofstream fileIndex("clientes.bin" ios::out | ios::app | ios::binary);
+
+
+	switch ()
+
+	{
+	case 1:
+
+		char codigo[10];
+		cout << "\nIngrese el nuevo Codigo: ";
+		cin >> codigo;
+
+		actual.set_codigo(ios::beg, posicion);
+		fileE.seekp(ios::beg, posicion);
+		fileE << "*";
+
+		fileE.seekp(ios::end);
+		DelimTextBuffer delim('^', 300);
+		actual.Write(fileE, fileIndex, delim);
+
+		cout << "Se esta Modificando ........... \n";
+
+		break;
+
+	case 2:
+
+		char categoria[25];
+		cout << "\n Ingrese la nueva categoria: ";
+		cin >> categoria;
+
+		actual.set_categoria(categoria);
+		fileE.seekp(ios::beg, posicion);
+		fileE << "*";
+
+		fileE.seekp(ios::end);
+		DelimTextBuffer delim('^', 300);
+		actual.Write(fileE, fileIndex, delim);
+
+		cout << "Se esta Modificando ........... \n";
+
+		break;
+
+	case 3:
+		char sub_categoria[25];
+
+		cout << "\n Ingrese la nueva sub-categoria: ";
+		cin >> sub_categoria;
+
+		actual.set_sub_categoria(sub_categoria);
+		fileE.seekp(ios::beg, posicion);
+		fileE << "*";
+
+		file.seekg(ios::end);
+		DelimTextBuffer delim('^', 300);
+		actual.Write(FileE, fileIndex, delim);
+
+		cout << "Se esta Modificando ........... \n";
+		break;
+
+
+	case 4:
+		char nombre[200];
+
+		cout << "\Ingrese el nuevo Nombre: ";
+		cin >> nombre;
+
+		actual.set_nombre(nombre);
+		fileE.seekp(ios::beg,posicion);
+		fileE << "*";
+
+		fileE.seekp(ios::end);
+		DelimTextBuffer delim('^', 300);
+
+		actual.WriteDataonIndex(fileE, fileIndex, delim);
+
+
+		cout << "Se esta Modificando ........... \n";
+
+
+		break;
+
+
+	case 5:
+
+		char descripcion[2000];
+		cout << < "Ingrese Descripcion: ";
+		cin >> descripcion;
+
+		actual.set_descripcion(descripcion);
+		fileE.seekp(ios::beg, posicion);
+
+		DelimTextBuffer delim('^', 300);
+		actual.Write(fileE, fileIndex, delim);
+		
+		cout << "Se esta Modificando ........... \n";
+		break;
+
+	case 6:
+		float precio_actual;
+
+		cout << "Ingrese nuevo Precio: ";
+		cin >> precio_actual;
+
+		actual.set_precio_actual(precio_actual);
+		filE.seekp(ios::beg,posicion);
+
+		DelimTextBuffer delim('^', 300);
+		actual.Write(fileE, fileIndex, delim);
+
+		cout << "Se esta Modificando ........... \n";
+
+		break;
+	case 7:
+		cout << "\nSaliendo .... \n";
+		break;
+
+	default:
+		cout << "\n Opcion Incorrecta \n";
+		break;
+	}
+
 }
 
 bool Amazon::buscarClienteCodigo(istream& file, const char* _codigo) {
