@@ -19,41 +19,21 @@ public:
 	//Obtener la posicion del producto en el indice
 	long searchProducto(int);
 	
-<<<<<<< HEAD
 	bool WriteDataonIndex(ofstream& fileIndex);
 	bool WriteDataonIndexByCode();
 	bool WriteDataonIndexByName();
 
 
-	void set_codigo(const char*);
-	void set_categoria(const char*);
-	void set_sub_categoria(const char*);
-	void set_nombre(const char*);
-	void set_descripcion(const char*);
-	void set_precio_actual(float);
-	void set_posicion(long);
-	void set_size(long);
-
-	char* get_codigo();
-	char* get_categoria();
-	char* get_sub_categoria();
-	char* get_nombre();
-	char* get_descripcion();
-	int get_precio_actual();
-	long get_posicion();
-	long get_size();
-
-=======
 	bool set_codigo(const char*);
 	bool set_categoria(const char*);
 	bool set_sub_categoria(const char*);
 	bool set_nombre(const char*);
 	bool set_descripcion(const char*);
->>>>>>> 2ef60607093f4c544f315757db9de91a8a7cc04a
+
 
 	//Funciones de Lectura y Escritura con Buffers
 	int Write(ostream&, ostream&, DelimTextBuffer&);
-	int Read(istream& file,DelimTextBuffer&, int posicion);
+	int Read(istream& file,DelimTextBuffer&);
 	int Pack(DelimTextBuffer&);
 	int Unpack(DelimTextBuffer&);
 
@@ -61,6 +41,8 @@ public:
 	bool WriteDataonIndexByCode();
 	bool WriteDataonIndexByName();
 
+
+	void print();
 	//Atributos de la clase
 	int id;
 	char* codigo;
@@ -73,9 +55,9 @@ public:
 	long posicion;
 	long size;
 
+	int getNextId();
 private:
 	//Obtener siguiente id autoIncremental
-	int getNextId();
 	void setNextId(int);
 };
 

@@ -109,7 +109,7 @@ void Amazon::agregarProducto()
 	nuevo.set_categoria(categoria);
 
 	cout << "Ingrese Sub-Categoria: ";
-	cin >> sub_categoria(_sub_categoria);
+	cin >> _sub_categoria;
 	nuevo.set_sub_categoria(_sub_categoria);
 
 	cout << "Ingese Nombre: ";
@@ -123,7 +123,7 @@ void Amazon::agregarProducto()
 
 	cout << "Ingrese el Precio del Producto: ";
 	cin >> precio_actual;
-	nuevo.set_precio_actual(precio_actual);
+	nuevo.precio_actual = precio_actual;
 
 
 	nuevo.posicion = 0;
@@ -423,6 +423,7 @@ void Amazon::navegacionProductos()
 				break;
 			}
 
+		}
 		else if (file.tellg() == file.eof())
 		{
 			int opcion = 0;
@@ -443,22 +444,21 @@ void Amazon::navegacionProductos()
 
 
 			case 3:
-				postAnterior = file.tellg();
+				posAnterior = file.tellg();
 
 				file.close();
 				break;
 
 			case 4:
-				return break;
+				break;
 			}
 
 
-			}
 		}
 	}
 }
 
-void Amazon::modificarCliente(const char* _codigoAux) {
+void Amazon::modificarCliente() {
 	ifstream file("clientes.bin", ios::in | ios::binary);
 
 	if (!file) {
@@ -469,12 +469,10 @@ void Amazon::modificarCliente(const char* _codigoAux) {
 	cout << " ***** M O D I F I C A R  C L I E N T E S ***** \n\n";
 
 	char _code[13];
-	if (_codigoAux == nullptr) {
-		cout << "\nIngrese el Codigo del Cliente: ";
-		cin >> _code;
-	}
-	else
-		_code == _codigoAux;
+	
+	cout << "\nIngrese el Codigo del Cliente: ";
+	cin >> _code;
+
 
 	Cliente actual;
 	int posicion = -1;
@@ -652,7 +650,7 @@ void Amazon::modificarCliente(const char* _codigoAux) {
 	}
 }
 
-void Amazon::modificarProducto(const char* _codigoAux)
+void Amazon::modificarProducto()
 {
 	ifstream file("productos.bin",ios::in | ios::binary);
 
@@ -666,17 +664,8 @@ void Amazon::modificarProducto(const char* _codigoAux)
 	cout << "*** M O D I F I C A R   P R O D U C T O S *** \n\n";
 
 	char code[10];
-
-	if (_codigoAux == nullptr)
-	{
-		cout << "\n Ingrese el Codigo del Producto: ";
-		cin >> code;
-	}
-
-	else 
-	{
-		code = _codigoAux;
-	}
+	cout << "\n Ingrese el Codigo del Producto: ";
+	cin >> code;
 
 
 	Producto actual;
@@ -705,10 +694,10 @@ void Amazon::modificarProducto(const char* _codigoAux)
 		<< "\n4.Modificar Nombre \n5.Modificar Descripcion  \n6.Modificar Precio Actual \n.7 Salir";
 
 	ofstream fileE("productos.bin", ios::out | ios::binary | ios::app);
-	ofstream fileIndex("clientes.bin" ios::out | ios::app | ios::binary);
+	ofstream fileIndex("clientes.bin", ios::out | ios::app | ios::binary);
 
 
-	switch ()
+	switch (opcion)
 
 	{
 	case 1:
@@ -717,7 +706,7 @@ void Amazon::modificarProducto(const char* _codigoAux)
 		cout << "\nIngrese el nuevo Codigo: ";
 		cin >> codigo;
 
-		actual.set_codigo(ios::beg, posicion);
+		actual.set_codigo(codigo);
 		fileE.seekp(ios::beg, posicion);
 		fileE << "*";
 
@@ -759,7 +748,7 @@ void Amazon::modificarProducto(const char* _codigoAux)
 
 		file.seekg(ios::end);
 		DelimTextBuffer delim('^', 300);
-		actual.Write(FileE, fileIndex, delim);
+		actual.Write(fileE, fileIndex, delim);
 
 		cout << "Se esta Modificando ........... \n";
 		break;
@@ -778,7 +767,7 @@ void Amazon::modificarProducto(const char* _codigoAux)
 		fileE.seekp(ios::end);
 		DelimTextBuffer delim('^', 300);
 
-		actual.WriteDataonIndex(fileE, fileIndex, delim);
+		actual.Write(fileE, fileIndex, delim);
 
 
 		cout << "Se esta Modificando ........... \n";
@@ -790,7 +779,7 @@ void Amazon::modificarProducto(const char* _codigoAux)
 	case 5:
 
 		char descripcion[2000];
-		cout << < "Ingrese Descripcion: ";
+		cout << "Ingrese Descripcion: ";
 		cin >> descripcion;
 
 		actual.set_descripcion(descripcion);
@@ -808,8 +797,8 @@ void Amazon::modificarProducto(const char* _codigoAux)
 		cout << "Ingrese nuevo Precio: ";
 		cin >> precio_actual;
 
-		actual.set_precio_actual(precio_actual);
-		filE.seekp(ios::beg,posicion);
+		actual.precio_actual = (precio_actual);
+		fileE.seekp(ios::beg,posicion);
 
 		DelimTextBuffer delim('^', 300);
 		actual.Write(fileE, fileIndex, delim);
@@ -899,7 +888,7 @@ bool Amazon::buscarClienteNombre(istream& file, const char* _nombre) {
 	return false;
 }
 
-bool Amazon::buscarProductoNombre(ifstream& file ,const char* _nombre)
+bool Amazon::buscarProductoNombre(istream& file ,const char* _nombre)
 {
 	file.seekg(0, ios::beg);
 
@@ -912,7 +901,6 @@ bool Amazon::buscarProductoNombre(ifstream& file ,const char* _nombre)
 		posicion = file.tellg();
 
 		actual.Read(file, delim);
-		//----
 		char* nombre = actual.nombre;
 
 		if (_nombre == nombre)
@@ -921,8 +909,6 @@ bool Amazon::buscarProductoNombre(ifstream& file ,const char* _nombre)
 
 			return true;
 		}
-
-	
 	}
 
 	return false;
@@ -947,12 +933,9 @@ bool Amazon::listarProductos(ifstream& file)
 {
 	cout << "*** L I S T A D O   D E  P R O D U C T O S ** \n\n";
 
-
 	file.seekg(0, ios::beg);
 
-
 	Producto actual;
-
 
 	while (!file.eof())
 	{

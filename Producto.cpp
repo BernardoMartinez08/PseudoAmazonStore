@@ -87,7 +87,7 @@ int Producto::Unpack(DelimTextBuffer& _buffer)
 
 }
 
-int Producto::Read(istream& file, DelimTextBuffer& _delim, int _id) {
+int Producto::Read(istream& file, DelimTextBuffer& _delim) {
 	int resultado = 0;
 	resultado = _delim.Read(file);
 	resultado = resultado && this->Unpack(_delim);
@@ -211,7 +211,7 @@ bool Producto::WriteDataonIndexByCode()
 
 bool Producto::WriteDataonIndexByName()
 {
-	ofstream fileIndex("indiceProduct.index", ios:out | ios::app | ios::binary);
+	ofstream fileIndex("indiceProduct.index", ios::out | ios::app | ios::binary);
 
 
 	fileIndex << (char)categoria;
@@ -222,5 +222,15 @@ bool Producto::WriteDataonIndexByName()
 	return fileIndex.good();
 
 
+}
+
+void Producto::print() {
+	cout << "\nId: " << id
+		<< "\nCodigo: " << codigo
+		<< "\nCategoria: " << categoria
+		<< "\nSub Categoria: " << sub_categoria
+		<< "\nNombre: " << nombre
+		<< "\nDescripcion: " << descripcion
+		<< "\nPrecio Actual: " << precio_actual << "\n";
 }
 

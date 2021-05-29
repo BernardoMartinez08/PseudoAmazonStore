@@ -15,14 +15,14 @@ public:
 	//Seccion Clientes
 	static void agregarCliente();
 	static void consultarCliente();
-	static void modificarCliente(const char* = nullptr);
+	static void modificarCliente();
 	static void navegacionClientes();
 
 
 	//Seccion Productos
 	static void agregarProducto();
 	static void consultarProducto();
-	static void modificarProducto(const char* = nullptr);
+	static void modificarProducto();
 	static void navegacionProductos();
 	
 private:
@@ -33,8 +33,8 @@ private:
 
 	//Seccion Productos
 
-	static bool buscarProductoCodigo(ifstream&, const char* _codigo);
-	static bool buscarProductoNombre(ifstream&, const char* _nombre);
+	static bool buscarProductoCodigo(istream&, const char* _codigo);
+	static bool buscarProductoNombre(istream&, const char* _nombre);
 	static bool listarProductos(ifstream&);
 };
 
