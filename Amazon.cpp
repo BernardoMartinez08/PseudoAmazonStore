@@ -503,7 +503,7 @@ void Amazon::modificarCliente() {
 		cin >> _codigo;
 
 		actual.set_codigo(_codigo);
-		fileE.seekp(ios::beg, posicion);
+		fileE.seekp(posicion);
 		fileE << "*";
 
 		fileE.seekp(ios::end);
@@ -519,7 +519,7 @@ void Amazon::modificarCliente() {
 		cin >> _primer_nombre;
 
 		actual.set_primer_nombre(_primer_nombre);
-		fileE.seekp(ios::beg, posicion);
+		fileE.seekp(posicion);
 		fileE << "*";
 
 		fileE.seekp(ios::end);
@@ -535,7 +535,7 @@ void Amazon::modificarCliente() {
 		cin >> _segundo_nombre;
 
 		actual.set_segundo_nombre(_segundo_nombre);
-		fileE.seekp(ios::beg, posicion);
+		fileE.seekp(posicion);
 		fileE << "*";
 
 		fileE.seekp(ios::end);
@@ -551,7 +551,7 @@ void Amazon::modificarCliente() {
 		cin >> _primer_apellido;
 
 		actual.set_primer_apellido(_primer_apellido);
-		fileE.seekp(ios::beg, posicion);
+		fileE.seekp(posicion);
 		fileE << "*";
 
 		fileE.seekp(ios::end);
@@ -567,7 +567,7 @@ void Amazon::modificarCliente() {
 		cin >> _segundo_apellido;
 
 		actual.set_segundo_apellido(_segundo_apellido);
-		fileE.seekp(ios::beg, posicion);
+		fileE.seekp(posicion);
 		fileE << "*";
 
 		fileE.seekp(ios::end);
@@ -583,7 +583,7 @@ void Amazon::modificarCliente() {
 		cin >> _genero;
 
 		actual.set_genero(_genero);
-		fileE.seekp(ios::beg, posicion);
+		fileE.seekp(posicion);
 		fileE << "*";
 
 		fileE.seekp(ios::end);
@@ -599,7 +599,7 @@ void Amazon::modificarCliente() {
 		cin >> _ciudad;
 
 		actual.set_ciudad(_ciudad);
-		fileE.seekp(ios::beg, posicion);
+		fileE.seekp(posicion);
 		fileE << "*";
 
 		fileE.seekp(ios::end);
@@ -615,7 +615,7 @@ void Amazon::modificarCliente() {
 		cin >> _region;
 
 		actual.set_region(_region);
-		fileE.seekp(ios::beg, posicion);
+		fileE.seekp(posicion);
 		fileE << "*";
 
 		fileE.seekp(ios::end);
@@ -631,7 +631,7 @@ void Amazon::modificarCliente() {
 		cin >> _pais;
 
 		actual.set_pais(_pais);
-		fileE.seekp(ios::beg, posicion);
+		fileE.seekp(posicion);
 		fileE << "*";
 
 		fileE.seekp(ios::end);
@@ -707,7 +707,7 @@ void Amazon::modificarProducto()
 		cin >> codigo;
 
 		actual.set_codigo(codigo);
-		fileE.seekp(ios::beg, posicion);
+		fileE.seekp(posicion);
 		fileE << "*";
 
 		fileE.seekp(ios::end);
@@ -725,7 +725,7 @@ void Amazon::modificarProducto()
 		cin >> categoria;
 
 		actual.set_categoria(categoria);
-		fileE.seekp(ios::beg, posicion);
+		fileE.seekp(posicion);
 		fileE << "*";
 
 		fileE.seekp(ios::end);
@@ -743,7 +743,7 @@ void Amazon::modificarProducto()
 		cin >> sub_categoria;
 
 		actual.set_sub_categoria(sub_categoria);
-		fileE.seekp(ios::beg, posicion);
+		fileE.seekp(posicion);
 		fileE << "*";
 
 		file.seekg(ios::end);
@@ -761,7 +761,7 @@ void Amazon::modificarProducto()
 		cin >> nombre;
 
 		actual.set_nombre(nombre);
-		fileE.seekp(ios::beg,posicion);
+		fileE.seekp(posicion);
 		fileE << "*";
 
 		fileE.seekp(ios::end);
@@ -783,7 +783,7 @@ void Amazon::modificarProducto()
 		cin >> descripcion;
 
 		actual.set_descripcion(descripcion);
-		fileE.seekp(ios::beg, posicion);
+		fileE.seekp(posicion);
 
 		DelimTextBuffer delim('^', 300);
 		actual.Write(fileE, fileIndex, delim);
@@ -798,7 +798,7 @@ void Amazon::modificarProducto()
 		cin >> precio_actual;
 
 		actual.precio_actual = (precio_actual);
-		fileE.seekp(ios::beg,posicion);
+		fileE.seekp(posicion);
 
 		DelimTextBuffer delim('^', 300);
 		actual.Write(fileE, fileIndex, delim);
@@ -818,7 +818,7 @@ void Amazon::modificarProducto()
 }
 
 bool Amazon::buscarClienteCodigo(istream& file, const char* _codigo) {
-	file.seekg(0, ios::beg);
+	file.seekg(ios::beg);
 
 	while (!file.eof()) {
 		DelimTextBuffer delim('^', 300);
@@ -830,7 +830,7 @@ bool Amazon::buscarClienteCodigo(istream& file, const char* _codigo) {
 		actual.Read(file, delim);
 
 		if (actual.codigo == _codigo) {
-			file.seekg(ios::beg, posicion);
+			file.seekg(posicion);
 			return true;
 		}
 	}
@@ -839,7 +839,7 @@ bool Amazon::buscarClienteCodigo(istream& file, const char* _codigo) {
 
 bool Amazon::buscarProductoCodigo(istream& file, const char* _codigo)
 {
-	file.seekg(0, ios::beg);
+	file.seekg(0);
 
 	while (!file.eof())
 	{
@@ -854,7 +854,7 @@ bool Amazon::buscarProductoCodigo(istream& file, const char* _codigo)
 
 		if (actual.codigo == _codigo)
 		{
-			file.seekg(ios::beg, posicion);
+			file.seekg(posicion);
 			return true;
 		}
 	}
@@ -863,7 +863,7 @@ bool Amazon::buscarProductoCodigo(istream& file, const char* _codigo)
 }
 
 bool Amazon::buscarClienteNombre(istream& file, const char* _nombre) {
-	file.seekg(0, ios::beg);
+	file.seekg(0);
 
 	while (!file.eof()) {
 		DelimTextBuffer delim('^', 300);
@@ -881,7 +881,7 @@ bool Amazon::buscarClienteNombre(istream& file, const char* _nombre) {
 		strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(actual.segundo_apellido) + 1, actual.segundo_apellido);
 
 		if (_nombre == nombreCompreto) {
-			file.seekg(ios::beg, posicion);
+			file.seekg(posicion);
 			return true;
 		}
 	}
@@ -890,7 +890,7 @@ bool Amazon::buscarClienteNombre(istream& file, const char* _nombre) {
 
 bool Amazon::buscarProductoNombre(istream& file ,const char* _nombre)
 {
-	file.seekg(0, ios::beg);
+	file.seekg(0);
 
 	while (!file.eof())
 	{
@@ -905,7 +905,7 @@ bool Amazon::buscarProductoNombre(istream& file ,const char* _nombre)
 
 		if (_nombre == nombre)
 		{
-			file.seekg(ios::beg, posicion);
+			file.seekg(posicion);
 
 			return true;
 		}
@@ -915,7 +915,7 @@ bool Amazon::buscarProductoNombre(istream& file ,const char* _nombre)
 }
 bool Amazon::listarClientes(istream& file) {
 	cout << " ***** L I S T A  D E  C L I E N T E S ***** \n\n";
-	file.seekg(0, ios::beg);
+	file.seekg(0);
 
 	Cliente actual;
 	while (!file.eof()) {
@@ -933,7 +933,7 @@ bool Amazon::listarProductos(ifstream& file)
 {
 	cout << "*** L I S T A D O   D E  P R O D U C T O S ** \n\n";
 
-	file.seekg(0, ios::beg);
+	file.seekg(0);
 
 	Producto actual;
 

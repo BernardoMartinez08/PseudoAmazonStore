@@ -225,8 +225,8 @@ vector<vector<int>>* Cliente::getIndiceID() {
 
 	indiceIds.read(reinterpret_cast<char*>(&_id), 4);
 
+	vector<vector<int>>* aux = nullptr;
 	while (!indiceIds.eof()) {
-		vector<vector<int>>* aux = new vector<vector<int>>;
 		indiceIds.read(reinterpret_cast<char*>(&_id), 4);
 		indiceIds.read(reinterpret_cast<char*>(&_posicion), 8);
 
@@ -237,7 +237,7 @@ vector<vector<int>>* Cliente::getIndiceID() {
 		aux->push_back(auxDato);
 	}
 
-	return nullptr;
+	return aux;
 }
 
 vector<int> Cliente::searchCliente(int _id) {

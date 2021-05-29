@@ -142,12 +142,14 @@
     <ClInclude Include="Amazon.h" />
     <ClInclude Include="Cliente.h" />
     <ClInclude Include="DelimTextBuffer.h" />
+    <ClInclude Include="Factura.h" />
     <ClInclude Include="Producto.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Amazon.cpp" />
     <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="DelimTextBuffer.cpp" />
+    <ClCompile Include="Factura.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Producto.cpp" />
   </ItemGroup>
