@@ -1,4 +1,5 @@
 #include "Amazon.h"
+#include "BusquedasSecuenciales.h"
 
 void Amazon::agregarCliente() {
 	ofstream file("clientes.bin", ios::out | ios::app | ios::binary);
@@ -139,6 +140,7 @@ void Amazon::agregarProducto()
 
 void Amazon::consultarCliente() {
 	ifstream file("clientes.bin", ios::in | ios::binary);
+	Busqueda buscador;
 
 	if (!file) {
 		cout << "Error al intentar abrir el archivo .bin\n\n";
@@ -158,7 +160,7 @@ void Amazon::consultarCliente() {
 		cout << "\nIngrese el Nombre Completo del Cliente: ";
 		cin >> _nombreCompleto;
 
-		if (buscarClienteNombre(file,_nombreCompleto)) {
+		if (buscador.buscarClienteNombre(file,_nombreCompleto)) {
 			DelimTextBuffer delim('^', 300);
 			Cliente actual;
 
@@ -175,7 +177,7 @@ void Amazon::consultarCliente() {
 		cout << "\nIngrese el Codigo del Cliente: ";
 		cin >> _codigo;
 
-		if (buscarClienteCodigo(file, _codigo)) {
+		if (buscador.buscarClienteCodigo(file, _codigo)) {
 			DelimTextBuffer delim('^', 300);
 			Cliente actual;
 
@@ -202,9 +204,9 @@ void Amazon::consultarCliente() {
 	file.close();
 }
 
-void Amazon::consultarProducto()
-{
+void Amazon::consultarProducto(){
 	ifstream file("productos.bin", ios::in | ios::binary);
+	Busqueda buscador;
 
 	if (!file)
 	{
@@ -219,8 +221,6 @@ void Amazon::consultarProducto()
 	cout << "Elige la forma de busqueda :"
 		<< "\n 1.Buscar por Nombre  \n2.Buscar por codigo";
 
-
-
 	switch (menu)
 	{
 
@@ -230,7 +230,7 @@ void Amazon::consultarProducto()
 		cout << "\n Ingrese el Nombre del Producto: ";
 		cin >> _nombre;
 
-		if (buscarProductoNombre(file, _nombre))
+		if (buscador.buscarProductoNombre(file, _nombre))
 		{
 			DelimTextBuffer delim('^', 300);
 			Producto actual;
@@ -248,7 +248,7 @@ void Amazon::consultarProducto()
 		cin >> codigo;
 
 
-		if (buscarProductoCodigo(file, codigo))
+		if (buscador.buscarProductoCodigo(file, codigo))
 		{
 			DelimTextBuffer delim('^', 300);
 			Producto actual;
@@ -460,6 +460,7 @@ void Amazon::navegacionProductos()
 
 void Amazon::modificarCliente() {
 	ifstream file("clientes.bin", ios::in | ios::binary);
+	Busqueda buscador;
 
 	if (!file) {
 		cout << "Error al intentar abrir el archivo .bin\n\n";
@@ -476,7 +477,7 @@ void Amazon::modificarCliente() {
 
 	Cliente actual;
 	int posicion = -1;
-	if (buscarClienteCodigo(file, _code)) {
+	if (buscador.buscarClienteCodigo(file, _code)) {
 		DelimTextBuffer delim('^', 300);
 		posicion = file.tellg();
 		actual.Read(file, delim);
@@ -650,9 +651,9 @@ void Amazon::modificarCliente() {
 	}
 }
 
-void Amazon::modificarProducto()
-{
+void Amazon::modificarProducto(){
 	ifstream file("productos.bin",ios::in | ios::binary);
+	Busqueda buscador;
 
 	if (!file)
 	{
@@ -671,7 +672,7 @@ void Amazon::modificarProducto()
 	Producto actual;
 
 	int posicion = -1;
-	if (buscarProductoCodigo(file, code))
+	if (buscador.buscarProductoCodigo(file, code))
 	{
 		DelimTextBuffer delim('^', 300);
 		posicion = file.tellg();
@@ -817,102 +818,6 @@ void Amazon::modificarProducto()
 
 }
 
-bool Amazon::buscarClienteCodigo(istream& file, const char* _codigo) {
-	file.seekg(ios::beg);
-
-	while (!file.eof()) {
-		DelimTextBuffer delim('^', 300);
-		Cliente actual;
-
-		int posicion = -1;
-		posicion = file.tellg();
-
-		actual.Read(file, delim);
-
-		if (actual.codigo == _codigo) {
-			file.seekg(posicion);
-			return true;
-		}
-	}
-	return false;
-}
-
-bool Amazon::buscarProductoCodigo(istream& file, const char* _codigo)
-{
-	file.seekg(0);
-
-	while (!file.eof())
-	{
-		DelimTextBuffer delim('^', 300);
-
-		Producto actual;
-
-		int posicion = -1;
-		posicion = file.tellg();
-
-		actual.Read(file, delim);
-
-		if (actual.codigo == _codigo)
-		{
-			file.seekg(posicion);
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool Amazon::buscarClienteNombre(istream& file, const char* _nombre) {
-	file.seekg(0);
-
-	while (!file.eof()) {
-		DelimTextBuffer delim('^', 300);
-		Cliente actual;
-
-		int posicion = -1;
-		posicion = file.tellg();
-
-		actual.Read(file, delim);
-
-		char* nombreCompreto = new char[strlen(actual.primer_nombre)];
-		strcpy_s(nombreCompreto, strlen(actual.primer_nombre) + 1, actual.primer_nombre);
-		strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(actual.segundo_nombre) + 1, actual.segundo_nombre);
-		strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(actual.primer_apellido) + 1, actual.primer_apellido);
-		strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(actual.segundo_apellido) + 1, actual.segundo_apellido);
-
-		if (_nombre == nombreCompreto) {
-			file.seekg(posicion);
-			return true;
-		}
-	}
-	return false;
-}
-
-bool Amazon::buscarProductoNombre(istream& file ,const char* _nombre)
-{
-	file.seekg(0);
-
-	while (!file.eof())
-	{
-		DelimTextBuffer delim('^', 300);
-		Producto actual;
-
-		int posicion = -1;
-		posicion = file.tellg();
-
-		actual.Read(file, delim);
-		char* nombre = actual.nombre;
-
-		if (_nombre == nombre)
-		{
-			file.seekg(posicion);
-
-			return true;
-		}
-	}
-
-	return false;
-}
 bool Amazon::listarClientes(istream& file) {
 	cout << " ***** L I S T A  D E  C L I E N T E S ***** \n\n";
 	file.seekg(0);

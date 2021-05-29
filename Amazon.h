@@ -27,14 +27,9 @@ public:
 	
 private:
 	//Seccion Clientes
-	static bool buscarClienteCodigo(istream&, const char* _codigo);
-	static bool buscarClienteNombre(istream&, const char* _nombreCompleto);
 	static bool listarClientes(istream&);
 
 	//Seccion Productos
-
-	static bool buscarProductoCodigo(istream&, const char* _codigo);
-	static bool buscarProductoNombre(istream&, const char* _nombre);
 	static bool listarProductos(ifstream&);
 };
 

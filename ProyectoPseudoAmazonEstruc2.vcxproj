@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Amazon.h" />
+    <ClInclude Include="BusquedasSecuenciales.h" />
     <ClInclude Include="Cliente.h" />
     <ClInclude Include="DelimTextBuffer.h" />
     <ClInclude Include="Detalle.h" />
@@ -148,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Amazon.cpp" />
+    <ClCompile Include="BusquedasSecuenciales.cpp" />
     <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="DelimTextBuffer.cpp" />
     <ClCompile Include="Detalle.cpp" />
