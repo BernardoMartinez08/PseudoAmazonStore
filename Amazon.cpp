@@ -79,7 +79,7 @@ void Amazon::agregarProducto()
 
 	if (!file)
 	{
-		cout << "Error al intentar abrir el archivo .bin de productos\n"
+		cout << "Error al intentar abrir el archivo .bin de productos\n";
 			return;
 	}
 
