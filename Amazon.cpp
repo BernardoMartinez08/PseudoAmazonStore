@@ -29,12 +29,10 @@ void Amazon::agregarCliente() {
 	cout << "INGRESE LOS DATOS PARA EL CLIENTE:\nIndique codigo: ";
 	cin >> _codigo;
 	nuevo.set_codigo(_codigo);
-	cout << "\nCodigo: " << nuevo.codigo << endl;
 
 	cout << "Indique el primer nombre:";
 	cin >> _primer_nombre;
 	nuevo.set_primer_nombre(_primer_nombre);
-	cout << "\nCodigo: " << nuevo.primer_nombre << endl;
 
 	cout << "Indique el segundo nombre:";
 	cin >> _segundo_nombre;
