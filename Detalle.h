@@ -1,6 +1,6 @@
 #pragma once
-#ifndef FACTURA_H
-#define FACTURA_H
+#ifndef DETALLE_H
+#define DETALLE_H
 
 #include <iostream>
 #include <fstream>
@@ -8,17 +8,13 @@
 #include "DelimTextBuffer.h"
 using namespace std;
 
-class Factura {
+class Detalle {
 public:
 	//Constructores
 
-	//codigo, cliente_id, fecha, hora, total_neto, total_impuesto, ubicacion.y, ubicacion.x
-	Factura(const char*, int, const char*, const char*, float, float, float, float);
-	Factura();
-
-	bool set_codigo(const char*);
-	bool set_fecha(const char*);
-	bool set_hora(const char*);
+	//factura_id, producto_id, cantidad, prrecio_unit
+	Detalle(int, int, int, float);
+	Detalle();
 
 	//Funciones de Lectura y Escritura con Buffers
 	int Write(ostream&, ostream&, DelimTextBuffer&);
@@ -26,21 +22,17 @@ public:
 	int Pack(DelimTextBuffer&);
 	int Unpack(DelimTextBuffer&);
 
-	//Buscar en los indices por codigo y por cliente.
+	//Buscar en los indices por codigo y por Factura
 	int searchFacturaByCode(const char*);
-	int searchFacturaByCliente(int);
+	int searchFacturaByFactura(int);
 
 	void print();
 	//Atributos
 	int id;
-	char* codigo;
-	int cliente_id;
-	char* fecha;
-	char* hora;
-	float total_neto;
-	float total_impuesto;
-	float ubicacion_Y;
-	float ubicacion_X;
+	int factura_id;
+	int producto_id;
+	int cantidad;
+	float precio_unit;
 
 	int posicion;
 	int size;
@@ -54,4 +46,4 @@ private:
 	vector<vector<int>>* getIndiceID();
 };
 
-#endif // !FACTURA_H
+#endif // !DETALLE_H

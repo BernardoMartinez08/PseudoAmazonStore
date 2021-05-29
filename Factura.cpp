@@ -1,15 +1,20 @@
 #include "Factura.h"
 
-Factura::Factura() : codigo(nullptr), cliente_id(0), fecha(nullptr), hora(nullptr), total_neto(0), total_impuesto(0), ubicacion_Y(0), ubicacion_X(0){
+Factura::Factura() : codigo(nullptr), cliente_id(-1), fecha(nullptr), hora(nullptr), total_neto(0), total_impuesto(0), ubicacion_Y(0), ubicacion_X(0){
 	size = 0;
 	posicion = 0;
 	id = -1;
 }
 
 Factura::Factura(const char* _codigo, int _cliente_id, const char* _fecha, const char* _hora, float _total_neto, float _total_impuesto, float _ubicacion_Y, float _ubicacion_X) {
-
 	set_codigo(_codigo);
-	
+	cliente_id = _cliente_id;
+	set_fecha(_fecha);
+	set_hora(_hora);
+	total_neto = _total_neto;
+	total_impuesto = _total_impuesto;
+	ubicacion_Y = _ubicacion_Y;
+	ubicacion_X = _ubicacion_X;
 
 	id = getNextId();
 	posicion = 0;
@@ -90,7 +95,6 @@ int Factura::Write(ostream& file, ostream& fileIndex, DelimTextBuffer& _delim) {
 	posicion = file.tellp();
 	resultado = this->Pack(_delim);
 	resultado = resultado && _delim.Write(file);
-	resultado = resultado && WriteDataonIndex(fileIndex);
 	return resultado;
 }
 
