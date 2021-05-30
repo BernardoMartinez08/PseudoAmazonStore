@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Amazon.h"
 
+
 using namespace std;
 int main()
 {
@@ -9,3 +10,4 @@ int main()
 	tienda.agregarCliente();
 	_getch();
 }
+
