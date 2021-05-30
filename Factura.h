@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include "DelimTextBuffer.h"
+#include <string>
 using namespace std;
 
 class Factura {

@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include "DelimTextBuffer.h"
+#include <string>
 using namespace std;
 
 class Producto {
@@ -19,7 +20,6 @@ public:
 	//Obtener la posicion del producto en el indice
 	long searchProducto(int);
 	
-	bool WriteDataonIndex(ofstream& fileIndex);
 	bool WriteDataonIndexByCode();
 	bool WriteDataonIndexByName();
 
@@ -38,8 +38,6 @@ public:
 	int Unpack(DelimTextBuffer&);
 
 	bool WriteDataonIndex(ostream& fileIndex);
-	bool WriteDataonIndexByCode();
-	bool WriteDataonIndexByName();
 
 
 	void print();

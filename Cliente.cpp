@@ -3,7 +3,7 @@
 Cliente::Cliente() : codigo(nullptr), primer_nombre(nullptr), segundo_nombre(nullptr), primer_apellido(nullptr), segundo_apellido(nullptr), genero(nullptr), pais(nullptr), region(nullptr), ciudad(nullptr) {
 	size = 0;
 	posicion = 0;
-	id = -1;
+	id = 0;
 }
 
 Cliente::Cliente(const char* _codigo, const char* _primer_nombre, const char* _segundo_nombre, const char* _primer_apellido, const char* _segundo_apellido, const char* _genero, const char* _ciudad, const char* _region, const char* _pais) {
@@ -109,7 +109,8 @@ bool Cliente::set_ciudad(const char* _ciudad) {
 
 int Cliente::Pack(DelimTextBuffer& _buffer) {
 	int resultado;
-	resultado = _buffer.Pack((char*)id);
+	std::string tmp = std::to_string(id);
+	resultado = _buffer.Pack(tmp.c_str());
 	resultado = resultado && _buffer.Pack(codigo);
 	resultado = resultado && _buffer.Pack(primer_nombre);
 	resultado = resultado && _buffer.Pack(segundo_nombre);
@@ -152,7 +153,7 @@ int Cliente::Write(ostream& file, ostream& fileIndex, DelimTextBuffer& _delim) {
 	posicion = file.tellp();
 	resultado = this->Pack(_delim);
 	resultado = resultado && _delim.Write(file);
-	resultado = resultado && WriteDataonIndex(fileIndex);
+	//resultado = resultado && WriteDataonIndex(fileIndex);
 	return resultado;
 }
 
@@ -175,6 +176,12 @@ void Cliente::print() {
 //Funciones Prototipo de funciones mas avanzadas.
 
 int Cliente::getNextId() {
+	ifstream auxID("clientes.index", ios::in | ios::binary | ios::_Nocreate);
+	
+	if (!auxID) {
+		setNextId(0);
+	}
+	
 	ifstream indiceIds("clientes.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
@@ -185,7 +192,7 @@ int Cliente::getNextId() {
 	indiceIds.seekg(0, ios::beg);
 
 	int _nextId;
-	indiceIds.read(reinterpret_cast<char*>(&_nextId), 4);
+	indiceIds >> _nextId;
 
 	indiceIds.close();
 
@@ -195,7 +202,7 @@ int Cliente::getNextId() {
 }
 
 void Cliente::setNextId(int _lastId) {
-	ofstream indiceIds("clientes.index", ios::out | ios::app | ios::binary);
+	ofstream indiceIds("clientes.index", ios::out | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
@@ -205,7 +212,7 @@ void Cliente::setNextId(int _lastId) {
 	int newID = _lastId + 1;
 
 	indiceIds.seekp(0, ios::beg);
-	indiceIds.write(reinterpret_cast<const char*>(&newID), sizeof(newID));
+	indiceIds << newID;
 
 	indiceIds.close();
 }

@@ -11,7 +11,7 @@ class DelimTextBuffer {
 public:
 	DelimTextBuffer(char Delim = '^', int maxBytes = 1000);
 	int Read(istream& file);
-	int Write(ostream& file);
+	int Write(ostream& file) const;
 	int Pack(const char* cadena, int size = -1);
 	char* Unpack(char* cadena);
 	void Clear();

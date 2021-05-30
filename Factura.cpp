@@ -54,7 +54,8 @@ bool Factura::set_hora(const char* _hora) {
 
 int Factura::Pack(DelimTextBuffer& _buffer) {
 	int resultado;
-	resultado = _buffer.Pack((char*)id);
+	std::string tmp = std::to_string(id);
+	resultado = _buffer.Pack(tmp.c_str());
 	resultado = resultado && _buffer.Pack(codigo);
 	resultado = resultado && _buffer.Pack((char*)cliente_id);
 	resultado = resultado && _buffer.Pack(fecha);
@@ -118,6 +119,12 @@ void Factura::print() {
 //Funciones Prototipo de funciones mas avanzadas.
 
 int Factura::getNextId() {
+	ifstream auxID("factura.index", ios::in | ios::binary | ios::_Nocreate);
+
+	if (!auxID) {
+		setNextId(0);
+	}
+	
 	ifstream indiceIds("factura.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
@@ -168,7 +175,7 @@ vector<vector<int>>* Factura::getIndiceID() {
 
 	indiceIds.read(reinterpret_cast<char*>(&_id), 4);
 
-	vector<vector<int>>* aux;
+	vector<vector<int>>* aux = new vector<vector<int>>;
 	while (!indiceIds.eof()) {
 		indiceIds.read(reinterpret_cast<char*>(&_id), 4);
 		indiceIds.read(reinterpret_cast<char*>(&_posicion), 8);

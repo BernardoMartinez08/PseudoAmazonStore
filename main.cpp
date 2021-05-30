@@ -7,6 +7,7 @@ using namespace std;
 int main()
 {
 	Amazon tienda;
+	Cliente aux;
 	tienda.agregarCliente();
 	_getch();
 }

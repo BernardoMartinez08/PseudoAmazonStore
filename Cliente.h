@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include "DelimTextBuffer.h"
+#include <string>
 using namespace std;
 
 class Cliente {
@@ -60,10 +61,10 @@ public:
 	int size;
 
 	int getNextId();
+	void setNextId(int);
 private:
 	bool set_id(int);
 	//Obtener siguiente id autoIncremental
-	void setNextId(int);
 
 	vector<vector<int>>* getIndiceID();
 };
