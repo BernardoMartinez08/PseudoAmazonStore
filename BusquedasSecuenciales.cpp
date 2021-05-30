@@ -284,7 +284,7 @@ bool Busqueda::buscarDetalleProducto(istream& file, int _id_producto) {
 	return false;
 }
 
-bool Busqueda::buscarFacturaID(istream& file, int _id) {
+bool Busqueda::buscarDetalleID(istream& file, int _id) {
 	file.seekg(0);
 
 	while (!file.eof())

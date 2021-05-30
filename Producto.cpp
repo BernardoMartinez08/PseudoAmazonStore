@@ -60,7 +60,8 @@ bool Producto::set_descripcion(const char* _descripcion) {
 int Producto::Pack(DelimTextBuffer& _buffer){
 	int resultado;
 
-	resultado = _buffer.Pack((char*)id);
+	std::string tmp = std::to_string(id);
+	resultado = _buffer.Pack(tmp.c_str());
 	resultado = resultado && _buffer.Pack(codigo);
 	resultado = resultado && _buffer.Pack(categoria);
 	resultado = resultado && _buffer.Pack(sub_categoria);
@@ -113,6 +114,12 @@ int Producto::Write(ostream& file, ostream& fileIndex, DelimTextBuffer& _delim) 
 //Funciones Prototipo de funciones mas avanzadas
 
 int Producto::getNextId() {
+	ifstream auxID("producto.index", ios::in | ios::binary | ios::_Nocreate);
+
+	if (!auxID) {
+		setNextId(0);
+	}
+	
 	ifstream indiceIds("indiceIdProducto.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
@@ -133,7 +140,7 @@ int Producto::getNextId() {
 }
 
 void Producto::setNextId(int _lastId) {
-	ofstream indiceIds("indiceIdProduct.index", ios::out | ios::app | ios::binary);
+	ofstream indiceIds("producto.index", ios::out | ios::app | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
@@ -149,7 +156,7 @@ void Producto::setNextId(int _lastId) {
 }
 
 long Producto::searchProducto(int _id) {
-	ifstream indiceIds("indiceIdProducto.index", ios::in | ios::binary);
+	ifstream indiceIds("producto.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
@@ -199,7 +206,7 @@ bool Producto::WriteDataonIndex(ostream& fileIndex)
 
 bool Producto::WriteDataonIndexByCode()
 {
-	ofstream fileIndex("indiceIdProduct.index", ios::out | ios::app | ios::binary);
+	ofstream fileIndex("productos.index", ios::out | ios::app | ios::binary);
 
 	fileIndex << codigo;
 	fileIndex << "|";
@@ -212,7 +219,7 @@ bool Producto::WriteDataonIndexByCode()
 
 bool Producto::WriteDataonIndexByName()
 {
-	ofstream fileIndex("indiceProduct.index", ios::out | ios::app | ios::binary);
+	ofstream fileIndex("productos.index", ios::out | ios::app | ios::binary);
 
 
 	fileIndex << (char)categoria;

@@ -15,7 +15,8 @@ Detalle::Detalle(int _factura_id, int _producto_id, int _cantidad, float _precio
 
 int Detalle::Pack(DelimTextBuffer& _buffer) {
 	int resultado;
-	resultado = _buffer.Pack((char*)id);
+	std::string tmp = std::to_string(id);
+	resultado = _buffer.Pack(tmp.c_str());
 	resultado = resultado && _buffer.Pack((char*)factura_id);
 	resultado = resultado && _buffer.Pack((char*)producto_id);
 	resultado = resultado && _buffer.Pack((char*)cantidad);
@@ -68,6 +69,12 @@ void Detalle::print() {
 //Funciones Prototipo de funciones mas avanzadas.
 
 int Detalle::getNextId() {
+	ifstream auxID("producto.index", ios::in | ios::binary | ios::_Nocreate);
+
+	if (!auxID) {
+		setNextId(0);
+	}
+	
 	ifstream indiceIds("detalle.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
@@ -118,7 +125,7 @@ vector<vector<int>>* Detalle::getIndiceID() {
 
 	indiceIds.read(reinterpret_cast<char*>(&_id), 4);
 
-	vector<vector<int>>* aux;
+	vector<vector<int>>* aux = new vector<vector<int>>;
 	while (!indiceIds.eof()) {
 		indiceIds.read(reinterpret_cast<char*>(&_id), 4);
 		indiceIds.read(reinterpret_cast<char*>(&_posicion), 8);

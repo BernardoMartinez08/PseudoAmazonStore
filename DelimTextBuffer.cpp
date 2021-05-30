@@ -24,7 +24,7 @@ int DelimTextBuffer::Read(istream& file) {
 	return file.good();
 }
 
-int DelimTextBuffer::Write(ostream& file) {
+int DelimTextBuffer::Write(ostream& file) const{
 	file.write((char*)&BufferSize, sizeof(BufferSize));
 	
 	if (file.fail())
@@ -35,8 +35,7 @@ int DelimTextBuffer::Write(ostream& file) {
 }
 
 void DelimTextBuffer::Clear() {
-	if (Buffer != nullptr)
-		delete Buffer;
+	BufferSize = 0;
 	NextByte = 0;
 }
 
@@ -88,7 +87,7 @@ char* DelimTextBuffer::Unpack(char* _cadena) {
 		return nullptr;
 
 	_cadena = new char[tamanio + 1];
-	strncpy(_cadena, &Buffer[start], tamanio);
+	memcpy(_cadena, &Buffer[start], tamanio);
 	_cadena[tamanio] = '\0';
 	
 	return _cadena;

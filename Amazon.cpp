@@ -3,7 +3,6 @@
 
 void Amazon::agregarCliente() {
 	ofstream file("clientes.bin", ios::out | ios::app | ios::binary);
-	ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary);
 
 	if (!file) {
 		cout << "Error al intentar abrir el archivo .bin de clientes\n\n";
@@ -65,7 +64,9 @@ void Amazon::agregarCliente() {
 
 	nuevo.posicion = 0;
 	nuevo.size = 0;
+	nuevo.id = _id;
 
+	ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary);
 	nuevo.Write(file, fileIndex, delim);
 
 	file.close();
@@ -75,8 +76,6 @@ void Amazon::agregarCliente() {
 void Amazon::agregarProducto()
 {
 	ofstream file("productos.bin", ios::out | ios::app | ios::binary);
-	ofstream fileIndex("productos.index", ios::out | ios::app | ios::binary);
-
 
 	if (!file)
 	{
@@ -129,6 +128,8 @@ void Amazon::agregarProducto()
 
 	nuevo.posicion = 0;
 	nuevo.size = 0;
+
+	ofstream fileIndex("producto.index", ios::out | ios::app | ios::binary);
 	nuevo.Write(file, fileIndex, delim);
 
 	file.close();
@@ -216,12 +217,12 @@ void Amazon::consultarProducto(){
 
 	cout << " ****** C O N S U L T A  D E  P R O D U C T O S **** \n\n";
 
-	int menu;
+	int opcion = 0;
 
 	cout << "Elige la forma de busqueda :"
 		<< "\n 1.Buscar por Nombre  \n2.Buscar por codigo";
 
-	switch (menu)
+	switch (opcion)
 	{
 
 	case 1:
@@ -498,7 +499,7 @@ void Amazon::modificarCliente() {
 	ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary);
 
 	switch (opc) {
-	case 1:
+	case 1: {
 		char _codigo[13];
 		cout << "\nIngrese el nuevo Codigo: ";
 		cin >> _codigo;
@@ -509,12 +510,12 @@ void Amazon::modificarCliente() {
 
 		fileE.seekp(ios::end);
 		DelimTextBuffer delim('^', 300);
-		actual.Write(fileE,fileIndex,delim);
+		actual.Write(fileE, fileIndex, delim);
 
 		cout << "\nMODIFICADO.......\n";
 		break;
-
-	case 2:
+	}
+	case 2: {
 		char _primer_nombre[30];
 		cout << "\nIngrese el nuevo primer nombre: ";
 		cin >> _primer_nombre;
@@ -529,8 +530,8 @@ void Amazon::modificarCliente() {
 
 		cout << "\nMODIFICADO.......\n";
 		break;
-
-	case 3:
+	}
+	case 3: {
 		char _segundo_nombre[30];
 		cout << "\nIngrese el nuevo segundo nombre: ";
 		cin >> _segundo_nombre;
@@ -545,8 +546,8 @@ void Amazon::modificarCliente() {
 
 		cout << "\nMODIFICADO.......\n";
 		break;
-
-	case 4:
+	}
+	case 4: {
 		char _primer_apellido[30];
 		cout << "\nIngrese el nuevo primer apellido: ";
 		cin >> _primer_apellido;
@@ -561,8 +562,8 @@ void Amazon::modificarCliente() {
 
 		cout << "\nMODIFICADO.......\n";
 		break;
-
-	case 5:
+	}
+	case 5: {
 		char _segundo_apellido[30];
 		cout << "\nIngrese el nuevo segundo apellido: ";
 		cin >> _segundo_apellido;
@@ -577,8 +578,8 @@ void Amazon::modificarCliente() {
 
 		cout << "\nMODIFICADO.......\n";
 		break;
-
-	case 6:
+	}
+	case 6: {
 		char _genero[30];
 		cout << "\nIngrese el nuevo genero: ";
 		cin >> _genero;
@@ -593,8 +594,8 @@ void Amazon::modificarCliente() {
 
 		cout << "\nMODIFICADO.......\n";
 		break;
-
-	case 7:
+	}
+	case 7: {
 		char _ciudad[30];
 		cout << "\nIngrese el nueva ciudad: ";
 		cin >> _ciudad;
@@ -609,8 +610,8 @@ void Amazon::modificarCliente() {
 
 		cout << "\nMODIFICADO.......\n";
 		break;
-
-	case 8:
+	}
+	case 8: {
 		char _region[30];
 		cout << "\nIngrese el nueva region: ";
 		cin >> _region;
@@ -625,8 +626,8 @@ void Amazon::modificarCliente() {
 
 		cout << "\nMODIFICADO.......\n";
 		break;
-
-	case 9:
+	}
+	case 9: {
 		char _pais[30];
 		cout << "\nIngrese el nuevo primer apellido: ";
 		cin >> _pais;
@@ -641,6 +642,7 @@ void Amazon::modificarCliente() {
 
 		cout << "\nMODIFICADO.......\n";
 		break;
+	}
 	case 10:
 		cout << "\nSaliendo.......\n";
 		break;
@@ -701,7 +703,7 @@ void Amazon::modificarProducto(){
 	switch (opcion)
 
 	{
-	case 1:
+	case 1: {
 
 		char codigo[10];
 		cout << "\nIngrese el nuevo Codigo: ";
@@ -718,8 +720,8 @@ void Amazon::modificarProducto(){
 		cout << "Se esta Modificando ........... \n";
 
 		break;
-
-	case 2:
+	}
+	case 2: {
 
 		char categoria[25];
 		cout << "\n Ingrese la nueva categoria: ";
@@ -736,8 +738,8 @@ void Amazon::modificarProducto(){
 		cout << "Se esta Modificando ........... \n";
 
 		break;
-
-	case 3:
+	}
+	case 3: {
 		char sub_categoria[25];
 
 		cout << "\n Ingrese la nueva sub-categoria: ";
@@ -754,8 +756,8 @@ void Amazon::modificarProducto(){
 		cout << "Se esta Modificando ........... \n";
 		break;
 
-
-	case 4:
+	}
+	case 4: {
 		char nombre[200];
 
 		cout << "\Ingrese el nuevo Nombre: ";
@@ -776,8 +778,8 @@ void Amazon::modificarProducto(){
 
 		break;
 
-
-	case 5:
+	}
+	case 5: {
 
 		char descripcion[2000];
 		cout << "Ingrese Descripcion: ";
@@ -788,11 +790,11 @@ void Amazon::modificarProducto(){
 
 		DelimTextBuffer delim('^', 300);
 		actual.Write(fileE, fileIndex, delim);
-		
+
 		cout << "Se esta Modificando ........... \n";
 		break;
-
-	case 6:
+	}
+	case 6: {
 		float precio_actual;
 
 		cout << "Ingrese nuevo Precio: ";
@@ -807,6 +809,7 @@ void Amazon::modificarProducto(){
 		cout << "Se esta Modificando ........... \n";
 
 		break;
+	}
 	case 7:
 		cout << "\nSaliendo .... \n";
 		break;
