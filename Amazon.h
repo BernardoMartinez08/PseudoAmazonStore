@@ -17,6 +17,7 @@ public:
 	static void consultarCliente();
 	static void modificarCliente();
 	static void navegacionClientes();
+	static void eliminarClientes();//------
 
 
 	//Seccion Productos
@@ -24,6 +25,7 @@ public:
 	static void consultarProducto();
 	static void modificarProducto();
 	static void navegacionProductos();
+	static void eliminarProducto();
 	
 private:
 	//Seccion Clientes

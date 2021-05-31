@@ -866,3 +866,133 @@ bool Amazon::listarProductos(ifstream& file)
 
 	return true;
 }
+
+void Amazon::eliminarClientes()
+{
+	ifstream file("clientes.bin" ,ios::in | ios::binary);
+	ofstream fileE("clientes.bin" , ios::out | ios::app | ios::binary)
+	Busqueda buscador;
+
+	if (!file)
+	{
+		cout << "Error al intentar abrir el archivo .bin\n\n";
+		return;
+
+	}
+
+	char code[13];
+	cout << "**** E L I M I N A R  C L I E N T E ";
+	cout << "Ingrese el codigo del clientea a eliminar :";
+	cin >> code;
+
+	Cliente actual;
+	int posicion = -1;
+	int opcion;
+	if (buscador.buscarClienteCodigo(file, code))
+	{
+		DelimTextBuffer delim('^', 300);
+		posicion = file.tellg();
+		actual.Read(file, delim);
+		file.close();
+	}
+	else
+	{
+		cout << "\nNo se encontro el cliente que busca \n";
+		return
+	}
+
+
+	cout << "¿Esta seguro que Desea a eliminar el cliente completamente ? (1 Si) (2 No)"
+		cout << "Ingrese una opcion:";
+	cin >> opcion;
+
+	switch (opcion)
+	{
+	case 1:
+		actual.set_codigo("*");
+		fileE.seekp(posicion);
+
+		file.seekg(ios::end);
+		DelimTextBuffer delim('^', 300);
+		actual.Write(fileE, fileIndex, delim);
+
+		cout << "... Cliente Eliminado...."
+
+		break;
+
+	case 2:
+		break;
+
+	}
+}
+
+void Amazon::eliminarProducto()
+{
+	ifstream file("clientes.bin", ios::in | ios::binary);
+	ofstream fileE("clientes.bin", ios::out | ios::app | ios::binary);
+
+	Busqueda buscador;
+
+	if (!file)
+	{
+		cout << "Error al intentar abrir el archivo .bin\n\n";
+		return;
+
+	}
+
+	char code[10];
+	cout << "**** E L I M I N A R  P R O D U C T O  S  ";
+	cout << "Ingrese el codigo del producto  a eliminar :";
+	cin >> code;
+
+
+
+	Producto  actual;
+	int posicion = -1;
+	int opcion;
+
+	if (buscador.buscarProductoCodigo(file, code))
+	{
+		DelimTextBuffer delim('^', 300);
+		posicion = file.tellg();
+		actual.Read(file, delim);
+		file.close();
+	}
+	else
+	{
+		cout << "\nNo se encontro el producto que busca :(\n";
+		return
+	}
+
+
+	cout << "¿Esta seguro que Desea a eliminar el  producto completamente ? (1 Si) (2 No)"
+		cout << "Ingrese una opcion:";
+		cin >> opcion;
+
+
+
+		switch (opcion)
+		{
+		case 1:
+
+
+			actual.set_codigo("*");
+			fileE.seekp(posicion);
+
+			file.seekg(ios::end);
+			DelimTextBuffer delim('^', 300);
+			actual.Write(fileE, fileIndex, delim);
+
+			cout << "... Producto  Eliminado...."
+			break;
+
+		
+		}
+	
+
+	
+
+
+
+}
+

@@ -55,7 +55,7 @@ void clientes()
 	Amazon tienda;
 	int cliente;
 	cout << "\n\t*** SECCION CLIENTE  *****\n\n";
-	cout << "1.Agregar Cliente\n2.Consultar Clientes \n3.Navegacion de Clientes \n4.Modificar Clientes\n5.Listar Clientes\n6.Salir";
+	cout << "1.Agregar Cliente\n2.Consultar Clientes \n3.Navegacion de Clientes \n4.Modificar Clientes\n5.Listar Clientes\n6.Eliminar Cliente \n7. Salir";
 
 	cout << "Ingrese una opcion:";
 	cin >> cliente;
@@ -79,8 +79,13 @@ void clientes()
 		tienda.navegacionClientes();
 		break;
 
+	case 6:
+		tienda.eliminarClientes();
+		break;
+
 	default:
 		break;
+
 
 
 	}
@@ -93,7 +98,7 @@ void productos()
 	Amazon tienda;
 	int producto;
 	cout << "\n\t*** SECCION PRODUCTO *** \n\n";
-	cout << "1.Agregar Producto\n2.Consultar Producto \n3. Modificar Producto \n4.Navegacion Producto \n5. Salir";
+	cout << "1.Agregar Producto\n2.Consultar Producto \n3. Modificar Producto \n4.Navegacion Producto \n5.Eliminar Producto 6.Salir";
 
 	cout << "Ingrese una opcion: ";
 	cin >> producto;
@@ -114,6 +119,15 @@ void productos()
 
 	case 4:
 		tienda.navegacionProductos();
+		break;
+
+	case 5:
+		tienda.eliminarProducto();
+		break;
+
+
+	default:
+		
 		break;
 
 	}
