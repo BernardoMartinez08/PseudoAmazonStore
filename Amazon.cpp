@@ -868,7 +868,8 @@ bool Amazon::listarProductos()
 void Amazon::eliminarClientes()
 {
 	ifstream file("clientes.bin" ,ios::in | ios::binary);
-	ofstream fileE("clientes.bin" , ios::out | ios::app | ios::binary)
+	ofstream fileE("clientes.bin", ios::out | ios::app | ios::binary);
+	ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary);
 	Busqueda buscador;
 
 	if (!file)
@@ -896,12 +897,12 @@ void Amazon::eliminarClientes()
 	else
 	{
 		cout << "\nNo se encontro el cliente que busca \n";
-		return
+		return;
 	}
 
 
 	cout << "¿Esta seguro que Desea a eliminar el cliente completamente ? (1 Si) (2 No)"
-		cout << "Ingrese una opcion:";
+		 << "Ingrese una opcion:";
 	cin >> opcion;
 
 	switch (opcion)
@@ -914,7 +915,7 @@ void Amazon::eliminarClientes()
 		DelimTextBuffer delim('^', 300);
 		actual.Write(fileE, fileIndex, delim);
 
-		cout << "... Cliente Eliminado...."
+		cout << "... Cliente Eliminado....";
 
 		break;
 
@@ -926,8 +927,9 @@ void Amazon::eliminarClientes()
 
 void Amazon::eliminarProducto()
 {
-	ifstream file("clientes.bin", ios::in | ios::binary);
-	ofstream fileE("clientes.bin", ios::out | ios::app | ios::binary);
+	ifstream file("productos.bin", ios::in | ios::binary);
+	ofstream fileE("productos.bin", ios::out | ios::app | ios::binary);
+	ofstream fileIndex("prodcutos.index", ios::out | ios::app | ios::binary);
 
 	Busqueda buscador;
 
@@ -959,12 +961,12 @@ void Amazon::eliminarProducto()
 	else
 	{
 		cout << "\nNo se encontro el producto que busca :(\n";
-		return
+		return;
 	}
 
 
 	cout << "¿Esta seguro que Desea a eliminar el  producto completamente ? (1 Si) (2 No)"
-		cout << "Ingrese una opcion:";
+		 << "Ingrese una opcion:";
 		cin >> opcion;
 
 
@@ -981,7 +983,7 @@ void Amazon::eliminarProducto()
 			DelimTextBuffer delim('^', 300);
 			actual.Write(fileE, fileIndex, delim);
 
-			cout << "... Producto  Eliminado...."
+			cout << "... Producto  Eliminado....";
 			break;
 
 		
