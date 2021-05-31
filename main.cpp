@@ -76,7 +76,7 @@ void clientes()
 		break;
 
 	case 5:
-		tienda.navegacionClientes();
+		tienda.listarClientes();
 		break;
 
 	default:
@@ -113,7 +113,7 @@ void productos()
 		break;
 
 	case 4:
-		tienda.navegacionProductos();
+		tienda.listarProductos();
 		break;
 
 	}

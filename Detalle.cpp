@@ -27,11 +27,11 @@ int Detalle::Pack(DelimTextBuffer& _buffer) {
 
 int Detalle::Unpack(DelimTextBuffer& _buffer) {
 	int resultado = 1;
-	resultado = size = (int)_buffer.Unpack((char*)size);
-	resultado = id = (int)_buffer.Unpack((char*)id);
-	resultado = factura_id = (int)_buffer.Unpack((char*)factura_id);
-	resultado = producto_id = (int)_buffer.Unpack((char*)producto_id);
-	resultado = cantidad = (int)_buffer.Unpack((char*)cantidad);
+	size = _buffer.BufferSize;
+	resultado = id = atoi(_buffer.Unpack((char*)id));
+	resultado = factura_id = atoi(_buffer.Unpack((char*)factura_id));
+	resultado = producto_id = atoi(_buffer.Unpack((char*)producto_id));
+	resultado = cantidad = atoi(_buffer.Unpack((char*)cantidad));
 	resultado = precio_unit = (float)strtod(_buffer.Unpack((char*)&precio_unit), NULL);
 
 	return resultado;

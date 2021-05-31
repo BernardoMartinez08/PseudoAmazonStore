@@ -70,10 +70,10 @@ int Factura::Pack(DelimTextBuffer& _buffer) {
 
 int Factura::Unpack(DelimTextBuffer& _buffer) {
 	int resultado = 1;
-	resultado = this->size = (int)_buffer.Unpack((char*)size);
-	resultado = set_id((int)_buffer.Unpack((char*)id));
+	resultado = this->size = _buffer.BufferSize;
+	resultado = set_id(atoi(_buffer.Unpack((char*)id)));
 	resultado = set_codigo(_buffer.Unpack(codigo));
-	resultado = cliente_id = (int)(_buffer.Unpack((char*)cliente_id));
+	resultado = cliente_id = atoi(_buffer.Unpack((char*)cliente_id));
 	resultado = set_fecha(_buffer.Unpack(fecha));
 	resultado = set_hora(_buffer.Unpack(hora));
 	resultado = total_neto = (float)strtod(_buffer.Unpack((char*)&total_neto), NULL);

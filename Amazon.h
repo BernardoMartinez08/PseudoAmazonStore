@@ -25,12 +25,11 @@ public:
 	static void modificarProducto();
 	static void navegacionProductos();
 	
-private:
 	//Seccion Clientes
-	static bool listarClientes(istream&);
+	static bool listarClientes();
 
 	//Seccion Productos
-	static bool listarProductos(ifstream&);
+	static bool listarProductos();
 };
 
 #endif // !AMAZON_H

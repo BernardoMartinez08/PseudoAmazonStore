@@ -75,13 +75,13 @@ int Producto::Pack(DelimTextBuffer& _buffer){
 int Producto::Unpack(DelimTextBuffer& _buffer)
 {
 	int resultado = 1;
-	size = (int)_buffer.BufferSize;
-	resultado = id = (int)_buffer.Unpack((char*)id);
-	resultado = resultado && set_sub_categoria(_buffer.Unpack(codigo));
-	resultado = resultado && set_categoria(_buffer.Unpack(categoria));
-	resultado = resultado && set_sub_categoria(_buffer.Unpack(sub_categoria));
-	resultado = resultado && set_nombre(_buffer.Unpack(nombre));
-	resultado = resultado && set_descripcion(_buffer.Unpack(descripcion));
+	size = _buffer.BufferSize;
+	resultado = id = atoi(_buffer.Unpack((char*)id));
+	resultado = set_sub_categoria(_buffer.Unpack(codigo));
+	resultado = set_categoria(_buffer.Unpack(categoria));
+	resultado = set_sub_categoria(_buffer.Unpack(sub_categoria));
+	resultado = set_nombre(_buffer.Unpack(nombre));
+	resultado = set_descripcion(_buffer.Unpack(descripcion));
 	precio_actual = (float)strtod(_buffer.Unpack((char*)&precio_actual), NULL);
 
 	return resultado;

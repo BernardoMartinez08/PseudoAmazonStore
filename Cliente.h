@@ -7,6 +7,8 @@
 #include <vector>
 #include "DelimTextBuffer.h"
 #include <string>
+#include <cstdlib>
+
 using namespace std;
 
 class Cliente {

@@ -126,17 +126,17 @@ int Cliente::Pack(DelimTextBuffer& _buffer) {
 
 int Cliente::Unpack(DelimTextBuffer& _buffer) {
 	int resultado = 1;
-	resultado = this->size = (int)_buffer.Unpack((char*)size);
-	resultado = resultado && set_id((int)_buffer.Unpack((char*)id));
-	resultado = resultado && set_codigo(_buffer.Unpack(codigo));
-	resultado = resultado && set_primer_nombre(_buffer.Unpack(primer_nombre));
-	resultado = resultado && set_segundo_nombre(_buffer.Unpack(segundo_nombre));
-	resultado = resultado && set_primer_apellido(_buffer.Unpack(primer_apellido));
-	resultado = resultado && set_segundo_apellido(_buffer.Unpack(segundo_apellido));
-	resultado = resultado && set_genero(_buffer.Unpack(genero));
-	resultado = resultado && set_ciudad(_buffer.Unpack(ciudad));
-	resultado = resultado && set_region(_buffer.Unpack(region));
-	resultado = resultado && set_pais(_buffer.Unpack(pais));
+	size = _buffer.BufferSize;
+	resultado = set_id(atoi(_buffer.Unpack((char*)id)));
+	resultado = set_codigo(_buffer.Unpack(codigo));
+	resultado = set_primer_nombre(_buffer.Unpack(primer_nombre));
+	resultado = set_segundo_nombre(_buffer.Unpack(segundo_nombre));
+	resultado = set_primer_apellido(_buffer.Unpack(primer_apellido));
+	resultado = set_segundo_apellido(_buffer.Unpack(segundo_apellido));
+	resultado = set_genero(_buffer.Unpack(genero));
+	resultado = set_ciudad(_buffer.Unpack(ciudad));
+	resultado = set_region(_buffer.Unpack(region));
+	resultado = set_pais(_buffer.Unpack(pais));
 
 	return resultado;
 }
@@ -160,7 +160,7 @@ int Cliente::Write(ostream& file, ostream& fileIndex, DelimTextBuffer& _delim) {
 void Cliente::print() {
 	cout << "\nId: " << id 
 		 << "\nCodigo: " << codigo
-		 << "\Nombre: " << primer_nombre << " " << segundo_nombre << " " << primer_apellido << " " << segundo_apellido
+		 << "\nNombre: " << primer_nombre << " " << segundo_nombre << " " << primer_apellido << " " << segundo_apellido
 	     << "\nGenero: " << genero
 		 << "\nCiudad: " << ciudad
 		 << "\nRegion: " << region
