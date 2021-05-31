@@ -154,6 +154,10 @@ void Amazon::consultarCliente() {
 	cout << "Elige la forma de busqueda que desea realizar: "
 		 << "\n1. Buscar por Nombre. \n2. Buscar por Codigo. \n3. Listar los Clientes.\n4. Salir";
 	
+	//agregue  esto
+	cout << "Ingrese una opcion: ";
+	cin >> opc;
+	
 	switch (opc)
 	{
 	case 1:
@@ -198,7 +202,7 @@ void Amazon::consultarCliente() {
 		cout << "\nSaliendo......\n";
 		break;
 	default:
-		cout << "\nOPCION INCORRECTA.\n";
+		//cout << "\nOPCION INCORRECTA.\n";
 		break;
 	}
 
@@ -221,6 +225,10 @@ void Amazon::consultarProducto(){
 
 	cout << "Elige la forma de busqueda :"
 		<< "\n 1.Buscar por Nombre  \n2.Buscar por codigo";
+	cout << "Ingrese una opcion:";
+	cin >> opcion;
+
+	cout << "\n";
 
 	switch (opcion)
 	{
