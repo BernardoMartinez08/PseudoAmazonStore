@@ -72,7 +72,7 @@ void Amazon::agregarCliente() {
 	file.close();
 	fileIndex.close();
 }
-
+//--error
 void Amazon::agregarProducto()
 {
 	ofstream file("productos.bin", ios::out | ios::app | ios::binary);
