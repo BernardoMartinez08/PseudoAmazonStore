@@ -13,9 +13,13 @@ bool Busqueda::buscarClienteCodigo(istream& file, const char* _codigo) {
 
 		actual.Read(file, delim);
 
-		if (actual.codigo == _codigo) {
-			file.seekg(posicion);
-			return true;
+		if (actual.id != 0) {
+			
+			if (strcmp(actual.codigo, _codigo) == 0) {
+				file.seekg(posicion);
+				cout << "AQUI";
+				return true;
+			}
 		}
 	}
 	return false;
@@ -33,15 +37,18 @@ bool Busqueda::buscarClienteNombre(istream& file, const char* _nombre) {
 
 		actual.Read(file, delim);
 
-		char* nombreCompreto = new char[strlen(actual.primer_nombre)];
-		strcpy_s(nombreCompreto, strlen(actual.primer_nombre) + 1, actual.primer_nombre);
-		strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(actual.segundo_nombre) + 1, actual.segundo_nombre);
-		strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(actual.primer_apellido) + 1, actual.primer_apellido);
-		strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(actual.segundo_apellido) + 1, actual.segundo_apellido);
+		if (actual.id != 0) {
+			char* nombreCompreto = new char[strlen(actual.primer_nombre)];
+			strcpy_s(nombreCompreto, strlen(actual.primer_nombre) + 1, actual.primer_nombre);
+			strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(actual.segundo_nombre) + 1, actual.segundo_nombre);
+			strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(actual.primer_apellido) + 1, actual.primer_apellido);
+			strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(actual.segundo_apellido) + 1, actual.segundo_apellido);
 
-		if (_nombre == nombreCompreto) {
-			file.seekg(posicion);
-			return true;
+			if (strcmp(_nombre,nombreCompreto) == 0) {
+				file.seekg(posicion);
+				cout << "AQUI";
+				return true;
+			}
 		}
 	}
 	return false;
@@ -61,10 +68,12 @@ bool Busqueda::buscarClienteID(istream& file, int _id) {
 
 		actual.Read(file, delim);
 
-		if (actual.id == _id)
-		{
-			file.seekg(posicion);
-			return true;
+		if (actual.id != 0) {
+			if (actual.id == _id)
+			{
+				file.seekg(posicion);
+				return true;
+			}
 		}
 	}
 
@@ -92,10 +101,12 @@ bool Busqueda::buscarProductoCodigo(istream& file, const char* _codigo){
 
 		actual.Read(file, delim);
 
-		if (actual.codigo == _codigo)
-		{
-			file.seekg(posicion);
-			return true;
+		if (actual.id != 0) {
+			if (strcmp(actual.codigo,_codigo) == 0)
+			{
+				file.seekg(posicion);
+				return true;
+			}
 		}
 	}
 
@@ -116,11 +127,13 @@ bool Busqueda::buscarProductoNombre(istream& file, const char* _nombre){
 		actual.Read(file, delim);
 		char* nombre = actual.nombre;
 
-		if (_nombre == nombre)
-		{
-			file.seekg(posicion);
+		if (actual.id != 0) {
+			if (strcmp(_nombre,nombre) == 0)
+			{
+				file.seekg(posicion);
 
-			return true;
+				return true;
+			}
 		}
 	}
 
@@ -141,10 +154,12 @@ bool Busqueda::buscarProductoID(istream& file, int _id) {
 
 		actual.Read(file, delim);
 
-		if (actual.id == _id)
-		{
-			file.seekg(posicion);
-			return true;
+		if (actual.id != 0) {
+			if (actual.id == _id)
+			{
+				file.seekg(posicion);
+				return true;
+			}
 		}
 	}
 
@@ -172,10 +187,12 @@ bool Busqueda::buscarFacturaCodigo(istream& file, const char* _codigo){
 
 		actual.Read(file, delim);
 
-		if (actual.codigo == _codigo)
-		{
-			file.seekg(posicion);
-			return true;
+		if (actual.id != 0) {
+			if (strcmp(actual.codigo,_codigo) == 0)
+			{
+				file.seekg(posicion);
+				return true;
+			}
 		}
 	}
 
@@ -195,11 +212,13 @@ bool Busqueda::buscarFacturaCliente(istream& file, int _id_cliente){
 
 		actual.Read(file, delim);
 		
-		if (actual.cliente_id == _id_cliente)
-		{
-			file.seekg(posicion);
+		if (actual.id != 0) {
+			if (actual.cliente_id == _id_cliente)
+			{
+				file.seekg(posicion);
 
-			return true;
+				return true;
+			}
 		}
 	}
 
@@ -220,10 +239,12 @@ bool Busqueda::buscarFacturaID(istream& file, int _id) {
 
 		actual.Read(file, delim);
 
-		if (actual.id == _id)
-		{
-			file.seekg(posicion);
-			return true;
+		if (actual.id != 0) {
+			if (actual.id == _id)
+			{
+				file.seekg(posicion);
+				return true;
+			}
 		}
 	}
 
@@ -249,11 +270,13 @@ bool Busqueda::buscarDetalleFactura(istream& file, int _id_factura) {
 
 		actual.Read(file, delim);
 
-		if (actual.factura_id == _id_factura)
-		{
-			file.seekg(posicion);
+		if (actual.id != 0) {
+			if (actual.factura_id == _id_factura)
+			{
+				file.seekg(posicion);
 
-			return true;
+				return true;
+			}
 		}
 	}
 
@@ -273,11 +296,13 @@ bool Busqueda::buscarDetalleProducto(istream& file, int _id_producto) {
 
 		actual.Read(file, delim);
 
-		if (actual.producto_id == _id_producto)
-		{
-			file.seekg(posicion);
+		if (actual.id != 0) {
+			if (actual.producto_id == _id_producto)
+			{
+				file.seekg(posicion);
 
-			return true;
+				return true;
+			}
 		}
 	}
 
@@ -298,10 +323,12 @@ bool Busqueda::buscarDetalleID(istream& file, int _id) {
 
 		actual.Read(file, delim);
 
-		if (actual.id == _id)
-		{
-			file.seekg(posicion);
-			return true;
+		if (actual.id != 0) {
+			if (actual.id == _id)
+			{
+				file.seekg(posicion);
+				return true;
+			}
 		}
 	}
 

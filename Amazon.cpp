@@ -72,7 +72,7 @@ void Amazon::agregarCliente() {
 	file.close();
 	fileIndex.close();
 }
-//--error
+
 void Amazon::agregarProducto()
 {
 	ofstream file("productos.bin", ios::out | ios::app | ios::binary);
@@ -134,9 +134,6 @@ void Amazon::agregarProducto()
 
 	file.close();
 	fileIndex.close();
-
-
-
 }
 
 void Amazon::consultarCliente() {
@@ -195,7 +192,7 @@ void Amazon::consultarCliente() {
 		break;
 
 	case 3:
-		listarClientes(file);
+		listarClientes();
 		break;
 
 	case 4:
@@ -272,7 +269,7 @@ void Amazon::consultarProducto(){
 		break;
 	case 3:
 
-		listarProductos(file);
+		listarProductos();
 		break;
 	case 4:
 		cout << "\n Saliendo ...\n";
@@ -695,9 +692,6 @@ void Amazon::modificarProducto(){
 		return;
 	}
 
-	//codigo=10, categoria 25  subcategoria 25 , nombre 200 
-	//descripcion-  2000 precio float
-
 	int opcion = 0;
 
 	cout << "Elige un numero para editar: "
@@ -829,8 +823,9 @@ void Amazon::modificarProducto(){
 
 }
 
-bool Amazon::listarClientes(istream& file) {
-	cout << " ***** L I S T A  D E  C L I E N T E S ***** \n\n";
+bool Amazon::listarClientes() {
+	ifstream file("clientes.bin", ios::in | ios::binary);
+	cout << "\n\n***** L I S T A  D E  C L I E N T E S *****\n\n";
 	file.seekg(0);
 
 	Cliente actual;
@@ -839,15 +834,17 @@ bool Amazon::listarClientes(istream& file) {
 		Cliente actual;
 
 		actual.Read(file, delim);
-		actual.print();
+		if(actual.id != 0)
+			actual.print();
 	}
 
 	return true;
 }
 
-bool Amazon::listarProductos(ifstream& file)
+bool Amazon::listarProductos()
 {
-	cout << "*** L I S T A D O   D E  P R O D U C T O S ** \n\n";
+	ifstream file("productos.bin", ios::in | ios::binary);
+	cout << "\n\n*** L I S T A D O   D E  P R O D U C T O S ***\n\n";
 
 	file.seekg(0);
 
@@ -861,7 +858,8 @@ bool Amazon::listarProductos(ifstream& file)
 
 		actual.Read(file, delim);
 
-		actual.print();
+		if (actual.id != 0)
+			actual.print();
 	}
 
 	return true;

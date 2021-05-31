@@ -9,6 +9,7 @@
 #include "Factura.h"
 #include "Detalle.h"
 #include "DelimTextBuffer.h"
+#include <cstring>
 using namespace std;
 
 

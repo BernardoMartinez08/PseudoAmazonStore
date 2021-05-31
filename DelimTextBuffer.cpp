@@ -31,6 +31,7 @@ int DelimTextBuffer::Write(ostream& file) const{
 		return false;
 
 	file.write(Buffer, BufferSize);
+	cout << BufferSize << " " << Buffer;
 	return file.good();
 }
 
@@ -43,7 +44,6 @@ int DelimTextBuffer::Pack(const char* _cadena, int _size) {
 	int tamanio = -1;
 	int start = NextByte;
 
-	cout << "\n\nTo Pack: " << _cadena;
 	if (_size >= 0)
 		tamanio = _size;
 	else
@@ -89,6 +89,6 @@ char* DelimTextBuffer::Unpack(char* _cadena) {
 	_cadena = new char[tamanio + 1];
 	memcpy(_cadena, &Buffer[start], tamanio);
 	_cadena[tamanio] = '\0';
-	
+
 	return _cadena;
 }
