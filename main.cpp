@@ -12,40 +12,42 @@ int main()
 {
 	Amazon tienda;
 	Cliente aux;
-	int opcion;
+	int opcion = 0;
 	//int cliente;
 	int producto;
 
-	cout << "\n\t**** TIENDA VIRTUAL DE AMAZON *********\n\n";
-	
-	cout << "1.Clientes \n2.Productos\n3.Facturas\n4.Salir\n ";
+
+	while (opcion != 4) {
+		cout << "\n\t**** TIENDA VIRTUAL DE AMAZON *********\n\n";
+
+		cout << "1.Clientes \n2.Productos\n3.Facturas\n4.Salir\n ";
 		cout << "Ingrese una opcion:";
 		cin >> opcion;
 
 		cout << "\n";
-	switch (opcion)
-	{
-	case 1:
 
-		clientes();
-		
-		break;
+		switch (opcion)
+		{
+		case 1:
+			clientes();
+			break;
 
-	case 2:
-		
-		productos();
-	
-		break;
+		case 2:
+			productos();
+			break;
 
-	case 3:
-		break;
+		case 3:
+			cout << "\n...EN CONSTRUCCION....";
+			break;
 
-	default:
-		cout << "...Saliendo ....";
-		break;
-
+		case 4:
+			cout << "\n...Saliendo....";
+			break;
+		default:
+			cout << "\nOPCION NO VALIDA";
+			break;
+		}
 	}
-	
 	_getch();
 }
 
@@ -84,13 +86,9 @@ void clientes()
 		break;
 
 	default:
+		cout << "\nOPCION NO VALIDA";
 		break;
-
-
-
 	}
-
-	
 }
 
 void productos()
@@ -125,11 +123,9 @@ void productos()
 		tienda.eliminarProducto();
 		break;
 
-
 	default:
-		
+		cout << "\nOPCION NO VALIDA";
 		break;
-
 	}
 
 }

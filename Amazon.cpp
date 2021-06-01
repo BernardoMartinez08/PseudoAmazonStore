@@ -920,7 +920,7 @@ void Amazon::eliminarClientes()
 
 	switch (opcion)
 	{
-	case 1:
+	case 1: {
 		actual.id = 0;
 		fileE.seekp(posicion);
 
@@ -930,7 +930,7 @@ void Amazon::eliminarClientes()
 		cout << "... Cliente Eliminado....";
 
 		break;
-
+	}
 	case 2:
 		cout << "... Operacion Cancelada....";
 		break;
@@ -990,7 +990,7 @@ void Amazon::eliminarProducto()
 
 	switch (opcion)
 	{
-	case 1:
+	case 1: {
 
 
 		actual.set_codigo("*");
@@ -1001,7 +1001,7 @@ void Amazon::eliminarProducto()
 
 		cout << "... Producto  Eliminado....";
 		break;
-
+	}
 	case 2:
 		cout << "... Operacion Cancelada....";
 		break;
