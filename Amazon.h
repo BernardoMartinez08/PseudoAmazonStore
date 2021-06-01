@@ -7,6 +7,9 @@
 #include "Producto.h"
 #include "Cliente.h"
 #include "DelimTextBuffer.h"
+#include <vector>
+#include "Detalle.h"
+#include "Factura.h"
 using namespace std;
 
 
@@ -17,8 +20,7 @@ public:
 	static void consultarCliente();
 	static void modificarCliente();
 	static void navegacionClientes();
-	static void eliminarClientes();//------
-
+	static void eliminarClientes();
 
 	//Seccion Productos
 	static void agregarProducto();
@@ -32,6 +34,12 @@ public:
 
 	//Seccion Productos
 	static bool listarProductos();
+
+	//Seccion Factura - Prototipo
+	static void facturar();
+
+private:
+	static void agregarAlCarrito(vector<Detalle>&, Detalle);
 };
 
 #endif // !AMAZON_H

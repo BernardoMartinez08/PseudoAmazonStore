@@ -334,3 +334,66 @@ bool Busqueda::buscarDetalleID(istream& file, int _id) {
 
 	return false;
 }
+
+
+
+
+
+
+//SECCION DE BORRAR HISTORIAL
+bool Busqueda::eliminarFacturasCliente(int _id_cliente) {
+	fstream file("facturas.bin", ios::in | ios::out | ios::binary);
+	ofstream fileIndex("facturas.index", ios::in | ios::binary);
+
+	while (!file.eof())
+	{
+		DelimTextBuffer delim('^', 300);
+		Factura actual;
+
+		int posicion = -1;
+		posicion = file.tellg();
+
+		actual.Read(file, delim);
+
+		if (actual.id != 0) {
+			if (actual.cliente_id == _id_cliente)
+			{
+				DelimTextBuffer delim('^', 300);
+				file.seekg(posicion);
+				actual.id = 0;
+				actual.Write(file, fileIndex, delim);
+			}
+		}
+	}
+
+	file.close();
+	return true;
+}
+
+bool Busqueda::eliminarDetallesFactura(int _id_factura) {
+	fstream file("detalles.bin", ios::in | ios::binary);
+	ofstream fileIndex("detalles.index", ios::in | ios::binary);
+
+	while (!file.eof())
+	{
+		DelimTextBuffer delim('^', 300);
+		Detalle actual;
+
+		int posicion = -1;
+		posicion = file.tellg();
+
+		actual.Read(file, delim);
+
+		if (actual.id != 0) {
+			if (actual.factura_id == _id_factura)
+			{
+				DelimTextBuffer delim('^', 300);
+				file.seekg(posicion);
+				actual.id = 0;
+				actual.Write(file, fileIndex, delim);
+			}
+		}
+	}
+	file.close();
+	return true;
+}

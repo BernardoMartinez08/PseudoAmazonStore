@@ -10,6 +10,7 @@
 #include "Detalle.h"
 #include "DelimTextBuffer.h"
 #include <cstring>
+#include <vector>
 using namespace std;
 
 
@@ -35,6 +36,10 @@ public:
 	static bool buscarDetalleProducto(istream&, int _id_producto);
 	static bool buscarDetalleID(istream&, int _id);
 
+
+	//Seccion de Historial
+	static bool eliminarFacturasCliente(int _id_cliente);
+	static bool eliminarDetallesFactura(int _id_factura);
 };
 
 #endif // !BUSQUEDAS_SECUENCIALES_H

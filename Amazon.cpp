@@ -380,6 +380,8 @@ void Amazon::navegacionClientes() {
 			}
 		}
 	}
+
+	file.close();
 }
 
 void Amazon::navegacionProductos()
@@ -462,6 +464,8 @@ void Amazon::navegacionProductos()
 
 		}
 	}
+
+	file.close();
 }
 
 void Amazon::modificarCliente() {
@@ -656,6 +660,10 @@ void Amazon::modificarCliente() {
 		cout << "\nOPCION INCORRECTA.......\n";
 		break;
 	}
+
+	file.close();
+	fileE.close();
+	fileIndex.close();
 }
 
 void Amazon::modificarProducto(){
@@ -821,6 +829,9 @@ void Amazon::modificarProducto(){
 		break;
 	}
 
+	file.close();
+	fileE.close();
+	fileIndex.close();
 }
 
 bool Amazon::listarClientes() {
@@ -838,6 +849,7 @@ bool Amazon::listarClientes() {
 			actual.print();
 	}
 
+	file.close();
 	return true;
 }
 
@@ -862,6 +874,7 @@ bool Amazon::listarProductos()
 			actual.print();
 	}
 
+	file.close();
 	return true;
 }
 
@@ -872,7 +885,7 @@ void Amazon::eliminarClientes()
 	ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary);
 	Busqueda buscador;
 
-	if (!file)
+	if (!file && !fileE && !fileIndex)
 	{
 		cout << "Error al intentar abrir el archivo .bin\n\n";
 		return;
@@ -908,10 +921,9 @@ void Amazon::eliminarClientes()
 	switch (opcion)
 	{
 	case 1:
-		actual.set_codigo("*");
+		actual.id = 0;
 		fileE.seekp(posicion);
 
-		file.seekg(ios::end);
 		DelimTextBuffer delim('^', 300);
 		actual.Write(fileE, fileIndex, delim);
 
@@ -920,32 +932,35 @@ void Amazon::eliminarClientes()
 		break;
 
 	case 2:
+		cout << "... Operacion Cancelada....";
 		break;
 
 	}
+
+	file.close();
+	fileE.close();
+	fileIndex.close();
 }
 
 void Amazon::eliminarProducto()
 {
 	ifstream file("productos.bin", ios::in | ios::binary);
+	ifstream fileDetalles("detalles.bin", ios::in | ios::binary);
 	ofstream fileE("productos.bin", ios::out | ios::app | ios::binary);
 	ofstream fileIndex("prodcutos.index", ios::out | ios::app | ios::binary);
 
 	Busqueda buscador;
 
-	if (!file)
+	if (!file && !fileDetalles && !fileE && !fileIndex)
 	{
 		cout << "Error al intentar abrir el archivo .bin\n\n";
 		return;
-
 	}
 
 	char code[10];
 	cout << "**** E L I M I N A R  P R O D U C T O  S  ";
 	cout << "Ingrese el codigo del producto  a eliminar :";
 	cin >> code;
-
-
 
 	Producto  actual;
 	int posicion = -1;
@@ -964,35 +979,188 @@ void Amazon::eliminarProducto()
 		return;
 	}
 
+	if (buscador.buscarDetalleProducto(fileDetalles, actual.id)) {
+		cout << "\nEste producto tiene facturas asociadas, no puede eliminarse.";
+		return;
+	}
 
 	cout << "¿Esta seguro que Desea a eliminar el  producto completamente ? (1 Si) (2 No)"
-		 << "Ingrese una opcion:";
-		cin >> opcion;
+		<< "Ingrese una opcion:";
+	cin >> opcion;
+
+	switch (opcion)
+	{
+	case 1:
 
 
+		actual.set_codigo("*");
+		fileE.seekp(posicion);
 
-		switch (opcion)
-		{
-		case 1:
+		DelimTextBuffer delim('^', 300);
+		actual.Write(fileE, fileIndex, delim);
+
+		cout << "... Producto  Eliminado....";
+		break;
+
+	case 2:
+		cout << "... Operacion Cancelada....";
+		break;
+	}
+
+	file.close();
+	fileE.close();
+	fileDetalles.close();
+	fileIndex.close();
+}
+
+void Amazon::facturar() {
+	fstream fileF("facturas.bin", ios::in | ios::out | ios::binary);
+	ofstream fileFIndex("facturas.index", ios::in | ios::binary);
+
+	fstream fileD("detalles.bin", ios::in | ios::binary);
+	ofstream fileDIndex("detalles.index", ios::in | ios::binary);
+
+	ifstream fileC("clientes.bin", ios::in | ios::binary);
+	ifstream fileP("productos.bin", ios::in | ios::binary);
+
+	if (!fileF && !fileFIndex && fileD && fileDIndex && fileP) {
+		cout << "\nError al intentar abrir los archivos :(\n";
+		return;
+	}
+
+	Busqueda buscardor;
+	Factura factura;
+
+	factura.id = factura.getNextId();
+
+	char _codigo[13];
+
+	cout << "\nIndique codigo para su Factura: ";
+	cin >> _codigo;
+
+	factura.set_codigo(_codigo);
 
 
-			actual.set_codigo("*");
-			fileE.seekp(posicion);
+	char _codigoCliente[13];
 
-			file.seekg(ios::end);
+	cout << "INGRESE LOS DATOS PARA EL CLIENTE:\nIndique codigo: ";
+	cin >> _codigoCliente;
+	bool clienteEncontrado = false;
+	
+	while (clienteEncontrado == false) {
+		fileC.seekg(0);
+		if (buscardor.buscarClienteCodigo(fileC, _codigoCliente)) {
+			Cliente cliente;
 			DelimTextBuffer delim('^', 300);
-			actual.Write(fileE, fileIndex, delim);
+			cliente.Read(fileC, delim);
+			
+			if (cliente.id != 0) {
+				factura.cliente_id = cliente.id;
+				clienteEncontrado = true;
+			}
+		}
+		else {
+			cout << "\nNo se encontro el cliente que busca, intente denuevo, Si desea crear uno precione 1, para intentar denuevo precione 2";
+			int opc = 1;
+			cin >> opc;
 
-			cout << "... Producto  Eliminado....";
-			break;
+			switch (opc) {
+			case 1:
+				agregarCliente();
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	bool agregarProd = true;
+	vector<Detalle> carrito;
+	while (agregarProd) {
+		char _codigoProducto[10]; 
+		cout << "\nIndique codigo del producto: ";
+		cin >> _codigoProducto;
+
+		if (buscardor.buscarProductoCodigo(fileP,_codigoProducto)) {
+			int cantidad =1;
+			cout << "\nIndique la cantidad del producto: ";
+			cin >> cantidad;
+
+			Producto producto;
+			Detalle detalle;
+			DelimTextBuffer delim('^', 300);
+			producto.Read(fileP, delim);
+
+			if (producto.id != 0) {
+				detalle.id = detalle.getNextId();
+				detalle.factura_id = factura.id;
+				detalle.producto_id = producto.id;
+				detalle.cantidad = cantidad;
+				detalle.precio_unit = producto.precio_actual;
+				agregarAlCarrito(carrito,detalle);
+			}
+
+			int opc = 0;
+			cout << "\nDesea Agregar Mas Productos al Carrito?? 1 (Si), 2(No): ";
+			cin >> opc;
+
+			switch (opc)
+			{
+			case 1:
+				agregarProd = true;
+				break;
+			default:
+				agregarProd = false;
+				break;
+			}
+		}
+	}
+
+	if (!carrito.empty()) {
+		for (int i = 0; i < carrito.size(); i++) {
+			factura.total_neto += carrito[i].precio_unit;
+			DelimTextBuffer delim('^', 300);
+			carrito[i].Write(fileD,fileDIndex,delim);
+		}
+
+		if (factura.total_neto != 0)
+			factura.total_impuesto = (factura.total_neto * 0.15);
+		else
+			factura.total_impuesto = 0;
+
+		factura.ubicacion_X = 0;
+		factura.ubicacion_Y = 0;
+
+		DelimTextBuffer delim2('^', 300);
+		factura.Write(fileF, fileFIndex, delim2);
+
+		factura.print();
 
 		
+		cout << "\nTotal a pagar: " << (factura.total_neto + factura.total_impuesto) << "\n\nFACTURA PROCESADA.!!!!!!!";
+	}
+}
+
+void Amazon::agregarAlCarrito(vector<Detalle>& _carrito, Detalle _producto) {
+	bool existe = false;
+	if (_carrito.empty()) {
+		_carrito.push_back(_producto);
+		cout << "\nAgregado al Carrito!!!\n";
+		return;
+	}
+
+	
+	for (int i = 0; i < _carrito.size(); i++) {
+		if (_carrito[i].producto_id== _producto.producto_id) {
+			_carrito[i].cantidad += _producto.cantidad;
+			existe = true;
+			break;
 		}
-	
+	}
 
-	
+	if (!existe)
+		_carrito.push_back(_producto);
 
-
-
+	cout << "\nAgregado al Carrito!!!\n";
 }
 
