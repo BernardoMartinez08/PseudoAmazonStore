@@ -17,7 +17,6 @@ bool Busqueda::buscarClienteCodigo(istream& file, const char* _codigo) {
 			
 			if (strcmp(actual.codigo, _codigo) == 0) {
 				file.seekg(posicion);
-				cout << "AQUI";
 				return true;
 			}
 		}
@@ -46,7 +45,6 @@ bool Busqueda::buscarClienteNombre(istream& file, const char* _nombre) {
 
 			if (strcmp(_nombre,nombreCompreto) == 0) {
 				file.seekg(posicion);
-				cout << "AQUI";
 				return true;
 			}
 		}

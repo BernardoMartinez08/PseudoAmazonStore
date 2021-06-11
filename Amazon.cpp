@@ -150,8 +150,7 @@ void Amazon::consultarCliente() {
 	int opc = 0;
 	cout << "Elige la forma de busqueda que desea realizar: "
 		 << "\n1. Buscar por Nombre. \n2. Buscar por Codigo. \n3. Listar los Clientes.\n4. Salir";
-	
-	//agregue  esto
+
 	cout << "Ingrese una opcion: ";
 	cin >> opc;
 	
@@ -199,7 +198,7 @@ void Amazon::consultarCliente() {
 		cout << "\nSaliendo......\n";
 		break;
 	default:
-		//cout << "\nOPCION INCORRECTA.\n";
+		cout << "\nOPCION INCORRECTA.\n";
 		break;
 	}
 
@@ -290,10 +289,11 @@ void Amazon::navegacionClientes() {
 		DelimTextBuffer delim('^', 300);
 		Cliente actual;
 
+		long posicion = file.tellg();
 		actual.Read(file, delim);
 		actual.print();
 
-		if (file.tellg() == 0) {
+		if (posicion == 0) {
 			int opc = 0;
 			cout << "1. Regresar al menu anterior.\n2. Modificar Registro.\n3. Eliminar Registro.\n4. Siguiente Registro.\n5. Salir al menu.\n";
 			cin >> opc;
@@ -305,17 +305,17 @@ void Amazon::navegacionClientes() {
 				break;
 
 			case 2:
-				modificarCliente();
+				modificarCliente(actual.codigo);
 				file.close();
 				break;
 
 			case 3:
-				//Pendiente.
+				eliminarClientes(actual.codigo);
 				file.close();
 				break;
 
 			case 4:
-				posAnterior = file.tellg();
+				posAnterior = posicion;
 				break;
 
 			case 5:
@@ -323,7 +323,7 @@ void Amazon::navegacionClientes() {
 				break;
 			}
 
-		}else if (file.tellg() != 0 && file.tellg() != file.eof()) {
+		}else if (posicion != 0 && posicion != file.eof()) {
 			int opc = 0;
 			cout << "1. Registro anterior.\n2. Modificar Registro.\n3. Eliminar Registro.\n4. Siguiente Registro.\n5. Salir al menu.\n";
 			cin >> opc;
@@ -334,18 +334,17 @@ void Amazon::navegacionClientes() {
 				break;
 
 			case 2:
-				modificarCliente();
+				modificarCliente(actual.codigo);
 				file.close();
 				break;
 
 			case 3:
-				posAnterior = file.tellg();
-				//Pendiente.
+				eliminarClientes(actual.codigo);
 				file.close();
 				break;
 
 			case 4:
-				posAnterior = file.tellg();
+				posAnterior = posicion;
 				break;
 
 			case 5:
@@ -364,13 +363,12 @@ void Amazon::navegacionClientes() {
 				break;
 
 			case 2:
-				modificarCliente();
+				modificarCliente(actual.codigo);
 				file.close();
 				break;
 
 			case 3:
-				posAnterior = file.tellg();
-				//Pendiente.
+				eliminarClientes(actual.codigo);
 				file.close();
 				break;
 
@@ -468,7 +466,7 @@ void Amazon::navegacionProductos()
 	file.close();
 }
 
-void Amazon::modificarCliente() {
+void Amazon::modificarCliente(const char* _code) {
 	ifstream file("clientes.bin", ios::in | ios::binary);
 	Busqueda buscador;
 
@@ -479,11 +477,15 @@ void Amazon::modificarCliente() {
 
 	cout << " ***** M O D I F I C A R  C L I E N T E S ***** \n\n";
 
-	char _code[13];
-	
-	cout << "\nIngrese el Codigo del Cliente: ";
-	cin >> _code;
-
+	char* code;
+	if (_code == nullptr) {
+		code = new char[13];
+		cout << "Ingrese el codigo del clientea a modificar :";
+		cin >> code;
+	}else {
+		code = new char[strlen(_code)];
+		strcpy_s(code, strlen(_code) + 1, _code);
+	}
 
 	Cliente actual;
 	int posicion = -1;
@@ -492,173 +494,132 @@ void Amazon::modificarCliente() {
 		posicion = file.tellg();
 		actual.Read(file, delim);
 		file.close();
-	}
-	else {
+	}else {
 		cout << "\nNo se encontro el cliente que busca :(\n";
 		return;
-
 	}
 
-	int opc = 0;
-	cout << "Elige un parametro a editar: "
-		<< "\n1. Modificar Codigo. \n2. Modificar Primer Nombre. \n3. Modificar Segundo Nombre. \n4. Modificar Primer Apellido." 
-		<< " \n5. Modificar Segundo Apellido. \n6. Modificar Genero. \n7. Modificar Ciudad. \n8. Modificar Region. \n9. Modificar Pais. \n10.Salir.";
-
-	ofstream fileE("clientes.bin", ios::out | ios::binary | ios::app);
+	fstream fileE("clientes.bin", ios::out | ios::in | ios::binary);
 	ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary);
 
-	switch (opc) {
-	case 1: {
-		char _codigo[13];
-		cout << "\nIngrese el nuevo Codigo: ";
-		cin >> _codigo;
+	int opc = 0;
+	bool modifico = false;
+	while (opc != 10) {
+		cout << "Elige un parametro a editar: "
+			<< "\n1. Modificar Codigo. \n2. Modificar Primer Nombre. \n3. Modificar Segundo Nombre. \n4. Modificar Primer Apellido."
+			<< " \n5. Modificar Segundo Apellido. \n6. Modificar Genero. \n7. Modificar Ciudad. \n8. Modificar Region. \n9. Modificar Pais. \n10.Guardar Cambios y Salir.\n";
+		cin >> opc;
 
-		actual.set_codigo(_codigo);
+		switch (opc) {
+		case 1: {
+			char _codigo[13];
+			cout << "\nIngrese el nuevo Codigo: ";
+			cin >> _codigo;
+
+			actual.set_codigo(_codigo);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+		}
+		case 2: {
+			char _primer_nombre[30];
+			cout << "\nIngrese el nuevo primer nombre: ";
+			cin >> _primer_nombre;
+
+			actual.set_primer_nombre(_primer_nombre);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+		}
+		case 3: {
+			char _segundo_nombre[30];
+			cout << "\nIngrese el nuevo segundo nombre: ";
+			cin >> _segundo_nombre;
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+		}
+		case 4: {
+			char _primer_apellido[30];
+			cout << "\nIngrese el nuevo primer apellido: ";
+			cin >> _primer_apellido;
+
+			actual.set_primer_apellido(_primer_apellido);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+		}
+		case 5: {
+			char _segundo_apellido[30];
+			cout << "\nIngrese el nuevo segundo apellido: ";
+			cin >> _segundo_apellido;
+
+			actual.set_segundo_apellido(_segundo_apellido);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+		}
+		case 6: {
+			char _genero[30];
+			cout << "\nIngrese el nuevo genero: ";
+			cin >> _genero;
+
+			actual.set_genero(_genero);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+		}
+		case 7: {
+			char _ciudad[30];
+			cout << "\nIngrese el nueva ciudad: ";
+			cin >> _ciudad;
+
+			actual.set_ciudad(_ciudad);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+		}
+		case 8: {
+			char _region[30];
+			cout << "\nIngrese el nueva region: ";
+			cin >> _region;
+
+			actual.set_region(_region);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+		}
+		case 9: {
+			char _pais[30];
+			cout << "\nIngrese el nuevo primer apellido: ";
+			cin >> _pais;
+
+			actual.set_pais(_pais);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+		}
+		case 10:
+			cout << "\nGuardando.......\n";
+			break;
+
+		default:
+			cout << "\nOPCION INCORRECTA.......\n";
+			break;
+		}
+	}
+
+	if (modifico == true) {
 		fileE.seekp(posicion);
-		fileE << "*";
+		fileE << "0";
 
 		fileE.seekp(ios::end);
 		DelimTextBuffer delim('^', 300);
 		actual.Write(fileE, fileIndex, delim);
-
-		cout << "\nMODIFICADO.......\n";
-		break;
-	}
-	case 2: {
-		char _primer_nombre[30];
-		cout << "\nIngrese el nuevo primer nombre: ";
-		cin >> _primer_nombre;
-
-		actual.set_primer_nombre(_primer_nombre);
-		fileE.seekp(posicion);
-		fileE << "*";
-
-		fileE.seekp(ios::end);
-		DelimTextBuffer delim('^', 300);
-		actual.Write(fileE, fileIndex, delim);
-
-		cout << "\nMODIFICADO.......\n";
-		break;
-	}
-	case 3: {
-		char _segundo_nombre[30];
-		cout << "\nIngrese el nuevo segundo nombre: ";
-		cin >> _segundo_nombre;
-
-		actual.set_segundo_nombre(_segundo_nombre);
-		fileE.seekp(posicion);
-		fileE << "*";
-
-		fileE.seekp(ios::end);
-		DelimTextBuffer delim('^', 300);
-		actual.Write(fileE, fileIndex, delim);
-
-		cout << "\nMODIFICADO.......\n";
-		break;
-	}
-	case 4: {
-		char _primer_apellido[30];
-		cout << "\nIngrese el nuevo primer apellido: ";
-		cin >> _primer_apellido;
-
-		actual.set_primer_apellido(_primer_apellido);
-		fileE.seekp(posicion);
-		fileE << "*";
-
-		fileE.seekp(ios::end);
-		DelimTextBuffer delim('^', 300);
-		actual.Write(fileE, fileIndex, delim);
-
-		cout << "\nMODIFICADO.......\n";
-		break;
-	}
-	case 5: {
-		char _segundo_apellido[30];
-		cout << "\nIngrese el nuevo segundo apellido: ";
-		cin >> _segundo_apellido;
-
-		actual.set_segundo_apellido(_segundo_apellido);
-		fileE.seekp(posicion);
-		fileE << "*";
-
-		fileE.seekp(ios::end);
-		DelimTextBuffer delim('^', 300);
-		actual.Write(fileE, fileIndex, delim);
-
-		cout << "\nMODIFICADO.......\n";
-		break;
-	}
-	case 6: {
-		char _genero[30];
-		cout << "\nIngrese el nuevo genero: ";
-		cin >> _genero;
-
-		actual.set_genero(_genero);
-		fileE.seekp(posicion);
-		fileE << "*";
-
-		fileE.seekp(ios::end);
-		DelimTextBuffer delim('^', 300);
-		actual.Write(fileE, fileIndex, delim);
-
-		cout << "\nMODIFICADO.......\n";
-		break;
-	}
-	case 7: {
-		char _ciudad[30];
-		cout << "\nIngrese el nueva ciudad: ";
-		cin >> _ciudad;
-
-		actual.set_ciudad(_ciudad);
-		fileE.seekp(posicion);
-		fileE << "*";
-
-		fileE.seekp(ios::end);
-		DelimTextBuffer delim('^', 300);
-		actual.Write(fileE, fileIndex, delim);
-
-		cout << "\nMODIFICADO.......\n";
-		break;
-	}
-	case 8: {
-		char _region[30];
-		cout << "\nIngrese el nueva region: ";
-		cin >> _region;
-
-		actual.set_region(_region);
-		fileE.seekp(posicion);
-		fileE << "*";
-
-		fileE.seekp(ios::end);
-		DelimTextBuffer delim('^', 300);
-		actual.Write(fileE, fileIndex, delim);
-
-		cout << "\nMODIFICADO.......\n";
-		break;
-	}
-	case 9: {
-		char _pais[30];
-		cout << "\nIngrese el nuevo primer apellido: ";
-		cin >> _pais;
-
-		actual.set_pais(_pais);
-		fileE.seekp(posicion);
-		fileE << "*";
-
-		fileE.seekp(ios::end);
-		DelimTextBuffer delim('^', 300);
-		actual.Write(fileE, fileIndex, delim);
-
-		cout << "\nMODIFICADO.......\n";
-		break;
-	}
-	case 10:
+		cout << "\nCambios Guardados!!!\nSaliendo.......\n";
+	}else {
+		cout << "\nNO SE REALIZARON CAMBIOS EN EL REGISTRO.......\n";
 		cout << "\nSaliendo.......\n";
-		break;
-	
-	default:
-		cout << "\nOPCION INCORRECTA.......\n";
-		break;
 	}
 
 	file.close();
@@ -666,7 +627,7 @@ void Amazon::modificarCliente() {
 	fileIndex.close();
 }
 
-void Amazon::modificarProducto(){
+void Amazon::modificarProducto(const char* _code){
 	ifstream file("productos.bin",ios::in | ios::binary);
 	Busqueda buscador;
 
@@ -676,16 +637,19 @@ void Amazon::modificarProducto(){
 		return;
 	}
 
-
 	cout << "*** M O D I F I C A R   P R O D U C T O S *** \n\n";
 
-	char code[10];
-	cout << "\n Ingrese el Codigo del Producto: ";
-	cin >> code;
-
+	char* code;
+	if (_code == nullptr) {
+		code = new char[13];
+		cout << "Ingrese el codigo del producto a modificar :";
+		cin >> code;
+	}else {
+		code = new char[strlen(_code)];
+		strcpy_s(code, strlen(_code) + 1, _code);
+	}
 
 	Producto actual;
-
 	int posicion = -1;
 	if (buscador.buscarProductoCodigo(file, code))
 	{
@@ -693,140 +657,109 @@ void Amazon::modificarProducto(){
 		posicion = file.tellg();
 		actual.Read(file, delim);
 		file.close();
-	}
-	else
+	}else
 	{
 		cout << "No se encontro el producto que buscaba \n";
 		return;
 	}
 
+	fstream fileE("productos.bin", ios::out | ios::in | ios::binary);
+	ofstream fileIndex("productos.bin", ios::out | ios::app | ios::binary);
+
 	int opcion = 0;
+	bool modifico = false;
+	while (opcion != 7) {
 
-	cout << "Elige un numero para editar: "
-		<< "\n1.Modificar Codigo \n2.Modificar Categoria \n3.Modificar Sub-Categoria "
-		<< "\n4.Modificar Nombre \n5.Modificar Descripcion  \n6.Modificar Precio Actual \n.7 Salir";
+		cout << "Elige un parametro a editar: "
+			<< "\n1.Modificar Codigo \n2.Modificar Categoria \n3.Modificar Sub-Categoria "
+			<< "\n4.Modificar Nombre \n5.Modificar Descripcion  \n6.Modificar Precio Actual \n.7 Guardar Cambios\n";
+		cin >> opcion;
 
-	ofstream fileE("productos.bin", ios::out | ios::binary | ios::app);
-	ofstream fileIndex("clientes.bin", ios::out | ios::app | ios::binary);
+		switch (opcion){
+		case 1: {
+			char codigo[10];
+			cout << "\nIngrese el nuevo Codigo: ";
+			cin >> codigo;
 
+			actual.set_codigo(codigo);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+		}
+		case 2: {
+			char categoria[25];
+			cout << "\n Ingrese la nueva categoria: ";
+			cin >> categoria;
 
-	switch (opcion)
+			actual.set_categoria(categoria);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+		}
+		case 3: {
+			char sub_categoria[25];
+			cout << "\n Ingrese la nueva sub-categoria: ";
+			cin >> sub_categoria;
 
-	{
-	case 1: {
+			actual.set_sub_categoria(sub_categoria);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
 
-		char codigo[10];
-		cout << "\nIngrese el nuevo Codigo: ";
-		cin >> codigo;
+		}
+		case 4: {
+			char nombre[200];
+			cout << "\Ingrese el nuevo Nombre: ";
+			cin >> nombre;
 
-		actual.set_codigo(codigo);
+			actual.set_nombre(nombre);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+
+		}
+		case 5: {
+			char descripcion[2000];
+			cout << "Ingrese Descripcion: ";
+			cin >> descripcion;
+
+			actual.set_descripcion(descripcion);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+		}
+		case 6: {
+			float precio_actual;
+			cout << "Ingrese nuevo Precio: ";
+			cin >> precio_actual;
+
+			actual.precio_actual = (precio_actual);
+			modifico = true;
+			cout << "\nMODIFICADO.......\n";
+			break;
+		}
+		case 7:
+			cout << "\nGuardando .... \n";
+			break;
+
+		default:
+			cout << "\nOPCION INCORRECTA.......\n";
+			break;
+		}
+	}
+
+	if (modifico == true) {
 		fileE.seekp(posicion);
-		fileE << "*";
+		fileE << "0";
 
 		fileE.seekp(ios::end);
 		DelimTextBuffer delim('^', 300);
 		actual.Write(fileE, fileIndex, delim);
-
-		cout << "Se esta Modificando ........... \n";
-
-		break;
+		cout << "\nCambios Guardados!!!\nSaliendo.......\n";
 	}
-	case 2: {
-
-		char categoria[25];
-		cout << "\n Ingrese la nueva categoria: ";
-		cin >> categoria;
-
-		actual.set_categoria(categoria);
-		fileE.seekp(posicion);
-		fileE << "*";
-
-		fileE.seekp(ios::end);
-		DelimTextBuffer delim('^', 300);
-		actual.Write(fileE, fileIndex, delim);
-
-		cout << "Se esta Modificando ........... \n";
-
-		break;
-	}
-	case 3: {
-		char sub_categoria[25];
-
-		cout << "\n Ingrese la nueva sub-categoria: ";
-		cin >> sub_categoria;
-
-		actual.set_sub_categoria(sub_categoria);
-		fileE.seekp(posicion);
-		fileE << "*";
-
-		file.seekg(ios::end);
-		DelimTextBuffer delim('^', 300);
-		actual.Write(fileE, fileIndex, delim);
-
-		cout << "Se esta Modificando ........... \n";
-		break;
-
-	}
-	case 4: {
-		char nombre[200];
-
-		cout << "\Ingrese el nuevo Nombre: ";
-		cin >> nombre;
-
-		actual.set_nombre(nombre);
-		fileE.seekp(posicion);
-		fileE << "*";
-
-		fileE.seekp(ios::end);
-		DelimTextBuffer delim('^', 300);
-
-		actual.Write(fileE, fileIndex, delim);
-
-
-		cout << "Se esta Modificando ........... \n";
-
-
-		break;
-
-	}
-	case 5: {
-
-		char descripcion[2000];
-		cout << "Ingrese Descripcion: ";
-		cin >> descripcion;
-
-		actual.set_descripcion(descripcion);
-		fileE.seekp(posicion);
-
-		DelimTextBuffer delim('^', 300);
-		actual.Write(fileE, fileIndex, delim);
-
-		cout << "Se esta Modificando ........... \n";
-		break;
-	}
-	case 6: {
-		float precio_actual;
-
-		cout << "Ingrese nuevo Precio: ";
-		cin >> precio_actual;
-
-		actual.precio_actual = (precio_actual);
-		fileE.seekp(posicion);
-
-		DelimTextBuffer delim('^', 300);
-		actual.Write(fileE, fileIndex, delim);
-
-		cout << "Se esta Modificando ........... \n";
-
-		break;
-	}
-	case 7:
-		cout << "\nSaliendo .... \n";
-		break;
-
-	default:
-		cout << "\n Opcion Incorrecta \n";
-		break;
+	else {
+		cout << "\nNO SE REALIZARON CAMBIOS EN EL REGISTRO.......\n";
+		cout << "\nSaliendo.......\n";
 	}
 
 	file.close();
@@ -878,10 +811,9 @@ bool Amazon::listarProductos()
 	return true;
 }
 
-void Amazon::eliminarClientes()
-{
+void Amazon::eliminarClientes(const char* _code){
 	ifstream file("clientes.bin" ,ios::in | ios::binary);
-	ofstream fileE("clientes.bin", ios::out | ios::app | ios::binary);
+	fstream fileE("clientes.bin", ios::out | ios::in | ios::binary);
 	ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary);
 	Busqueda buscador;
 
@@ -892,10 +824,18 @@ void Amazon::eliminarClientes()
 
 	}
 
-	char code[13];
-	cout << "**** E L I M I N A R  C L I E N T E ";
-	cout << "Ingrese el codigo del clientea a eliminar :";
-	cin >> code;
+	cout << "\n\n**** E L I M I N A R  C L I E N T E ";
+	char* code;
+	if (_code == nullptr) {
+		code = new char[13];
+		cout << "\nIngrese el codigo del clientea a eliminar :";
+		cin >> code;
+	}
+	else {
+		code = new char[strlen(_code)];
+		strcpy_s(code, strlen(_code) + 1, _code);
+	}
+		
 
 	Cliente actual;
 	int posicion = -1;
@@ -913,20 +853,18 @@ void Amazon::eliminarClientes()
 		return;
 	}
 
-
-	cout << "¿Esta seguro que Desea a eliminar el cliente completamente ? (1 Si) (2 No)"
-		 << "Ingrese una opcion:";
+	cout << "Esta seguro que Desea a eliminar el cliente completamente (1 Si) (2 No)"
+		 << "\nIngrese una opcion:";
 	cin >> opcion;
 
 	switch (opcion)
 	{
 	case 1: {
 		actual.id = 0;
-		fileE.seekp(posicion);
-
+		fileE.seekp(posicion,ios::beg);
+		
 		DelimTextBuffer delim('^', 300);
 		actual.Write(fileE, fileIndex, delim);
-
 		cout << "... Cliente Eliminado....";
 
 		break;
@@ -942,11 +880,11 @@ void Amazon::eliminarClientes()
 	fileIndex.close();
 }
 
-void Amazon::eliminarProducto()
+void Amazon::eliminarProducto(const char* _code)
 {
 	ifstream file("productos.bin", ios::in | ios::binary);
 	ifstream fileDetalles("detalles.bin", ios::in | ios::binary);
-	ofstream fileE("productos.bin", ios::out | ios::app | ios::binary);
+	fstream fileE("productos.bin", ios::out | ios::in | ios::binary);
 	ofstream fileIndex("prodcutos.index", ios::out | ios::app | ios::binary);
 
 	Busqueda buscador;
@@ -957,10 +895,17 @@ void Amazon::eliminarProducto()
 		return;
 	}
 
-	char code[10];
-	cout << "**** E L I M I N A R  P R O D U C T O  S  ";
-	cout << "Ingrese el codigo del producto  a eliminar :";
-	cin >> code;
+	cout << "\n\n**** E L I M I N A R  P R O D U C T O ";
+	char* code;
+	if (_code == nullptr) {
+		code = new char[13];
+		cout << "\nIngrese el codigo del producto a eliminar :";
+		cin >> code;
+	}
+	else {
+		code = new char[strlen(_code)];
+		strcpy_s(code, strlen(_code) + 1, _code);
+	}
 
 	Producto  actual;
 	int posicion = -1;
@@ -984,7 +929,7 @@ void Amazon::eliminarProducto()
 		return;
 	}
 
-	cout << "¿Esta seguro que Desea a eliminar el  producto completamente ? (1 Si) (2 No)"
+	cout << "Esta seguro que Desea a eliminar el  producto completamente (1 Si) (2 No)"
 		<< "Ingrese una opcion:";
 	cin >> opcion;
 
@@ -993,8 +938,8 @@ void Amazon::eliminarProducto()
 	case 1: {
 
 
-		actual.set_codigo("*");
-		fileE.seekp(posicion);
+		actual.id = 0;
+		fileE.seekp(posicion, ios::beg);
 
 		DelimTextBuffer delim('^', 300);
 		actual.Write(fileE, fileIndex, delim);

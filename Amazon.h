@@ -18,16 +18,16 @@ public:
 	//Seccion Clientes
 	static void agregarCliente();
 	static void consultarCliente();
-	static void modificarCliente();
+	static void modificarCliente(const char* code = nullptr);
 	static void navegacionClientes();
-	static void eliminarClientes();
+	static void eliminarClientes(const char* code = nullptr);
 
 	//Seccion Productos
 	static void agregarProducto();
 	static void consultarProducto();
-	static void modificarProducto();
+	static void modificarProducto(const char* code = nullptr);
 	static void navegacionProductos();
-	static void eliminarProducto();
+	static void eliminarProducto(const char* code = nullptr);
 	
 	//Seccion Clientes
 	static bool listarClientes();

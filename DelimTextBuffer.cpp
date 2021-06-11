@@ -31,7 +31,6 @@ int DelimTextBuffer::Write(ostream& file) const{
 		return false;
 
 	file.write(Buffer, BufferSize);
-	cout << BufferSize << " " << Buffer;
 	return file.good();
 }
 
