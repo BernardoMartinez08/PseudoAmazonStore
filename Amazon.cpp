@@ -145,11 +145,11 @@ void Amazon::consultarCliente() {
 		return;
 	}
 
-	cout << " ***** C O N S U L T A  D E  C L I E N T E S ***** \n\n";
+	cout << "\n\t ***** C O N S U L T A  D E  C L I E N T E S ***** \n\n";
 
 	int opc = 0;
 	cout << "Elige la forma de busqueda que desea realizar: "
-		 << "\n1. Buscar por Nombre. \n2. Buscar por Codigo. \n3. Listar los Clientes.\n4. Salir";
+		 << "\n1. Buscar por Nombre. \n2. Buscar por Codigo. \n3. Listar los Clientes.\n4. Salir \n";
 
 	cout << "Ingrese una opcion: ";
 	cin >> opc;
@@ -168,6 +168,7 @@ void Amazon::consultarCliente() {
 			actual.Read(file, delim);
 			actual.print();
 		}
+	
 		else
 			cout << "\nNo se encontro el cliente que busca :(\n";
 
@@ -477,7 +478,8 @@ void Amazon::modificarCliente(const char* _code) {
 
 	cout << " ***** M O D I F I C A R  C L I E N T E S ***** \n\n";
 
-	char* code;
+	//char* code;
+	char code;
 	if (_code == nullptr) {
 		code = new char[13];
 		cout << "Ingrese el codigo del clientea a modificar :";

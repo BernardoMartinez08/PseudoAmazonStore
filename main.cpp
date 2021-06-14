@@ -70,6 +70,7 @@ void clientes()
 			break;
 		case 2:
 			tienda.consultarCliente();
+		
 			break;
 		case 3:
 			tienda.navegacionClientes();
