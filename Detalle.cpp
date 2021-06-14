@@ -17,10 +17,14 @@ int Detalle::Pack(DelimTextBuffer& _buffer) {
 	int resultado;
 	std::string tmp = std::to_string(id);
 	resultado = _buffer.Pack(tmp.c_str());
-	resultado = resultado && _buffer.Pack((char*)factura_id);
-	resultado = resultado && _buffer.Pack((char*)producto_id);
-	resultado = resultado && _buffer.Pack((char*)cantidad);
-	resultado = resultado && _buffer.Pack((char*)&precio_unit);
+	tmp = std::to_string(factura_id);
+	resultado = resultado && _buffer.Pack(tmp.c_str());
+	tmp = std::to_string(producto_id);
+	resultado = resultado && _buffer.Pack(tmp.c_str());
+	tmp = std::to_string(cantidad);
+	resultado = resultado && _buffer.Pack(tmp.c_str());
+	tmp = std::to_string(precio_unit);
+	resultado = resultado && _buffer.Pack(tmp.c_str());
 
 	return resultado;
 }
@@ -32,7 +36,7 @@ int Detalle::Unpack(DelimTextBuffer& _buffer) {
 	resultado = factura_id = atoi(_buffer.Unpack((char*)factura_id));
 	resultado = producto_id = atoi(_buffer.Unpack((char*)producto_id));
 	resultado = cantidad = atoi(_buffer.Unpack((char*)cantidad));
-	resultado = precio_unit = (float)strtod(_buffer.Unpack((char*)&precio_unit), NULL);
+	resultado = precio_unit = atof(_buffer.Unpack((char*)&precio_unit));
 
 	return resultado;
 }

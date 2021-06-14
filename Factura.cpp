@@ -57,14 +57,18 @@ int Factura::Pack(DelimTextBuffer& _buffer) {
 	std::string tmp = std::to_string(id);
 	resultado = _buffer.Pack(tmp.c_str());
 	resultado = resultado && _buffer.Pack(codigo);
-	resultado = resultado && _buffer.Pack((char*)cliente_id);
+	tmp = std::to_string(cliente_id);
+	resultado = resultado && _buffer.Pack(tmp.c_str());
 	resultado = resultado && _buffer.Pack(fecha);
 	resultado = resultado && _buffer.Pack(hora);
-	resultado = resultado && _buffer.Pack((char*)&total_neto);
-	resultado = resultado && _buffer.Pack((char*)&total_impuesto);
-	resultado = resultado && _buffer.Pack((char*)&ubicacion_Y);
-	resultado = resultado && _buffer.Pack((char*)&ubicacion_X);
-
+	tmp = std::to_string(total_neto);
+	resultado = resultado && _buffer.Pack(tmp.c_str());
+	tmp = std::to_string(total_impuesto);
+	resultado = resultado && _buffer.Pack(tmp.c_str());
+	tmp = std::to_string(ubicacion_Y);
+	resultado = resultado && _buffer.Pack(tmp.c_str());
+	tmp = std::to_string(ubicacion_X);
+	resultado = resultado && _buffer.Pack(tmp.c_str());
 	return resultado;
 }
 
@@ -76,10 +80,10 @@ int Factura::Unpack(DelimTextBuffer& _buffer) {
 	resultado = cliente_id = atoi(_buffer.Unpack((char*)cliente_id));
 	resultado = set_fecha(_buffer.Unpack(fecha));
 	resultado = set_hora(_buffer.Unpack(hora));
-	resultado = total_neto = (float)strtod(_buffer.Unpack((char*)&total_neto), NULL);
-	resultado = total_impuesto = (float)strtod(_buffer.Unpack((char*)&total_impuesto), NULL);
-	resultado = ubicacion_Y = (float)strtod(_buffer.Unpack((char*)&ubicacion_Y), NULL);
-	resultado = ubicacion_X = (float)strtod(_buffer.Unpack((char*)&ubicacion_X), NULL);
+	resultado = total_neto = atof(_buffer.Unpack((char*)&total_neto));
+	resultado = total_impuesto = atof(_buffer.Unpack((char*)&total_impuesto));
+	resultado = ubicacion_Y = atof(_buffer.Unpack((char*)&ubicacion_Y));
+	resultado = ubicacion_X = atof(_buffer.Unpack((char*)&ubicacion_X));
 
 	return resultado;
 }

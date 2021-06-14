@@ -67,7 +67,8 @@ int Producto::Pack(DelimTextBuffer& _buffer){
 	resultado = resultado && _buffer.Pack(sub_categoria);
 	resultado = resultado && _buffer.Pack(nombre);
 	resultado = resultado && _buffer.Pack(descripcion);
-	resultado = resultado && _buffer.Pack((char*)&precio_actual);
+	tmp = std::to_string(precio_actual);
+	resultado = resultado && _buffer.Pack(tmp.c_str());
 
 	return resultado;
 }
@@ -82,7 +83,7 @@ int Producto::Unpack(DelimTextBuffer& _buffer)
 	resultado = set_sub_categoria(_buffer.Unpack(sub_categoria));
 	resultado = set_nombre(_buffer.Unpack(nombre));
 	resultado = set_descripcion(_buffer.Unpack(descripcion));
-	precio_actual = (float)strtod(_buffer.Unpack((char*)&precio_actual), NULL);
+	resultado = precio_actual = atof(_buffer.Unpack((char*)&precio_actual));
 
 	return resultado;
 
