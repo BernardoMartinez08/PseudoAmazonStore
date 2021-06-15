@@ -20,11 +20,13 @@ public:
 	static bool buscarClienteCodigo(istream&, const char* _codigo);
 	static bool buscarClienteNombre(istream&, const char* _nombreCompleto);
 	static bool buscarClienteID(istream&, int _id);
+	static void imprimirFacturasCliente(istream&, int _id_cliente);
 
 	//Seccion Productos
 	static bool buscarProductoCodigo(istream&, const char* _codigo);
 	static bool buscarProductoNombre(istream&, const char* _nombre);
 	static bool buscarProductoID(istream&, int _id);
+	static void imprimirVentasProducto(istream&, istream&,  int _id_producto);
 
 	//Seccion de Factura
 	static bool buscarFacturaCodigo(istream&, const char* _codigo);

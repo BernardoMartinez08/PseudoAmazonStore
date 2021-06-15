@@ -1,5 +1,5 @@
 #include "BusquedasSecuenciales.h"
-
+#include <cstring>
 //SECCION DE CLIENTES
 bool Busqueda::buscarClienteCodigo(istream& file, const char* _codigo) {
 	file.seekg(ios::beg);
@@ -76,6 +76,33 @@ bool Busqueda::buscarClienteID(istream& file, int _id) {
 	}
 
 	return false;
+}
+
+void Busqueda::imprimirFacturasCliente(istream& file, int _id_cliente) {
+	file.seekg(0);
+
+	int total = 0;
+	while (!file.eof())
+	{
+		DelimTextBuffer delim('^', 300);
+		Factura actual;
+
+		buscarFacturaCliente(file,_id_cliente);
+		actual.Read(file, delim);
+
+		if (actual.id != 0) {
+			if (actual.cliente_id == _id_cliente)
+			{
+				actual.print();
+				total++;
+			}
+		}
+	}
+
+	if (total != 0)
+		cout << "\n\nEste cliente tiene " << total << " facturas asociadas.";
+	else
+		cout << "\n\nNo hay Facturas Asociadas a este cliente.";
 }
 
 
@@ -164,7 +191,48 @@ bool Busqueda::buscarProductoID(istream& file, int _id) {
 	return false;
 }
 
+void Busqueda::imprimirVentasProducto(istream& fileFacturas, istream& fileDetalles, int _id_producto) {
+	fileFacturas.seekg(0);
+	vector<Detalle> ventas[12];
+	string meses[12] = { "Enero" "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
 
+	while (!fileFacturas.eof())
+	{
+		DelimTextBuffer delim('^', 300);
+		Factura actualF;
+
+		actualF.Read(fileFacturas, delim);
+
+		if (actualF.id != 0) {
+			fileDetalles.seekg(0);
+			while (!fileDetalles.eof()) {
+				DelimTextBuffer delim2('^', 300);
+				Detalle actualD;
+
+				buscarDetalleFactura(fileDetalles, actualF.id);
+				actualD.Read(fileDetalles, delim);
+
+				if (actualD.id != 0) {
+					if (actualD.producto_id == _id_producto)
+					{
+						if (actualF.mes >= 1 && actualF.mes <= 12) {
+							ventas[actualF.mes - 1].push_back(actualD);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < 12; i++) {
+		cout << "\n\nVentas Correspondientes a: " << meses[i] << ":\n";
+		for (int j = 0; i < ventas[i].size(); j++) {
+			ventas[i][j].print();
+		}
+
+		cout << "\n\nEste producto se vendio: " << ventas[i].size() << " en el mes de: " << meses[i] << ".";
+	}
+}
 
 
 
@@ -177,7 +245,6 @@ bool Busqueda::buscarFacturaCodigo(istream& file, const char* _codigo){
 	while (!file.eof())
 	{
 		DelimTextBuffer delim('^', 300);
-
 		Factura actual;
 
 		int posicion = -1;
@@ -198,8 +265,6 @@ bool Busqueda::buscarFacturaCodigo(istream& file, const char* _codigo){
 }
 
 bool Busqueda::buscarFacturaCliente(istream& file, int _id_cliente){
-	file.seekg(0);
-
 	while (!file.eof())
 	{
 		DelimTextBuffer delim('^', 300);
@@ -249,6 +314,34 @@ bool Busqueda::buscarFacturaID(istream& file, int _id) {
 	return false;
 }
 
+bool Busqueda::eliminarFacturasCliente(int _id_cliente) {
+	fstream file("facturas.bin", ios::in | ios::out | ios::binary);
+	ofstream fileIndex("facturas.index", ios::in | ios::binary);
+
+	while (!file.eof())
+	{
+		DelimTextBuffer delim('^', 300);
+		Factura actual;
+
+		int posicion = -1;
+		posicion = file.tellg();
+
+		actual.Read(file, delim);
+
+		if (actual.id != 0) {
+			if (actual.cliente_id == _id_cliente)
+			{
+				DelimTextBuffer delim('^', 300);
+				file.seekg(posicion);
+				actual.id = 0;
+				actual.Write(file, fileIndex, delim);
+			}
+		}
+	}
+
+	file.close();
+	return true;
+}
 
 
 
@@ -256,8 +349,6 @@ bool Busqueda::buscarFacturaID(istream& file, int _id) {
 
 //SECCION DETALLE DE FACTURA
 bool Busqueda::buscarDetalleFactura(istream& file, int _id_factura) {
-	file.seekg(0);
-
 	while (!file.eof())
 	{
 		DelimTextBuffer delim('^', 300);
@@ -282,8 +373,6 @@ bool Busqueda::buscarDetalleFactura(istream& file, int _id_factura) {
 }
 
 bool Busqueda::buscarDetalleProducto(istream& file, int _id_producto) {
-	file.seekg(0);
-
 	while (!file.eof())
 	{
 		DelimTextBuffer delim('^', 300);
@@ -331,41 +420,6 @@ bool Busqueda::buscarDetalleID(istream& file, int _id) {
 	}
 
 	return false;
-}
-
-
-
-
-
-
-//SECCION DE BORRAR HISTORIAL
-bool Busqueda::eliminarFacturasCliente(int _id_cliente) {
-	fstream file("facturas.bin", ios::in | ios::out | ios::binary);
-	ofstream fileIndex("facturas.index", ios::in | ios::binary);
-
-	while (!file.eof())
-	{
-		DelimTextBuffer delim('^', 300);
-		Factura actual;
-
-		int posicion = -1;
-		posicion = file.tellg();
-
-		actual.Read(file, delim);
-
-		if (actual.id != 0) {
-			if (actual.cliente_id == _id_cliente)
-			{
-				DelimTextBuffer delim('^', 300);
-				file.seekg(posicion);
-				actual.id = 0;
-				actual.Write(file, fileIndex, delim);
-			}
-		}
-	}
-
-	file.close();
-	return true;
 }
 
 bool Busqueda::eliminarDetallesFactura(int _id_factura) {

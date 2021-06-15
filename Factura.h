@@ -13,12 +13,11 @@ class Factura {
 public:
 	//Constructores
 
-	//codigo, cliente_id, fecha, hora, total_neto, total_impuesto, ubicacion.y, ubicacion.x
-	Factura(const char*, int, const char*, const char*, float, float, float, float);
+	//codigo, cliente_id, dia, mes, anio, hora, total_neto, total_impuesto, ubicacion.y, ubicacion.x
+	Factura(const char*, int, int, int, int, const char*, float, float, float, float);
 	Factura();
 
 	bool set_codigo(const char*);
-	bool set_fecha(const char*);
 	bool set_hora(const char*);
 
 	//Funciones de Lectura y Escritura con Buffers
@@ -36,7 +35,9 @@ public:
 	int id;
 	char* codigo;
 	int cliente_id;
-	char* fecha;
+	int dia;
+	int mes;
+	int anio;
 	char* hora;
 	float total_neto;
 	float total_impuesto;

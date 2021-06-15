@@ -1,15 +1,17 @@
 #include "Factura.h"
 
-Factura::Factura() : codigo(nullptr), cliente_id(-1), fecha(nullptr), hora(nullptr), total_neto(0), total_impuesto(0), ubicacion_Y(0), ubicacion_X(0){
+Factura::Factura() : codigo(nullptr), cliente_id(-1), dia(0), mes(0), anio(0), hora(nullptr), total_neto(0), total_impuesto(0), ubicacion_Y(0), ubicacion_X(0){
 	size = 0;
 	posicion = 0;
 	id = -1;
 }
 
-Factura::Factura(const char* _codigo, int _cliente_id, const char* _fecha, const char* _hora, float _total_neto, float _total_impuesto, float _ubicacion_Y, float _ubicacion_X) {
+Factura::Factura(const char* _codigo, int _cliente_id, int _dia, int _mes, int _anio, const char* _hora, float _total_neto, float _total_impuesto, float _ubicacion_Y, float _ubicacion_X) {
 	set_codigo(_codigo);
 	cliente_id = _cliente_id;
-	set_fecha(_fecha);
+	dia = _dia;
+	mes = _mes;
+	anio = _anio;
 	set_hora(_hora);
 	total_neto = _total_neto;
 	total_impuesto = _total_impuesto;
@@ -34,15 +36,6 @@ bool Factura::set_codigo(const char* _codigo) {
 	return strcpy_s(codigo, strlen(_codigo) + 1, _codigo);
 }
 
-bool Factura::set_fecha(const char* _fecha) {
-	if (fecha != nullptr)
-		delete fecha;
-
-
-	fecha = new char[strlen(_fecha)];
-	return strcpy_s(fecha, strlen(_fecha) + 1, _fecha);
-}
-
 bool Factura::set_hora(const char* _hora) {
 	if (hora != nullptr)
 		delete hora;
@@ -59,7 +52,12 @@ int Factura::Pack(DelimTextBuffer& _buffer) {
 	resultado = resultado && _buffer.Pack(codigo);
 	tmp = std::to_string(cliente_id);
 	resultado = resultado && _buffer.Pack(tmp.c_str());
-	resultado = resultado && _buffer.Pack(fecha);
+	tmp = std::to_string(dia);
+	resultado = resultado && _buffer.Pack(tmp.c_str());
+	tmp = std::to_string(mes);
+	resultado = resultado && _buffer.Pack(tmp.c_str());
+	tmp = std::to_string(anio);
+	resultado = resultado && _buffer.Pack(tmp.c_str());
 	resultado = resultado && _buffer.Pack(hora);
 	tmp = std::to_string(total_neto);
 	resultado = resultado && _buffer.Pack(tmp.c_str());
@@ -78,7 +76,9 @@ int Factura::Unpack(DelimTextBuffer& _buffer) {
 	resultado = set_id(atoi(_buffer.Unpack((char*)id)));
 	resultado = set_codigo(_buffer.Unpack(codigo));
 	resultado = cliente_id = atoi(_buffer.Unpack((char*)cliente_id));
-	resultado = set_fecha(_buffer.Unpack(fecha));
+	resultado = dia = atoi(_buffer.Unpack((char*)dia));
+	resultado = mes = atoi(_buffer.Unpack((char*)mes));
+	resultado = anio = atoi(_buffer.Unpack((char*)anio));
 	resultado = set_hora(_buffer.Unpack(hora));
 	resultado = total_neto = atof(_buffer.Unpack((char*)&total_neto));
 	resultado = total_impuesto = atof(_buffer.Unpack((char*)&total_impuesto));
@@ -107,7 +107,7 @@ void Factura::print() {
 	cout << "\nId: " << id
 		<< "\nCodigo: " << codigo
 		<< "\Id Cliente: " << cliente_id
-		<< "\Fecha: " << fecha
+		<< "\Fecha: " << dia << "/" << mes << "/" << anio
 		<< "\nHora: " << hora
 		<< "\nTotal Neto: " << total_neto
 		<< "\nTotal Impuestos: " << total_impuesto
