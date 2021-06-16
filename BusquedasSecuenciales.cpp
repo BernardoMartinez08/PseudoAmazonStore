@@ -1,5 +1,8 @@
 #include "BusquedasSecuenciales.h"
 #include <cstring>
+#include<stdlib.h>
+#include<time.h>
+
 //SECCION DE CLIENTES
 bool Busqueda::buscarClienteCodigo(istream& file, const char* _codigo) {
 	file.seekg(ios::beg);
@@ -448,4 +451,177 @@ bool Busqueda::eliminarDetallesFactura(int _id_factura) {
 	}
 	file.close();
 	return true;
+}
+
+
+
+
+
+//Generando registros seudo aleatorios
+void Busqueda::generarArchivoNombres() {
+	ofstream fileM("nombresM.bin", ios::out | ios::app | ios::binary);
+	ofstream fileF("nombresF.bin", ios::out | ios::app | ios::binary);
+
+	if (!fileM && !fileF) {
+		cout << "Error al intentar abrir el archivo .bin de clientes\n\n";
+		return;
+	}
+
+	string Masculinos[25] = {"Carlos","Jose","Mario","Ricardo","Esteban","Joel","Jesus","Jack","Jake","Kevin","Caleb","Daniel","David","Jonnathan","Jorge","Luis","Alexander","Arndold","Dylan","Joel","Issac","Fernando","Omar","Samuel","Polo"};
+	string Femeninos[25] = { "Julie","Sky","Nicole","Michelle","Karoline","Karina","Fabiola","Marlen","Rosa","Rocio","Calletana","Lucrecia","Carla","Nadia","Jose","Maria","Esthela","Esther","Lohanny","Mariel","Martha","Ariana","Taylor","Megan","Olivia" };
+
+	for (int i = 0; i < 25; i++) {
+		fileM << Masculinos[i] << ",";
+		fileF << Femeninos[i] << ",";
+	}
+
+	fileM.close();
+	fileF.close();
+}
+
+void Busqueda::generarArchivoApellidos() {
+	ofstream file("apellidos.bin", ios::out | ios::app | ios::binary);
+
+	if (!file) {
+		cout << "Error al intentar abrir el archivo .bin de clientes\n\n";
+		return;
+	}
+
+	string Apellidos[50] = { "Martinez","Romero","Vallecillo","Oseguera","Puerto","Sanchez","Pineda","Amador","Amaya","Hernandez","Alvarado","Sosa","Sandoval","Arias","Menjivar","Melendez","Pinel","Padilla","Lamberth","Castro","Acosta","Ramos","Salas","Munguia","Moon",
+		"Aguirre","Gomez","Salinas","Navarro","Espinosa","Maldonado","Guzman","Cabrera","Rosa","Oviedo","Castel","Castillo","Ruiz","Saldivar","Salazar","Backer","Beltran","Ortega","Blanco","Cardona","Villegas","Rios","Montealban","Villalobos","Grand"};
+
+	for (int i = 0; i < 50; i++) {
+		file << Apellidos[i] << ",";
+	}
+
+	file.close();
+}
+
+void Busqueda::generarArchivoUbicaciones() {
+	ofstream file("ubicaciones.bin", ios::out | ios::app | ios::binary);
+
+	if (!file) {
+		cout << "Error al intentar abrir el archivo .bin de clientes\n\n";
+		return;
+	}
+
+	string ubicaciones[25] = {"San Pedro Sula,Cortes,Honduras","Tegucigalpa,Fransco. Morazan,Honduras","San Salvador,San Salvador,El Salvador","Sonsonate,Sonsonate,El Salvador","Miami,Florida,USA","Los Angeles,California,USA","Sevilla,Andalucia,España","Barcelona,Cataluña,España","Mexico City,Mexico DF,Mexico","Santiago,Santiago,Chile","Rio de Janeiro,Rio de Janeiro,Brasil","London,Inglaterra,Reino Unido","Buenos Aires,La Plata,Argentina","Orlando,Florida,USA","La Ceiba,Atlantida,Honduras","Ciudad de Guatemala,Guatemala,Guatemala","Puerto Barrios,Izabal,Guatemala","Las Vegas,Nevada,USA","Medellin,Antioquia,Colombia","Cartagena,Bolívar,Colombia","Ciudad de Panama,Pamana,Panama","Monterrey,Nuevo Leon,Mexico","Merida,Yucatan,Mexico","Lima,Cortes,Honduras","Copan Ruinas,Copan,Honduras"};
+
+	for (int i = 0; i < 25; i++) {
+		file << ubicaciones[i] << "/";
+	}
+
+	file.close();
+}
+
+vector<string> Busqueda::extraerNombresHombres() {
+	ifstream fileNombres("nombresM.bin", ios::out | ios::app | ios::binary);
+	vector<string> hombres;
+	//Extraer los Hombres
+	while (!fileNombres.eof()) {
+		char nombre[25];
+		fileNombres.getline(nombre, 25, ',');
+		hombres.push_back(nombre);
+	}
+	fileNombres.close();
+	return hombres;
+}
+
+vector<string> Busqueda::extraerNombresMujeres() {
+	ifstream fileNombres("nombresF.bin", ios::out | ios::app | ios::binary);
+	vector<string> mujeres;
+	//Extraer las Mujeres
+	while (!fileNombres.eof()) {
+		char nombre[25];
+		fileNombres.getline(nombre, 25, ',');
+		mujeres.push_back(nombre);
+	}
+	fileNombres.close();
+	return mujeres;
+}
+
+vector<string> Busqueda::extraerApellidos() {
+	ifstream fileApellidos("apellidos.bin", ios::out | ios::app | ios::binary);
+	vector<string> apellidos;
+	//Extraer los Apellidos
+	while (!fileApellidos.eof()) {
+		char apellido[30];
+		fileApellidos.getline(apellido, 30, ',');
+		apellidos.push_back(apellido);
+	}
+	fileApellidos.close();
+	return apellidos;
+}
+
+vector<ubicacion> Busqueda::extraerUbicaciones() {
+	ifstream fileUbicaciones("ubicaciones.bin", ios::out | ios::app | ios::binary);
+	vector<ubicacion> ubicaciones;
+	//Extraer los Apellidos
+	while (!fileUbicaciones.eof()) {
+		ubicacion ubi;
+		char ciudad[30];
+		fileUbicaciones.getline(ciudad, 30, ',');
+		ubi.ciudad = ciudad;
+
+		char region[30];
+		fileUbicaciones.getline(region, 30, ',');
+		ubi.region = region;
+
+		char pais[30];
+		fileUbicaciones.getline(pais, 30, ',');
+		ubi.pais = pais;
+
+		ubicaciones.push_back(ubi);
+	}
+	fileUbicaciones.close();
+	return ubicaciones;
+}
+
+void Busqueda::generarClientes(ostream& file, int cantidad) {
+	srand(time(NULL));
+
+	vector<string> hombres = extraerNombresHombres();
+	vector<string> mujeres = extraerNombresMujeres();
+	vector<string> apellidos = extraerApellidos();
+	vector<ubicacion> ubicaciones = extraerUbicaciones();
+
+	int genero, edad;
+	while (cantidad != 0) {
+		Cliente nuevo;
+		nuevo.id = nuevo.getNextId();
+		//Numero aleatoria entre 0 y 1, 0 = hombre, 1 = mujer
+		genero = rand() % 1;
+
+		int _aux;
+		if (genero == 0) {
+			_aux = rand() % 25;
+			nuevo.set_primer_nombre(hombres[_aux].c_str());
+			_aux = rand() % 25;
+			nuevo.set_segundo_nombre(hombres[_aux].c_str());
+			nuevo.set_genero("M");
+		}
+		else {
+			_aux = rand() % 25;
+			nuevo.set_primer_nombre(mujeres[_aux].c_str());
+			_aux = rand() % 25;
+			nuevo.set_primer_nombre(mujeres[_aux].c_str());
+			nuevo.set_genero("F");
+		}
+
+		_aux = rand() % 50;
+		nuevo.set_primer_apellido(apellidos[_aux].c_str());
+		_aux = rand() % 50;
+		nuevo.set_segundo_apellido(apellidos[_aux].c_str());
+
+		int _edad = 18 + rand() % (81 - 18);
+
+		_aux = rand() % 25;
+		nuevo.set_ciudad(ubicaciones[_aux].ciudad.c_str());
+		nuevo.set_region(ubicaciones[_aux].region.c_str());
+		nuevo.set_pais(ubicaciones[_aux].pais.c_str());
+
+		DelimTextBuffer delim('^', 300);
+		nuevo.Write(file,file,delim);
+		cantidad--;
+	}
 }

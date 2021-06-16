@@ -11,8 +11,14 @@
 #include "DelimTextBuffer.h"
 #include <cstring>
 #include <vector>
+#include <string>
 using namespace std;
 
+struct ubicacion{
+	string ciudad;
+	string region;
+	string pais;
+};
 
 class Busqueda {
 public:
@@ -42,6 +48,22 @@ public:
 	//Seccion de Historial
 	static bool eliminarFacturasCliente(int _id_cliente);
 	static bool eliminarDetallesFactura(int _id_factura);
+
+
+	//Generando registros seudo aleatorios
+	//Registros
+	static void generarArchivoNombres();
+	static void generarArchivoApellidos();
+	static void generarArchivoUbicaciones();
+	
+	static vector<string> extraerNombresHombres();
+	static vector<string> extraerNombresMujeres();
+	static vector<string> extraerApellidos();
+	static vector<ubicacion> extraerUbicaciones();
+
+	//Generadores
+	static void generarClientes(ostream& ,int);
+
 };
 
 #endif // !BUSQUEDAS_SECUENCIALES_H
