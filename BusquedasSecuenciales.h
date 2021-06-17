@@ -64,6 +64,14 @@ public:
 	//Generadores
 	static void generarClientes(ostream& ,int);
 
+	//Generando Productos
+	static void generarArchivoCategorias();
+	static void generarArchivoSubCategoria();
+	static void generarArchivoProducto();
+
+	static vector<string> extraerCategorias();
+	static vector<string> extraerSubcategoria();
+
 };
 
 #endif // !BUSQUEDAS_SECUENCIALES_H
