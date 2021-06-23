@@ -478,6 +478,47 @@ void Busqueda::generarArchivoNombres() {
 	fileM.close();
 	fileF.close();
 }
+void Busqueda::generarArchivoCategorias()
+{
+	ofstream fileCategoria("categorias.bin", ios::out | ios::app | ios::binary);
+
+	if (!fileCategoria)
+	{
+		cout << "Error al intentar abrir el archivo .bin de productos\n\n";
+		return;
+
+		string categorias[5] = { "Electronicos","Hogar" ,"Deporte" "Moda", "Videojuegos" };
+	}
+
+	for(int i =0;i<5;i++)
+	{
+		fileCategoria<< categorias[i] << ",";
+	}
+	fileCategoria.close();
+}
+
+void Busqueda::generarArchivoSubCategoria()
+{
+	ofstream fileSubcategoria("subcategorias.bin", ios::out | ios::app | ios::binary);
+
+	if (!fileSubcategoria)
+	{
+		cout << "Error al intentar abrir el archivo .bin de productos\n\n";
+		return;
+
+		string subcategorias[5] = { "Computadora","Muebles" ,"Balones" "Ropa de Hombre", "PS5" };
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		fileSubcategoria << categorias[i] << ",";
+	}
+	fileSubcategoria.close();
+}
+void Busqueda::generarArchivoProducto()
+{
+
+}
 
 void Busqueda::generarArchivoApellidos() {
 	ofstream file("apellidos.bin", ios::out | ios::app | ios::binary);
@@ -527,6 +568,37 @@ vector<string> Busqueda::extraerNombresHombres() {
 	return hombres;
 }
 
+vector <string> Busqueda::extraerCategorias()
+{
+	ifstream fileCategorias("categorias.bin", ios::out | ios::app | ios::binary);
+	vector<string> categoria;
+
+	while (!fileCategorias.eof())
+	{
+		char categoria[5];
+		fileCategorias.getline(categoria, 5, ',');
+		categoria.push_back(categoria);
+
+	}
+	fileCategorias.close();
+	return categoria;
+}
+
+vector <string> Busqueda::extraerSubcategoria()
+{
+	ifstream fileSubCategorias("subcategorias.bin", ios::out | ios::app | ios::binary);
+	vector<string>subcategoria;
+
+	while (!fileCategorias.eof())
+	{
+		char subcategoria[5];
+		fileSubCategorias.getline(subcategoria, 5, ',');
+		subcategoria.push_back(subcategoria);
+
+	}
+	fileSubCategorias.close();
+	return subcategoria;
+}
 vector<string> Busqueda::extraerNombresMujeres() {
 	ifstream fileNombres("nombresF.bin", ios::out | ios::app | ios::binary);
 	vector<string> mujeres;
