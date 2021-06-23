@@ -21,6 +21,7 @@ public:
 	static void modificarCliente(const char* code = nullptr);
 	static void navegacionClientes();
 	static void eliminarClientes(const char* code = nullptr);
+	static void eliminarClienteAux(Cliente actual, fstream& fileE, long posicion, ofstream& fileIndex);
 
 	//Seccion Productos
 	static void agregarProducto();
@@ -28,6 +29,7 @@ public:
 	static void modificarProducto(const char* code = nullptr);
 	static void navegacionProductos();
 	static void eliminarProducto(const char* code = nullptr);
+	static void eliminarProductoAux(Producto actual, fstream& fileE, long posicion, ofstream& fileIndex);
 	
 	//Seccion Clientes
 	static bool listarClientes();

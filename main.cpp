@@ -57,7 +57,7 @@ void clientes()
 {
 	Amazon tienda;
 	int cliente = 0;
-	while (cliente != 6) {
+	while (cliente != 7) {
 		cout << "\n\t*** SECCION CLIENTE  *****\n\n";
 		cout << "1.Agregar Cliente\n2.Consultar Clientes \n3.Navegacion de Clientes \n4.Modificar Clientes\n5.Listar Clientes\n6.Eliminar Cliente \n7. Salir";
 
@@ -86,6 +86,10 @@ void clientes()
 
 		case 6:
 			tienda.eliminarClientes();
+			break;
+
+		case 7:
+			cout << "\nVOLVIENDO AL MENU ANTERIOR";
 			break;
 
 		default:
@@ -126,6 +130,10 @@ void productos()
 
 		case 5:
 			tienda.eliminarProducto();
+			break;
+
+		case 6:
+			cout << "\nVOLVIENDO AL MENU ANTERIOR";
 			break;
 
 		default:
