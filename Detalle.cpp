@@ -58,10 +58,11 @@ int Detalle::Write(ostream& file, ostream& fileIndex, DelimTextBuffer& _delim) {
 
 void Detalle::print() {
 	cout << "\nId: " << id
-		<< "\Id Factura: " << factura_id
-		<< "\Id Producto: " << producto_id
+		<< "\nId Factura: " << factura_id
+		<< "\nId Producto: " << producto_id
 		<< "\nCantidad: " << cantidad
-		<< "\nPrecio Unitario: " << precio_unit << "\n";
+		<< "\nPrecio Unitario: " << precio_unit 
+		<< "\nPrecio Total: " << (precio_unit*cantidad) << "\n";
 }
 
 
@@ -73,13 +74,13 @@ void Detalle::print() {
 //Funciones Prototipo de funciones mas avanzadas.
 
 int Detalle::getNextId() {
-	ifstream auxID("producto.index", ios::in | ios::binary | ios::_Nocreate);
+	ifstream auxID("detalles.index", ios::in | ios::binary | ios::_Nocreate);
 
 	if (!auxID) {
 		setNextId(0);
 	}
 	
-	ifstream indiceIds("detalle.index", ios::in | ios::binary);
+	ifstream indiceIds("detalles.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
@@ -99,7 +100,7 @@ int Detalle::getNextId() {
 }
 
 void Detalle::setNextId(int _lastId) {
-	ofstream indiceIds("detalle.index", ios::out | ios::app | ios::binary);
+	ofstream indiceIds("detalles.index", ios::out | ios::app | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
@@ -115,7 +116,7 @@ void Detalle::setNextId(int _lastId) {
 }
 
 vector<vector<int>>* Detalle::getIndiceID() {
-	ifstream indiceIds("detalle.index", ios::in | ios::binary);
+	ifstream indiceIds("detalles.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";

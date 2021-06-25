@@ -42,11 +42,14 @@ bool Busqueda::buscarClienteNombre(istream& file, const char* _nombre) {
 		if (actual.id != 0) {
 			char* nombreCompreto = new char[strlen(actual.primer_nombre)];
 			strcpy_s(nombreCompreto, strlen(actual.primer_nombre) + 1, actual.primer_nombre);
+			strcat_s(nombreCompreto, strlen(nombreCompreto) + 2, " ");
 			strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(actual.segundo_nombre) + 1, actual.segundo_nombre);
+			strcat_s(nombreCompreto, strlen(nombreCompreto) + 2, " ");
 			strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(actual.primer_apellido) + 1, actual.primer_apellido);
+			strcat_s(nombreCompreto, strlen(nombreCompreto) + 2, " ");
 			strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(actual.segundo_apellido) + 1, actual.segundo_apellido);
 
-			if (strcmp(_nombre,nombreCompreto) == 0) {
+			if (strcmp(toLowerCase(_nombre),toLowerCase(nombreCompreto)) == 0) {
 				file.seekg(posicion);
 				return true;
 			}
@@ -116,12 +119,10 @@ void Busqueda::imprimirFacturasCliente(istream& file, int _id_cliente) {
 
 //SECCION DE PRODUCTO
 bool Busqueda::buscarProductoCodigo(istream& file, const char* _codigo){
-	file.seekg(0);
+	file.seekg(ios::beg);
 
-	while (!file.eof())
-	{
+	while (!file.eof()) {
 		DelimTextBuffer delim('^', 300);
-
 		Producto actual;
 
 		int posicion = -1;
@@ -130,14 +131,13 @@ bool Busqueda::buscarProductoCodigo(istream& file, const char* _codigo){
 		actual.Read(file, delim);
 
 		if (actual.id != 0) {
-			if (strcmp(actual.codigo,_codigo) == 0)
-			{
+
+			if (strcmp(actual.codigo, _codigo) == 0) {
 				file.seekg(posicion);
 				return true;
 			}
 		}
 	}
-
 	return false;
 }
 
@@ -154,6 +154,8 @@ bool Busqueda::buscarProductoNombre(istream& file, const char* _nombre){
 
 		actual.Read(file, delim);
 		char* nombre = actual.nombre;
+		nombre = toLowerCase(nombre);
+		_nombre = toLowerCase(_nombre);
 
 		if (actual.id != 0) {
 			if (strcmp(_nombre,nombre) == 0)
@@ -243,6 +245,10 @@ void Busqueda::imprimirVentasProducto(istream& fileFacturas, istream& fileDetall
 
 //SECCION DE FACTURA
 bool Busqueda::buscarFacturaCodigo(istream& file, const char* _codigo){
+	if (!file) {
+		return false;
+	}
+	
 	file.seekg(0);
 
 	while (!file.eof())
@@ -268,6 +274,10 @@ bool Busqueda::buscarFacturaCodigo(istream& file, const char* _codigo){
 }
 
 bool Busqueda::buscarFacturaCliente(istream& file, int _id_cliente){
+	if (!file) {
+		return false;
+	}
+	
 	while (!file.eof())
 	{
 		DelimTextBuffer delim('^', 300);
@@ -292,6 +302,9 @@ bool Busqueda::buscarFacturaCliente(istream& file, int _id_cliente){
 }
 
 bool Busqueda::buscarFacturaID(istream& file, int _id) {
+	if (!file) {
+		return false;
+	}
 	file.seekg(0);
 
 	while (!file.eof())
@@ -318,8 +331,12 @@ bool Busqueda::buscarFacturaID(istream& file, int _id) {
 }
 
 bool Busqueda::eliminarFacturasCliente(int _id_cliente) {
-	fstream file("facturas.bin", ios::in | ios::out | ios::binary);
-	ofstream fileIndex("facturas.index", ios::in | ios::binary);
+	fstream file("facturas.bin", ios::in | ios::out | ios::binary | ios::_Nocreate);
+	ofstream fileIndex("facturas.index", ios::in | ios::binary | ios::_Nocreate);
+
+	if (!file && !fileIndex) {
+		return false;
+	}
 
 	while (!file.eof())
 	{
@@ -352,6 +369,10 @@ bool Busqueda::eliminarFacturasCliente(int _id_cliente) {
 
 //SECCION DETALLE DE FACTURA
 bool Busqueda::buscarDetalleFactura(istream& file, int _id_factura) {
+	if (!file) {
+		return false;
+	}
+	
 	while (!file.eof())
 	{
 		DelimTextBuffer delim('^', 300);
@@ -376,6 +397,10 @@ bool Busqueda::buscarDetalleFactura(istream& file, int _id_factura) {
 }
 
 bool Busqueda::buscarDetalleProducto(istream& file, int _id_producto) {
+	if (!file) {
+		return false;
+	}
+	
 	while (!file.eof())
 	{
 		DelimTextBuffer delim('^', 300);
@@ -400,6 +425,9 @@ bool Busqueda::buscarDetalleProducto(istream& file, int _id_producto) {
 }
 
 bool Busqueda::buscarDetalleID(istream& file, int _id) {
+	if (!file) {
+		return false;
+	}
 	file.seekg(0);
 
 	while (!file.eof())
@@ -426,8 +454,12 @@ bool Busqueda::buscarDetalleID(istream& file, int _id) {
 }
 
 bool Busqueda::eliminarDetallesFactura(int _id_factura) {
-	fstream file("detalles.bin", ios::in | ios::binary);
-	ofstream fileIndex("detalles.index", ios::in | ios::binary);
+	fstream file("detalles.bin", ios::in | ios::binary | ios::_Nocreate);
+	ofstream fileIndex("detalles.index", ios::in | ios::binary | ios::_Nocreate);
+	
+	if (!file && !fileIndex) {
+		return false;
+	}
 
 	while (!file.eof())
 	{
@@ -478,47 +510,6 @@ void Busqueda::generarArchivoNombres() {
 	fileM.close();
 	fileF.close();
 }
-void Busqueda::generarArchivoCategorias()
-{
-	ofstream fileCategoria("categorias.bin", ios::out | ios::app | ios::binary);
-
-	if (!fileCategoria)
-	{
-		cout << "Error al intentar abrir el archivo .bin de productos\n\n";
-		return;
-
-		string categorias[5] = { "Electronicos","Hogar" ,"Deporte" "Moda", "Videojuegos" };
-	}
-
-	for(int i =0;i<5;i++)
-	{
-		fileCategoria<< categorias[i] << ",";
-	}
-	fileCategoria.close();
-}
-
-void Busqueda::generarArchivoSubCategoria()
-{
-	ofstream fileSubcategoria("subcategorias.bin", ios::out | ios::app | ios::binary);
-
-	if (!fileSubcategoria)
-	{
-		cout << "Error al intentar abrir el archivo .bin de productos\n\n";
-		return;
-
-		string subcategorias[5] = { "Computadora","Muebles" ,"Balones" "Ropa de Hombre", "PS5" };
-	}
-
-	for (int i = 0; i < 5; i++)
-	{
-		fileSubcategoria << categorias[i] << ",";
-	}
-	fileSubcategoria.close();
-}
-void Busqueda::generarArchivoProducto()
-{
-
-}
 
 void Busqueda::generarArchivoApellidos() {
 	ofstream file("apellidos.bin", ios::out | ios::app | ios::binary);
@@ -568,37 +559,6 @@ vector<string> Busqueda::extraerNombresHombres() {
 	return hombres;
 }
 
-vector <string> Busqueda::extraerCategorias()
-{
-	ifstream fileCategorias("categorias.bin", ios::out | ios::app | ios::binary);
-	vector<string> categoria;
-
-	while (!fileCategorias.eof())
-	{
-		char categoria[5];
-		fileCategorias.getline(categoria, 5, ',');
-		categoria.push_back(categoria);
-
-	}
-	fileCategorias.close();
-	return categoria;
-}
-
-vector <string> Busqueda::extraerSubcategoria()
-{
-	ifstream fileSubCategorias("subcategorias.bin", ios::out | ios::app | ios::binary);
-	vector<string>subcategoria;
-
-	while (!fileCategorias.eof())
-	{
-		char subcategoria[5];
-		fileSubCategorias.getline(subcategoria, 5, ',');
-		subcategoria.push_back(subcategoria);
-
-	}
-	fileSubCategorias.close();
-	return subcategoria;
-}
 vector<string> Busqueda::extraerNombresMujeres() {
 	ifstream fileNombres("nombresF.bin", ios::out | ios::app | ios::binary);
 	vector<string> mujeres;
@@ -649,6 +609,77 @@ vector<ubicacion> Busqueda::extraerUbicaciones() {
 	return ubicaciones;
 }
 
+void Busqueda::generarArchivoCategorias()
+{
+	ofstream fileCategoria("categorias.bin", ios::out | ios::app | ios::binary);
+
+	if (!fileCategoria) {
+		cout << "Error al intentar abrir el archivo .bin de productos\n\n";
+		return;
+	}
+
+	string categorias[5] = { "Electronicos","Hogar" ,"Deporte" "Moda", "Videojuegos" };
+
+	for (int i = 0; i < 5; i++) {
+		fileCategoria << categorias[i] << ",";
+	}
+	fileCategoria.close();
+}
+
+void Busqueda::generarArchivoSubCategoria()
+{
+	ofstream fileSubcategoria("subcategorias.bin", ios::out | ios::app | ios::binary);
+
+	if (!fileSubcategoria) {
+		cout << "Error al intentar abrir el archivo .bin de productos\n\n";
+		return;
+	}
+
+	string subcategorias[5] = { "Computadora","Muebles" ,"Balones" "Ropa de Hombre", "PS5" };
+
+	for (int i = 0; i < 5; i++) {
+		fileSubcategoria << subcategorias[i] << ",";
+	}
+	fileSubcategoria.close();
+}
+
+void Busqueda::generarArchivoProducto()
+{
+
+}
+
+vector <string> Busqueda::extraerCategorias()
+{
+	ifstream fileCategorias("categorias.bin", ios::out | ios::app | ios::binary);
+	vector<string> categorias;
+
+	while (!fileCategorias.eof())
+	{
+		char categoria[5];
+		fileCategorias.getline(categoria, 5, ',');
+		categorias.push_back(categoria);
+
+	}
+	fileCategorias.close();
+	return categorias;
+}
+
+vector <string> Busqueda::extraerSubcategoria()
+{
+	ifstream fileSubCategorias("subcategorias.bin", ios::out | ios::app | ios::binary);
+	vector<string>subcategorias;
+
+	while (!fileSubCategorias.eof())
+	{
+		char subcategoria[5];
+		fileSubCategorias.getline(subcategoria, 5, ',');
+		subcategorias.push_back(subcategoria);
+
+	}
+	fileSubCategorias.close();
+	return subcategorias;
+}
+
 void Busqueda::generarClientes(ostream& file, int cantidad) {
 	srand(time(NULL));
 
@@ -696,4 +727,13 @@ void Busqueda::generarClientes(ostream& file, int cantidad) {
 		nuevo.Write(file,file,delim);
 		cantidad--;
 	}
+}
+
+char* Busqueda::toLowerCase(const char* cadena) {
+	char* nueva = new char[strlen(cadena) + 1];
+	for (int i = 0; i < strlen(cadena); i++){
+		nueva[i] = tolower(cadena[i]);
+	}
+
+	return nueva;
 }

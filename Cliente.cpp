@@ -181,7 +181,8 @@ int Cliente::getNextId() {
 	if (!auxID) {
 		setNextId(0);
 	}
-	
+	auxID.close();
+
 	ifstream indiceIds("clientes.index", ios::in | ios::binary);
 
 	if (!indiceIds) {

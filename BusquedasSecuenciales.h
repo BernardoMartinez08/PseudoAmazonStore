@@ -72,6 +72,7 @@ public:
 	static vector<string> extraerCategorias();
 	static vector<string> extraerSubcategoria();
 
+	static char* toLowerCase(const char*);
 };
 
 #endif // !BUSQUEDAS_SECUENCIALES_H

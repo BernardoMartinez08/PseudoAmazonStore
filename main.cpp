@@ -1,7 +1,9 @@
 #include <conio.h>
 #include <iostream>
 #include "Amazon.h"
-
+#include<stdio.h>
+#include<windows.h>
+#include<string>
 
 void clientes();
 void productos();
@@ -20,7 +22,7 @@ int main()
 
 
 	while (opcion != 4) {
-		cout << "\n\t**** TIENDA VIRTUAL DE AMAZON *********\n\n";
+		cout << "\n********* TIENDA VIRTUAL DE AMAZON *********\n\n";
 
 		cout << "1.Clientes \n2.Productos\n3.Facturas\n4.Salir\n ";
 		cout << "Ingrese una opcion:";
@@ -40,7 +42,7 @@ int main()
 
 		case 3:
 			cout << "\n...EN CONSTRUCCION....";
-			tienda.facturar();
+			tienda.RegistrarCompra();
 			break;
 
 		case 4:
@@ -60,7 +62,7 @@ void clientes()
 	Amazon tienda;
 	int cliente = 0;
 	while (cliente != 7) {
-		cout << "\n\t*** SECCION CLIENTE  *****\n\n";
+		cout << "\n***** SECCION CLIENTE  *****\n\n";
 		cout << "1.Agregar Cliente\n2.Consultar Clientes \n3.Navegacion de Clientes \n4.Modificar Clientes\n5.Listar Clientes\n6.Eliminar Cliente \n7. Salir";
 
 		cout << "\nIngrese una opcion:";
@@ -83,7 +85,8 @@ void clientes()
 			break;
 
 		case 5:
-			tienda.listarClientes();
+			if (!tienda.listarClientes())
+				cout << "\n\nNO HAY REGISTROS QUE MOSTRAR\n";
 			break;
 
 		case 6:
@@ -105,9 +108,9 @@ void productos()
 {
 	Amazon tienda;
 	int producto = 0;
-	while (producto != 6) {
-		cout << "\n\t*** SECCION PRODUCTO *** \n\n";
-		cout << "1.Agregar Producto\n2.Consultar Producto \n3. Modificar Producto \n4.Navegacion Producto \n5.Eliminar Producto \n6.Salir";
+	while (producto != 7) {
+		cout << "\n**** SECCION PRODUCTO **** \n\n";
+		cout << "1.Agregar Producto\n2.Consultar Producto \n3.Modificar Producto \n4.Navegacion Producto\n5.Listar Productos \n6.Eliminar Producto \n7.Salir";
 
 		cout << "\nIngrese una opcion: ";
 		cin >> producto;
@@ -127,14 +130,19 @@ void productos()
 			break;
 
 		case 4:
-			tienda.listarProductos();
+			tienda.navegacionProductos();
 			break;
 
 		case 5:
-			tienda.eliminarProducto();
+			if (!tienda.listarProductos())
+				cout << "\n\nNO HAY REGISTROS QUE MOSTRAR\n";
 			break;
 
 		case 6:
+			tienda.eliminarProducto();
+			break;
+
+		case 7:
 			cout << "\nVOLVIENDO AL MENU ANTERIOR";
 			break;
 

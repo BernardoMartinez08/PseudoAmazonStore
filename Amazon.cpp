@@ -1,7 +1,9 @@
 #include "Amazon.h"
 #include "BusquedasSecuenciales.h"
+#include<stdio.h>
+#include<windows.h>
 
-void Amazon::agregarCliente() {
+void Amazon::agregarCliente(const char* _code) {
 	ofstream file("clientes.bin", ios::out | ios::app | ios::binary);
 
 	if (!file) {
@@ -11,12 +13,22 @@ void Amazon::agregarCliente() {
 
 	cout << " ***** I N G R E S O  D E  C L I E N T E S ***** \n\n";
 
+	char _codigo[13];
+	if (_code == nullptr) {
+		cin.ignore();
+		cout << "INGRESE LOS DATOS PARA EL CLIENTE:\nIndique codigo: ";
+		cin.getline(_codigo, 13);
+	}
+	else {
+		strcpy_s(_codigo, strlen(_code) + 1, _code);
+	}
+
 	Cliente nuevo;
 	DelimTextBuffer delim('^',300);
 
 	int _id = nuevo.getNextId();
+	nuevo.set_codigo(_codigo);
 
-	char _codigo[13];
 	char _primer_nombre[30];
 	char _segundo_nombre[30];
 	char _primer_apellido[30];
@@ -25,10 +37,6 @@ void Amazon::agregarCliente() {
 	char _ciudad[50];
 	char _region[50];
 	char _pais[50];
-
-	cout << "INGRESE LOS DATOS PARA EL CLIENTE:\nIndique codigo: ";
-	cin >> _codigo;
-	nuevo.set_codigo(_codigo);
 
 	cout << "Indique el primer nombre:";
 	cin >> _primer_nombre;
@@ -50,16 +58,17 @@ void Amazon::agregarCliente() {
 	cin >> _genero;
 	nuevo.set_genero(_genero);
 
+	cin.ignore();
 	cout << "Indique la ciudad de residencia:";
-	cin >> _ciudad;
+	cin.getline(_ciudad,50);
 	nuevo.set_ciudad(_ciudad);
-
+	
 	cout << "Indique la region donde se ubica:";
-	cin >> _region;
+	cin.getline(_region,50);
 	nuevo.set_region(_region);
 
 	cout << "Indique su pais:";
-	cin >> _pais;
+	cin.getline(_pais,50);
 	nuevo.set_pais(_pais);
 
 	nuevo.posicion = 0;
@@ -92,6 +101,7 @@ void Amazon::agregarProducto()
 	DelimTextBuffer delim('^', 300);
 
 	int id = nuevo.getNextId();
+	cout << id;
 
 	char codigo[10];
 	char categoria[25];
@@ -100,34 +110,32 @@ void Amazon::agregarProducto()
 	char descripcion[2000];
 	float precio_actual;
 
-	cout << "INGRESE LOS DATOS PARA EL PRODUCTO:\nIngrese  codigo: ";
-	cin >> codigo;
-	
+	cout << "INGRESE LOS DATOS PARA EL PRODUCTO:\nIngrese el Codigo: ";
+	cin.ignore();
+	cin.getline(codigo,10);
 	nuevo.set_codigo(codigo);
-	//cout << "\nCodigo: " << nuevo.codigo << endl;
 	
-	cout << "Ingrese Categoria: ";
-	cin >> categoria;
+	cout << "Ingrese la Categoria: ";
+	cin.getline(categoria,25);
 	nuevo.set_categoria(categoria);
 
-	cout << "Ingrese Sub-Categoria: ";
-	cin >> _sub_categoria;
+	cout << "Ingrese la Sub-Categoria: ";
+	cin.getline(_sub_categoria,25);
 	nuevo.set_sub_categoria(_sub_categoria);
 
-	cout << "Ingese Nombre: ";
-	cin >> nombre;
+	cout << "Ingese el Nombre: ";
+	cin.getline(nombre,200);
 	nuevo.set_nombre(nombre);
 	
-
-	cout << "Ingrese Descripcion: ",
-	cin >> descripcion;
+	cout << "Ingrese una Descripcion: ";
+	cin.getline(descripcion,2000);
 	nuevo.set_descripcion(descripcion);
 
 	cout << "Ingrese el Precio del Producto: ";
 	cin >> precio_actual;
 	nuevo.precio_actual = precio_actual;
 
-
+	nuevo.id = id;
 	nuevo.posicion = 0;
 	nuevo.size = 0;
 
@@ -142,7 +150,7 @@ void Amazon::agregarProducto()
 }
 
 void Amazon::consultarCliente() {
-	ifstream file("clientes.bin", ios::in | ios::binary);
+	ifstream file("clientes.bin", ios::in | ios::binary | ios::_Nocreate);
 	Busqueda buscador;
 
 	if (!file) {
@@ -163,8 +171,9 @@ void Amazon::consultarCliente() {
 	{
 	case 1:
 		char _nombreCompleto[120];
+		cin.ignore();
 		cout << "\nIngrese el Nombre Completo del Cliente: ";
-		cin >> _nombreCompleto;
+		cin.getline(_nombreCompleto,120);
 
 		if (buscador.buscarClienteNombre(file,_nombreCompleto)) {
 			DelimTextBuffer delim('^', 300);
@@ -197,7 +206,8 @@ void Amazon::consultarCliente() {
 		break;
 
 	case 3:
-		listarClientes();
+		if (!listarClientes())
+			cout << "\n\nNO HAY REGISTROS QUE MOSTRAR\n";
 		break;
 
 	case 4:
@@ -212,7 +222,7 @@ void Amazon::consultarCliente() {
 }
 
 void Amazon::consultarProducto(){
-	ifstream file("productos.bin", ios::in | ios::binary);
+	ifstream file("productos.bin", ios::in | ios::binary | ios::_Nocreate);
 	Busqueda buscador;
 
 	if (!file)
@@ -226,7 +236,7 @@ void Amazon::consultarProducto(){
 	int opcion = 0;
 
 	cout << "Elige la forma de busqueda :"
-		<< "\n 1.Buscar por Nombre  \n2.Buscar por codigo";
+		<< "\n1.Buscar por Nombre.  \n2.Buscar por codigo. \n3.Listar los Producto.\n4.Salir \n";
 	cout << "Ingrese una opcion:";
 	cin >> opcion;
 
@@ -238,8 +248,9 @@ void Amazon::consultarProducto(){
 	case 1:
 
 		char _nombre[200];
-		cout << "\n Ingrese el Nombre del Producto: ";
-		cin >> _nombre;
+		cin.ignore();
+		cout << "\nIngrese el Nombre del Producto: ";
+		cin.getline(_nombre,200);
 
 		if (buscador.buscarProductoNombre(file, _nombre))
 		{
@@ -273,8 +284,8 @@ void Amazon::consultarProducto(){
 
 		break;
 	case 3:
-
-		listarProductos();
+		if (!listarProductos())
+			cout << "\n\nNO HAY REGISTROS QUE MOSTRAR\n";
 		break;
 	case 4:
 		cout << "\n Saliendo ...\n";
@@ -327,12 +338,18 @@ void Amazon::navegacionClientes() {
 				break;
 
 			case 2:
-				modificarCliente(actual.codigo);
+				if (actual.id != 0)
+					modificarCliente(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
 				file.close();
 				break;
 
 			case 3:
-				eliminarClientes(actual.codigo);
+				if (actual.id != 0)
+					eliminarClientes(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
 				file.close();
 				break;
 
@@ -356,12 +373,18 @@ void Amazon::navegacionClientes() {
 				break;
 
 			case 2:
-				modificarCliente(actual.codigo);
+				if (actual.id != 0)
+					modificarCliente(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
 				file.close();
 				break;
 
 			case 3:
-				eliminarClientes(actual.codigo);
+				if (actual.id != 0)
+					eliminarClientes(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
 				file.close();
 				break;
 
@@ -385,12 +408,18 @@ void Amazon::navegacionClientes() {
 				break;
 
 			case 2:
-				modificarCliente(actual.codigo);
+				if (actual.id != 0)
+					modificarCliente(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
 				file.close();
 				break;
 
 			case 3:
-				eliminarClientes(actual.codigo);
+				if (actual.id != 0)
+					eliminarClientes(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
 				file.close();
 				break;
 
@@ -419,7 +448,7 @@ void Amazon::navegacionProductos()
 		Producto actual;
 		Producto auxactual;
 
-		cout << " ****** N A V E G A C I O N  D E  P R O D U C T O S **** \n\n";
+		cout << "\n\n ****** N A V E G A C I O N  D E  P R O D U C T O S **** \n\n";
 
 		bool fin = false;
 		long posicion = file.tellg();
@@ -450,12 +479,18 @@ void Amazon::navegacionProductos()
 				break;
 
 			case 2:
-				modificarProducto(actual.codigo);
+				if (actual.id != 0)
+					modificarProducto(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
 				file.close();
 				break;
 
 			case 3:
-				eliminarProducto(actual.codigo);
+				if (actual.id != 0)
+					eliminarProducto(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
 				file.close();
 				break;
 
@@ -480,12 +515,18 @@ void Amazon::navegacionProductos()
 				break;
 
 			case 2:
-				modificarProducto(actual.codigo);
+				if (actual.id != 0)
+					modificarProducto(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
 				file.close();
 				break;
 
 			case 3:
-				eliminarProducto(actual.codigo);
+				if (actual.id != 0)
+					eliminarProducto(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
 				file.close();
 				break;
 
@@ -510,12 +551,18 @@ void Amazon::navegacionProductos()
 				break;
 
 			case 2:
-				modificarProducto(actual.codigo);
+				if (actual.id != 0)
+					modificarProducto(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
 				file.close();
 				break;
 
 			case 3:
-				eliminarProducto(actual.codigo);
+				if (actual.id != 0)
+					eliminarProducto(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
 				file.close();
 				break;
 
@@ -738,7 +785,7 @@ void Amazon::modificarProducto(const char* _code){
 		modificado.print();
 		cout << "\nElige un parametro a editar: "
 			<< "\n1.Modificar Codigo \n2.Modificar Categoria \n3.Modificar Sub-Categoria "
-			<< "\n4.Modificar Nombre \n5.Modificar Descripcion  \n6.Modificar Precio Actual \n.7 Guardar Cambios\n";
+			<< "\n4.Modificar Nombre \n5.Modificar Descripcion  \n6.Modificar Precio Actual \n7.Guardar Cambios\n";
 		cin >> opcion;
 
 		switch (opcion){
@@ -833,33 +880,48 @@ void Amazon::modificarProducto(const char* _code){
 }
 
 bool Amazon::listarClientes() {
-	ifstream file("clientes.bin", ios::in | ios::binary);
+	ifstream file("clientes.bin", ios::in | ios::binary | ios::_Nocreate);
+
+	if (!file){
+		cout << "Error al intentar abrir el archivo .bin de clientes\n";
+		return false;
+	}
+
 	cout << "\n\n***** L I S T A  D E  C L I E N T E S *****\n\n";
 	file.seekg(0);
 
 	Cliente actual;
+	bool hay = false;
 	while (!file.eof()) {
 		DelimTextBuffer delim('^', 300);
 		Cliente actual;
 
 		actual.Read(file, delim);
-		if(actual.id != 0)
+		if (actual.id != 0) {
 			actual.print();
+			hay = true;
+		}
 	}
 
 	file.close();
-	return true;
+	return hay;
 }
 
 bool Amazon::listarProductos()
 {
-	ifstream file("productos.bin", ios::in | ios::binary);
+	ifstream file("productos.bin", ios::in | ios::binary | ios::_Nocreate);
+
+	if (!file){
+		cout << "Error al intentar abrir el archivo .bin de productos\n";
+		return false;
+	}
+
 	cout << "\n\n*** L I S T A D O   D E  P R O D U C T O S ***\n\n";
 
 	file.seekg(0);
 
 	Producto actual;
-
+	bool hay = false;
 	while (!file.eof())
 	{
 		DelimTextBuffer delim('^', 300);
@@ -868,18 +930,20 @@ bool Amazon::listarProductos()
 
 		actual.Read(file, delim);
 
-		if (actual.id != 0)
+		if (actual.id != 0) {
 			actual.print();
+			hay = true;
+		}
 	}
 
 	file.close();
-	return true;
+	return hay;
 }
 
 void Amazon::eliminarClientes(const char* _code){
-	ifstream file("clientes.bin" ,ios::in | ios::binary);
-	fstream fileE("clientes.bin", ios::out | ios::in | ios::binary);
-	ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary);
+	ifstream file("clientes.bin" ,ios::in | ios::binary | ios::_Nocreate);
+	fstream fileE("clientes.bin", ios::out | ios::in | ios::binary | ios::_Nocreate);
+	ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary | ios::_Nocreate);
 	Busqueda buscador;
 
 	if (!file && !fileE && !fileIndex)
@@ -959,10 +1023,10 @@ void Amazon::eliminarProductoAux(Producto actual, fstream& fileE, long posicion,
 
 void Amazon::eliminarProducto(const char* _code)
 {
-	ifstream file("productos.bin", ios::in | ios::binary);
-	ifstream fileDetalles("detalles.bin", ios::in | ios::binary);
-	fstream fileE("productos.bin", ios::out | ios::in | ios::binary);
-	ofstream fileIndex("prodcutos.index", ios::out | ios::app | ios::binary);
+	ifstream file("productos.bin", ios::in | ios::binary | ios::_Nocreate);
+	ifstream fileDetalles("detalles.bin", ios::in | ios::binary | ios::_Nocreate);
+	fstream fileE("productos.bin", ios::out | ios::in | ios::binary | ios::_Nocreate);
+	ofstream fileIndex("prodcutos.index", ios::out | ios::app | ios::binary | ios::_Nocreate);
 
 	Busqueda buscador;
 
@@ -993,6 +1057,7 @@ void Amazon::eliminarProducto(const char* _code)
 		DelimTextBuffer delim('^', 300);
 		posicion = file.tellg();
 		actual.Read(file, delim);
+		actual.print();
 		file.close();
 	}
 	else
@@ -1006,19 +1071,19 @@ void Amazon::eliminarProducto(const char* _code)
 		return;
 	}
 
-	cout << "\nEsta seguro que Desea a eliminar el  producto completamente (1 Si) (2 No)"
-		<< "Ingrese una opcion:";
+	cout << "\nEsta seguro que Desea a eliminar el  producto completamente (1 SI) (2 NO)"
+		<< "\nIngrese una opcion:";
 	cin >> opcion;
 
 	switch (opcion)
 	{
 	case 1: {
 		eliminarProductoAux(actual, fileE, posicion, fileIndex);
-		cout << "... Producto  Eliminado....";
+		cout << "... Producto  Eliminado....\n";
 		break;
 	}
 	case 2:
-		cout << "... Operacion Cancelada....";
+		cout << "... Operacion Cancelada....\n";
 		break;
 	}
 
@@ -1028,17 +1093,14 @@ void Amazon::eliminarProducto(const char* _code)
 	fileIndex.close();
 }
 
-void Amazon::facturar() {
+void Amazon::RegistrarCompra() {
 	fstream fileF("facturas.bin", ios::in | ios::out | ios::binary);
 	ofstream fileFIndex("facturas.index", ios::in | ios::binary);
 
 	fstream fileD("detalles.bin", ios::in | ios::binary);
 	ofstream fileDIndex("detalles.index", ios::in | ios::binary);
 
-	ifstream fileC("clientes.bin", ios::in | ios::binary);
-	ifstream fileP("productos.bin", ios::in | ios::binary);
-
-	if (!fileF && !fileFIndex && fileD && fileDIndex && fileP) {
+	if (!fileF && !fileFIndex && fileD && fileDIndex) {
 		cout << "\nError al intentar abrir los archivos :(\n";
 		return;
 	}
@@ -1047,23 +1109,43 @@ void Amazon::facturar() {
 	Factura factura;
 
 	factura.id = factura.getNextId();
+	cout << factura.id;
 
 	char _codigo[13];
+	char* _hora= new char[6];
 
-	cout << "\nIndique codigo para su Factura: ";
+	cout << "\nDATOS DE FACTURA:\nIndique codigo para su Factura: ";
 	cin >> _codigo;
+
+	cout << "\nDatos de Fecha:\nIndique el dia de compra: ";
+	cin >> factura.dia;
+	cout << "Indique el mes de compra: ";
+	cin >> factura.mes;
+	cout << "Indique el anio de compra: ";
+	cin >> factura.anio;
+	cout << "Indique la hora de compra: ";
+	cin >> _hora;
+	factura.set_hora(_hora);
+
+	cout << "\nDatos de Localizacion:\nIndique su cordenada X: ";
+	cin >> factura.ubicacion_X;
+	cout << "\nIndique su cordenada X: ";
+	cin >> factura.ubicacion_Y;
 
 	factura.set_codigo(_codigo);
 
-
 	char _codigoCliente[13];
 
-	cout << "INGRESE LOS DATOS PARA EL CLIENTE:\nIndique codigo: ";
+
+	//Seleccionar el Cliente.
+	cout << "\nINGRESE LOS DATOS PARA EL CLIENTE:\nIndique codigo: ";
 	cin >> _codigoCliente;
 	bool clienteEncontrado = false;
 	
 	while (clienteEncontrado == false) {
+		ifstream fileC("clientes.bin", ios::in | ios::binary);
 		fileC.seekg(0);
+
 		if (buscardor.buscarClienteCodigo(fileC, _codigoCliente)) {
 			Cliente cliente;
 			DelimTextBuffer delim('^', 300);
@@ -1072,6 +1154,9 @@ void Amazon::facturar() {
 			if (cliente.id != 0) {
 				factura.cliente_id = cliente.id;
 				clienteEncontrado = true;
+				cout << "\nCliente: ";
+				cliente.print();
+				break;
 			}
 		}
 		else {
@@ -1081,17 +1166,26 @@ void Amazon::facturar() {
 
 			switch (opc) {
 			case 1:
-				agregarCliente();
+				cin.ignore();
+				cout << "INGRESE LOS DATOS PARA EL CLIENTE:\nIndique codigo: ";
+				cin.getline(_codigoCliente, 13);
+				agregarCliente(_codigoCliente);
 				break;
 			default:
+				cout << "INGRESE LOS DATOS PARA EL CLIENTE:\nIndique codigo: ";
+				cin >> _codigoCliente;
 				break;
 			}
+			fileC.close();
 		}
 	}
 
+	//Cargar Productos.
+	cout << "\nDATOS DE CLIENTE:";
 	bool agregarProd = true;
 	vector<Detalle> carrito;
 	while (agregarProd) {
+		ifstream fileP("productos.bin", ios::in | ios::binary);
 		char _codigoProducto[10]; 
 		cout << "\nIndique codigo del producto: ";
 		cin >> _codigoProducto;
@@ -1113,6 +1207,8 @@ void Amazon::facturar() {
 				detalle.cantidad = cantidad;
 				detalle.precio_unit = producto.precio_actual;
 				agregarAlCarrito(carrito,detalle);
+				detalle.print();
+				cout << "\nPRODUCTO AGREGADO AL CARRITO.\n";
 			}
 
 			int opc = 0;
@@ -1129,13 +1225,19 @@ void Amazon::facturar() {
 				break;
 			}
 		}
+		else {
+			cout << "\nNo se encontro ese producto, intente con otro.";
+		}
+		fileP.close();
 	}
 
 	if (!carrito.empty()) {
+		cout << "\n\nRESUMEN DE COMPRAS: ";
 		for (int i = 0; i < carrito.size(); i++) {
-			factura.total_neto += carrito[i].precio_unit;
+			factura.total_neto += (carrito[i].precio_unit * carrito[i].cantidad);
 			DelimTextBuffer delim('^', 300);
 			carrito[i].Write(fileD,fileDIndex,delim);
+			carrito[i].print();
 		}
 
 		if (factura.total_neto != 0)
@@ -1143,14 +1245,9 @@ void Amazon::facturar() {
 		else
 			factura.total_impuesto = 0;
 
-		factura.ubicacion_X = 0;
-		factura.ubicacion_Y = 0;
-
 		DelimTextBuffer delim2('^', 300);
 		factura.Write(fileF, fileFIndex, delim2);
-
 		factura.print();
-
 		
 		cout << "\nTotal a pagar: " << (factura.total_neto + factura.total_impuesto) << "\n\nFACTURA PROCESADA.!!!!!!!";
 	}
@@ -1179,3 +1276,249 @@ void Amazon::agregarAlCarrito(vector<Detalle>& _carrito, Detalle _producto) {
 	cout << "\nAgregado al Carrito!!!\n";
 }
 
+void Amazon::eliminarFactura(const char* _code) {
+	ifstream file("facturas.bin", ios::in | ios::binary | ios::_Nocreate);
+	fstream fileE("facturas.bin", ios::out | ios::in | ios::binary | ios::_Nocreate);
+	ofstream fileIndex("facturas.index", ios::out | ios::app | ios::binary | ios::_Nocreate);
+	Busqueda buscador;
+
+	if (!file && !fileE && !fileIndex)
+	{
+		cout << "Error al intentar abrir el archivo .bin\n\n";
+		return;
+
+	}
+
+	cout << "\n\n**** E L I M I N A R  F A C T U R A S ";
+	char* code;
+	if (_code == nullptr) {
+		code = new char[13];
+		cout << "\nIngrese el codigo de la factura a eliminar :";
+		cin >> code;
+	}
+	else {
+		code = new char[strlen(_code)];
+		strcpy_s(code, strlen(_code) + 1, _code);
+	}
+
+
+	Factura actual;
+	int posicion = -1;
+	int opcion;
+	if (buscador.buscarFacturaCodigo(file, code))
+	{
+		DelimTextBuffer delim('^', 300);
+		posicion = file.tellg();
+		actual.Read(file, delim);
+		file.close();
+	}
+	else
+	{
+		cout << "\nNo se encontro la factura que busca que busca \n";
+		return;
+	}
+
+	cout << "\n\nEsta seguro que Desea a eliminar esta Factura completamente (1 Si) (2 No)"
+		<< "\nIngrese una opcion:";
+	cin >> opcion;
+
+	switch (opcion)
+	{
+	case 1: {
+		eliminarFacturaAux(actual, fileE, posicion, fileIndex);
+		buscador.eliminarDetallesFactura(actual.id);
+		cout << "... Factura Eliminado....";
+
+		break;
+	}
+	case 2:
+		cout << "... Operacion Cancelada....";
+		break;
+
+	}
+
+	file.close();
+	fileE.close();
+	fileIndex.close();
+}
+
+void Amazon::eliminarFacturaAux(Factura actual, fstream& fileE, long posicion, ofstream& fileIndex) {
+	actual.id = 0;
+	fileE.seekp(posicion, ios::beg);
+
+	DelimTextBuffer delim('^', 300);
+	actual.Write(fileE, fileIndex, delim);
+}
+
+void Amazon::navegacionFacturas() {
+	ifstream file("facturas.bin", ios::in | ios::binary);
+	file.seekg(0, ios::beg);
+
+	Factura actual;
+	long posAnterior = 0;
+
+	while (!file.eof()) {
+		DelimTextBuffer delim('^', 300);
+		Cliente actual;
+		Cliente auxactual;
+
+		cout << "\n\n ****** N A V E G A C I O N  D E  F A C T U R A S ****** \n\n";
+		bool fin = false;
+		long posicion = file.tellg();
+		actual.Read(file, delim);
+
+		long auxposicion = file.tellg();
+		auxactual.Read(file, delim);
+
+		if (actual.id != 0)
+			actual.print();
+		else
+			cout << "\n\n **REGISTRO FUE BORRADO ANTERIORMENTE** \n\n";
+
+		if (auxactual.id == 0) {
+			fin = true;
+		}
+		file.seekg(auxposicion);
+
+
+		if (posicion == 0) {
+			int opc = 0;
+			cout << "\n1. Regresar al menu anterior.\n2. Mostrar Factura Completa.\n3. Eliminar Registro.\n4. Siguiente Registro.\n5. Salir al menu.\n";
+			cin >> opc;
+
+			switch (opc) {
+			case 1:
+				cout << "Regresando......";
+				return;
+				break;
+
+			case 2:
+				if (actual.id != 0)
+					modificarCliente(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
+				file.close();
+				break;
+
+			case 3:
+				if (actual.id != 0)
+					eliminarFactura(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
+				file.close();
+				break;
+
+			case 4:
+				posAnterior = posicion;
+				break;
+
+			case 5:
+				return;
+				break;
+			}
+
+		}
+		else if (posicion != 0 && fin == false) {
+			int opc = 0;
+			cout << "\n1. Registro anterior.\n2. Mostrar Factura Completa.\n3. Eliminar Registro.\n4. Siguiente Registro.\n5. Salir al menu.\n";
+			cin >> opc;
+
+			switch (opc) {
+			case 1:
+				file.seekg(posAnterior);
+				break;
+
+			case 2:
+				if (actual.id != 0)
+					modificarCliente(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
+				file.close();
+				break;
+
+			case 3:
+				if (actual.id != 0)
+					eliminarFactura(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
+				file.close();
+				file.close();
+				break;
+
+			case 4:
+				posAnterior = posicion;
+				break;
+
+			case 5:
+				return;
+				break;
+			}
+		}
+		else if (fin == true) {
+			int opc = 0;
+			cout << "\n1. Registro anterior.\n2. Mostrar Factura Completa.\n3. Eliminar Registro.\n4. Salir al menu.\n";
+			cin >> opc;
+
+			switch (opc) {
+			case 1:
+				fin = false;
+				file.seekg(posAnterior);
+				break;
+
+			case 2:
+				if (actual.id != 0)
+					modificarCliente(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
+				file.close();
+				break;
+
+			case 3:
+				if (actual.id != 0)
+					eliminarFactura(actual.codigo);
+				else
+					cout << "\nNO ES POSIBLE REGISTRO YA DEJO DE EXISTIR";
+				file.close();
+				break;
+
+			case 4:
+				return;
+				break;
+			}
+		}
+	}
+
+	file.close();
+}
+
+bool Amazon::listarDetallesDeFactura(int _id_factura) {
+	ifstream file("detalles.bin", ios::in | ios::binary | ios::_Nocreate);
+
+	if (!file) {
+		cout << "Error al intentar abrir el archivo .bin de clientes\n";
+		return false;
+	}
+
+	cout << "\n\n***** D E T A L L E S  D E  F A C T U R A *****\n\n";
+	file.seekg(0);
+
+	while (!file.eof())
+	{
+		DelimTextBuffer delim('^', 300);
+		Detalle actual;
+
+		int posicion = -1;
+		posicion = file.tellg();
+
+		actual.Read(file, delim);
+
+		if (actual.id != 0) {
+			if (actual.factura_id == _id_factura){
+				actual.print();
+				return true;
+			}
+		}
+	}
+
+	return false;
+}

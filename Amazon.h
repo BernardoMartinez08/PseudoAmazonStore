@@ -16,7 +16,7 @@ using namespace std;
 class Amazon {
 public:
 	//Seccion Clientes
-	static void agregarCliente();
+	static void agregarCliente(const char* code = nullptr);
 	static void consultarCliente();
 	static void modificarCliente(const char* code = nullptr);
 	static void navegacionClientes();
@@ -38,7 +38,12 @@ public:
 	static bool listarProductos();
 
 	//Seccion Factura - Prototipo
-	static void facturar();
+	static void RegistrarCompra();
+	static void navegacionFacturas();
+	static void eliminarFactura(const char* code = nullptr);
+	static void eliminarFacturaAux(Factura actual, fstream& fileE, long posicion, ofstream& fileIndex);
+	static bool listarDetallesDeFactura(int _id_factura);
+
 
 private:
 	static void agregarAlCarrito(vector<Detalle>&, Detalle);

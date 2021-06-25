@@ -78,7 +78,7 @@ int Producto::Unpack(DelimTextBuffer& _buffer)
 	int resultado = 1;
 	size = _buffer.BufferSize;
 	resultado = id = atoi(_buffer.Unpack((char*)id));
-	resultado = set_sub_categoria(_buffer.Unpack(codigo));
+	resultado = set_codigo(_buffer.Unpack(codigo));
 	resultado = set_categoria(_buffer.Unpack(categoria));
 	resultado = set_sub_categoria(_buffer.Unpack(sub_categoria));
 	resultado = set_nombre(_buffer.Unpack(nombre));
@@ -120,8 +120,9 @@ int Producto::getNextId() {
 	if (!auxID) {
 		setNextId(0);
 	}
-	
-	ifstream indiceIds("indiceIdProducto.index", ios::in | ios::binary);
+	auxID.close();
+
+	ifstream indiceIds("producto.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
@@ -131,7 +132,7 @@ int Producto::getNextId() {
 	indiceIds.seekg(0, ios::beg);
 
 	int _nextId;
-	indiceIds.read(reinterpret_cast<char*>(&_nextId), 4);
+	indiceIds >> _nextId;
 
 	indiceIds.close();
 
@@ -141,7 +142,7 @@ int Producto::getNextId() {
 }
 
 void Producto::setNextId(int _lastId) {
-	ofstream indiceIds("producto.index", ios::out | ios::app | ios::binary);
+	ofstream indiceIds("producto.index", ios::out | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
@@ -151,7 +152,7 @@ void Producto::setNextId(int _lastId) {
 	int newID = _lastId + 1;
 
 	indiceIds.seekp(0, ios::beg);
-	indiceIds.write(reinterpret_cast<const char*>(&newID), sizeof(_lastId));
+	indiceIds << newID;
 
 	indiceIds.close();
 }

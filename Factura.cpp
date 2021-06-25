@@ -106,8 +106,8 @@ int Factura::Write(ostream& file, ostream& fileIndex, DelimTextBuffer& _delim) {
 void Factura::print() {
 	cout << "\nId: " << id
 		<< "\nCodigo: " << codigo
-		<< "\Id Cliente: " << cliente_id
-		<< "\Fecha: " << dia << "/" << mes << "/" << anio
+		<< "\nId Cliente: " << cliente_id
+		<< "\nFecha: " << dia << "/" << mes << "/" << anio
 		<< "\nHora: " << hora
 		<< "\nTotal Neto: " << total_neto
 		<< "\nTotal Impuestos: " << total_impuesto
@@ -123,13 +123,13 @@ void Factura::print() {
 //Funciones Prototipo de funciones mas avanzadas.
 
 int Factura::getNextId() {
-	ifstream auxID("factura.index", ios::in | ios::binary | ios::_Nocreate);
+	ifstream auxID("facturas.index", ios::in | ios::binary | ios::_Nocreate);
 
 	if (!auxID) {
 		setNextId(0);
 	}
 	
-	ifstream indiceIds("factura.index", ios::in | ios::binary);
+	ifstream indiceIds("facturas.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
@@ -149,7 +149,7 @@ int Factura::getNextId() {
 }
 
 void Factura::setNextId(int _lastId) {
-	ofstream indiceIds("factura.index", ios::out | ios::app | ios::binary);
+	ofstream indiceIds("facturas.index", ios::out | ios::app | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
@@ -165,7 +165,7 @@ void Factura::setNextId(int _lastId) {
 }
 
 vector<vector<int>>* Factura::getIndiceID() {
-	ifstream indiceIds("factura.index", ios::in | ios::binary);
+	ifstream indiceIds("facturas.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
