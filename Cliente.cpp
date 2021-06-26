@@ -175,7 +175,7 @@ void Cliente::print() {
 
 //Funciones Prototipo de funciones mas avanzadas.
 
-int Cliente::getNextId() {
+int Cliente::getNextId(bool next) {
 	ifstream auxID("clientes.index", ios::in | ios::binary | ios::_Nocreate);
 	
 	if (!auxID) {
@@ -193,11 +193,12 @@ int Cliente::getNextId() {
 	indiceIds.seekg(0, ios::beg);
 
 	int _nextId;
-	indiceIds >> _nextId;
+	indiceIds.read(reinterpret_cast<char*>(&_nextId), 4);
 
 	indiceIds.close();
 
-	setNextId(_nextId);
+	if(next == true)
+		setNextId(_nextId);
 
 	return _nextId;
 }
@@ -213,7 +214,7 @@ void Cliente::setNextId(int _lastId) {
 	int newID = _lastId + 1;
 
 	indiceIds.seekp(0, ios::beg);
-	indiceIds << newID;
+	indiceIds.write(reinterpret_cast<const char*>(&newID), sizeof(newID));
 
 	indiceIds.close();
 }

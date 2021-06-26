@@ -62,7 +62,7 @@ public:
 	int posicion;
 	int size;
 
-	int getNextId();
+	int getNextId(bool next = true);
 	void setNextId(int);
 private:
 	bool set_id(int);

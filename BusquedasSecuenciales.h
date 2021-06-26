@@ -12,12 +12,27 @@
 #include <cstring>
 #include <vector>
 #include <string>
+#include <stdlib.h>
+#include <ctime>
+#include <sstream>
+#include "Amazon.h"
 using namespace std;
 
 struct ubicacion{
 	string ciudad;
 	string region;
 	string pais;
+};
+
+struct precio {
+	int precioMin;
+	int precioMax;
+};
+
+struct coordenada {
+	string ciudad;
+	float _x;
+	float _y;
 };
 
 class Busqueda {
@@ -62,16 +77,27 @@ public:
 	static vector<ubicacion> extraerUbicaciones();
 
 	//Generadores
-	static void generarClientes(ostream& ,int);
+	static void generarCodigoAleatorio(char* code, int len);
+	static void generarClientes(int);
+	static void generarProductos(int);
+	static void generarFacturas(int);
 
 	//Generando Productos
 	static void generarArchivoCategorias();
 	static void generarArchivoSubCategoria();
 	static void generarArchivoProducto();
+	static void generarArchivoDescripcion();
 
 	static vector<string> extraerCategorias();
-	static vector<string> extraerSubcategoria();
+	static vector<vector<string>> extraerSubcategoria();
+	static vector<vector<precio>> extraerPrecios();
+	static vector<vector<vector<string>>> extraerProductos();
+	static vector<string> extraerDescripcion();
 
+	//Generando Productos
+	static void generarArchivoCoordenadas();
+	static vector<coordenada> extraerCoordenadas();
+		 
 	static char* toLowerCase(const char*);
 };
 

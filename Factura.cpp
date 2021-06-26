@@ -122,13 +122,14 @@ void Factura::print() {
 
 //Funciones Prototipo de funciones mas avanzadas.
 
-int Factura::getNextId() {
+int Factura::getNextId(bool next) {
 	ifstream auxID("facturas.index", ios::in | ios::binary | ios::_Nocreate);
 
 	if (!auxID) {
 		setNextId(0);
 	}
-	
+	auxID.close();
+
 	ifstream indiceIds("facturas.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
@@ -140,16 +141,16 @@ int Factura::getNextId() {
 
 	int _nextId;
 	indiceIds.read(reinterpret_cast<char*>(&_nextId), 4);
-
 	indiceIds.close();
 
-	setNextId(_nextId);
+	if (next == true)
+		setNextId(_nextId);
 
 	return _nextId;
 }
 
 void Factura::setNextId(int _lastId) {
-	ofstream indiceIds("facturas.index", ios::out | ios::app | ios::binary);
+	ofstream indiceIds("facturas.index", ios::out | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";

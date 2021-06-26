@@ -1094,21 +1094,19 @@ void Amazon::eliminarProducto(const char* _code)
 }
 
 void Amazon::RegistrarCompra() {
-	fstream fileF("facturas.bin", ios::in | ios::out | ios::binary);
-	ofstream fileFIndex("facturas.index", ios::in | ios::binary);
-
-	fstream fileD("detalles.bin", ios::in | ios::binary);
-	ofstream fileDIndex("detalles.index", ios::in | ios::binary);
-
-	if (!fileF && !fileFIndex && fileD && fileDIndex) {
-		cout << "\nError al intentar abrir los archivos :(\n";
-		return;
-	}
-
 	Busqueda buscardor;
 	Factura factura;
 
 	factura.id = factura.getNextId();
+
+	ofstream fileF("facturas.bin", ios::out | ios::app | ios::binary);
+	ofstream fileFIndex("facturas.index", ios::out | ios::app | ios::binary);
+
+	if (!fileF && !fileFIndex) {
+		cout << "\nError al intentar abrir los archivos :(\n";
+		return;
+	}
+
 	cout << factura.id;
 
 	char _codigo[13];
@@ -1129,7 +1127,7 @@ void Amazon::RegistrarCompra() {
 
 	cout << "\nDatos de Localizacion:\nIndique su cordenada X: ";
 	cin >> factura.ubicacion_X;
-	cout << "\nIndique su cordenada X: ";
+	cout << "\nIndique su cordenada Y: ";
 	cin >> factura.ubicacion_Y;
 
 	factura.set_codigo(_codigo);
@@ -1181,7 +1179,7 @@ void Amazon::RegistrarCompra() {
 	}
 
 	//Cargar Productos.
-	cout << "\nDATOS DE CLIENTE:";
+	cout << "\nDATOS DE PRODUCTOS:";
 	bool agregarProd = true;
 	vector<Detalle> carrito;
 	while (agregarProd) {
@@ -1233,6 +1231,9 @@ void Amazon::RegistrarCompra() {
 
 	if (!carrito.empty()) {
 		cout << "\n\nRESUMEN DE COMPRAS: ";
+		ofstream fileD("detalles.bin", ios::out | ios::app | ios::binary);
+		ofstream fileDIndex("detalles.index", ios::out | ios::binary);
+
 		for (int i = 0; i < carrito.size(); i++) {
 			factura.total_neto += (carrito[i].precio_unit * carrito[i].cantidad);
 			DelimTextBuffer delim('^', 300);

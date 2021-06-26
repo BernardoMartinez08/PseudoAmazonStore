@@ -47,10 +47,9 @@ public:
 	int posicion;
 	int size;
 
-	int getNextId();
+	int getNextId(bool next = true);
 private:
 	bool set_id(int);
-	//Obtener siguiente id autoIncremental
 	void setNextId(int);
 
 	vector<vector<int>>* getIndiceID();

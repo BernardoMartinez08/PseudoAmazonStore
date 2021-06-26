@@ -73,13 +73,14 @@ void Detalle::print() {
 
 //Funciones Prototipo de funciones mas avanzadas.
 
-int Detalle::getNextId() {
+int Detalle::getNextId(bool next) {
 	ifstream auxID("detalles.index", ios::in | ios::binary | ios::_Nocreate);
 
 	if (!auxID) {
 		setNextId(0);
 	}
-	
+	auxID.close();
+
 	ifstream indiceIds("detalles.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
@@ -94,13 +95,14 @@ int Detalle::getNextId() {
 
 	indiceIds.close();
 
-	setNextId(_nextId);
+	if (next == true)
+		setNextId(_nextId);
 
 	return _nextId;
 }
 
 void Detalle::setNextId(int _lastId) {
-	ofstream indiceIds("detalles.index", ios::out | ios::app | ios::binary);
+	ofstream indiceIds("detalles.index", ios::out | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";

@@ -44,9 +44,9 @@ public:
 	static void eliminarFacturaAux(Factura actual, fstream& fileE, long posicion, ofstream& fileIndex);
 	static bool listarDetallesDeFactura(int _id_factura);
 
+	static void agregarAlCarrito(vector<Detalle>&, Detalle);
 
 private:
-	static void agregarAlCarrito(vector<Detalle>&, Detalle);
 };
 
 #endif // !AMAZON_H

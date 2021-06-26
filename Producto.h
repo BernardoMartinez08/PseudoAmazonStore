@@ -54,7 +54,7 @@ public:
 	long posicion;
 	long size;
 
-	int getNextId();
+	int getNextId(bool next = true);
 private:
 	//Obtener siguiente id autoIncremental
 	void setNextId(int);
