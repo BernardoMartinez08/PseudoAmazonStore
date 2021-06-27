@@ -18,9 +18,6 @@ public:
 	Producto(const char*, const char*, const char*, const char*, const char*, float);
 	Producto();
 	
-	//Obtener la posicion del producto en el indice
-	long searchProducto(int);
-	
 	bool set_codigo(const char*);
 	bool set_categoria(const char*);
 	bool set_sub_categoria(const char*);

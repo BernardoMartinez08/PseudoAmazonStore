@@ -12,7 +12,7 @@ void productos();
 void facturas();
 void generadores();
 Amazon tienda;
-Busqueda buscador;
+Busqueda buscador(tienda.browser);
 using namespace std;
 int main()
 {
@@ -20,13 +20,6 @@ int main()
 	Cliente aux;
 	int opcion = 0;
 	int producto;
-
-	tienda.browser = new BusquedaIndexada();
-
-	tienda.browser->cargarPrincipales();
-	tienda.browser->cargarSecundarios();
-
-	buscador.browser = tienda.browser;
 
 	while (opcion != 5) {
 		cout << "\n********* TIENDA VIRTUAL DE AMAZON *********\n\n";
@@ -58,6 +51,9 @@ int main()
 
 		case 5:
 			cout << "\n...Saliendo....";
+			tienda.salir();
+
+			cout << "\nSE GUARDARON LOS INDICES, PRECIONE UNA TECLA PARA CERRAR.";
 			break;
 		default:
 			cout << "\nOPCION NO VALIDA";

@@ -15,7 +15,6 @@
 #include <stdlib.h>
 #include <ctime>
 #include <sstream>
-#include "Amazon.h"
 #include "NodoInvertido.h"
 #include "NodoInvertidoLista.h"
 #include "NodoPrincipal.h"
@@ -113,6 +112,10 @@ public:
 	char* toLowerCase(const char*);
 
 private:
+	bool guardarSecundariosCliente();
+	bool guardarSecundariosProducto();
+	bool guardarSecundariosFactura();
+
 	void quickSort(vector<NodoPrincipal>*& _datos, int primero, int ultimo);
 	void quickSort(vector<NodoPrincipal>*& _datos);
 };

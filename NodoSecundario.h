@@ -14,7 +14,6 @@ class NodoSecundario {
 	friend istream& operator>>(istream&, NodoSecundario&);
 public:
 	NodoSecundario();
-
 	bool set_key(const char*);
 
 	char* key;

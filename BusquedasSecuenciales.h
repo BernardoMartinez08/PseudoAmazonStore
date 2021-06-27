@@ -38,8 +38,8 @@ struct coordenada {
 
 class Busqueda {
 public:
-	BusquedaIndexada* browser;
-
+	Busqueda(BusquedaIndexada _browser);
+	Busqueda();
 	//Seccion Clientes
 	static bool buscarClienteCodigo(istream&, const char* _codigo);
 	static bool buscarClienteNombre(istream&, const char* _nombreCompleto);

@@ -123,25 +123,30 @@ void Factura::print() {
 //Funciones Prototipo de funciones mas avanzadas.
 
 int Factura::getNextId(bool next) {
-	ifstream auxID("facturas.index", ios::in | ios::binary | ios::_Nocreate);
+	ifstream auxID("identifiers.index", ios::in | ios::binary | ios::_Nocreate);
 
 	if (!auxID) {
-		setNextId(0);
+		setNextId(1);
 	}
 	auxID.close();
 
-	ifstream indiceIds("facturas.index", ios::in | ios::binary);
+	ifstream indiceIds("identifiers.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
 		return -1;
 	}
 
-	indiceIds.seekg(0, ios::beg);
+	indiceIds.seekg(9, ios::beg);
 
 	int _nextId;
 	indiceIds.read(reinterpret_cast<char*>(&_nextId), 4);
 	indiceIds.close();
+
+	if (_nextId < 0) {
+		setNextId(1);
+		_nextId = 2;
+	}
 
 	if (next == true)
 		setNextId(_nextId);
@@ -150,7 +155,7 @@ int Factura::getNextId(bool next) {
 }
 
 void Factura::setNextId(int _lastId) {
-	ofstream indiceIds("facturas.index", ios::out | ios::binary);
+	fstream indiceIds("identifiers.index", ios::out | ios::in | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
@@ -159,7 +164,7 @@ void Factura::setNextId(int _lastId) {
 
 	int newID = _lastId + 1;
 
-	indiceIds.seekp(0, ios::beg);
+	indiceIds.seekp(9, ios::beg);
 	indiceIds.write(reinterpret_cast<const char*>(&newID), sizeof(newID));
 
 	indiceIds.close();

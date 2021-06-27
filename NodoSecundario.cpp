@@ -26,13 +26,13 @@ ostream& operator<<(ostream& stream, const NodoSecundario& data) {
 
 istream& operator>>(istream& stream, NodoSecundario& data) {
 	//Key
-	char _key[25];
-	stream.getline(_key, 25, ',');
+	char _key[200];
+	stream.getline(_key, 200, ',');
 	data.set_key(_key);
 	
 	//ID
-	char _id[8];
-	stream.getline(_id, 8, ',');
+	char _id[32];
+	stream.getline(_id, 32, ',');
 	data.id = atoi(_id);
 	return stream;
 }

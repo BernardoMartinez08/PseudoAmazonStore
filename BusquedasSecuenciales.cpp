@@ -3,6 +3,16 @@
 #include<stdlib.h>
 #include<time.h>
 
+BusquedaIndexada browser;
+
+Busqueda::Busqueda(BusquedaIndexada _browser) {
+	browser = _browser;
+}
+
+Busqueda::Busqueda() {
+
+}
+
 //SECCION DE CLIENTES
 bool Busqueda::buscarClienteCodigo(istream& file, const char* _codigo) {
 	file.seekg(ios::beg);
@@ -332,9 +342,8 @@ bool Busqueda::buscarFacturaID(istream& file, int _id) {
 
 bool Busqueda::eliminarFacturasCliente(int _id_cliente) {
 	fstream file("facturas.bin", ios::in | ios::out | ios::binary | ios::_Nocreate);
-	ofstream fileIndex("facturas.index", ios::in | ios::binary | ios::_Nocreate);
 
-	if (!file && !fileIndex) {
+	if (!file) {
 		return false;
 	}
 
@@ -354,7 +363,7 @@ bool Busqueda::eliminarFacturasCliente(int _id_cliente) {
 				DelimTextBuffer delim('^', 300);
 				file.seekg(posicion);
 				actual.id = 0;
-				actual.Write(file, fileIndex, delim);
+				actual.Write(file, delim);
 			}
 		}
 	}
@@ -455,9 +464,8 @@ bool Busqueda::buscarDetalleID(istream& file, int _id) {
 
 bool Busqueda::eliminarDetallesFactura(int _id_factura) {
 	fstream file("detalles.bin", ios::in | ios::binary | ios::_Nocreate);
-	ofstream fileIndex("detalles.index", ios::in | ios::binary | ios::_Nocreate);
 	
-	if (!file && !fileIndex) {
+	if (!file) {
 		return false;
 	}
 
@@ -477,7 +485,7 @@ bool Busqueda::eliminarDetallesFactura(int _id_factura) {
 				DelimTextBuffer delim('^', 300);
 				file.seekg(posicion);
 				actual.id = 0;
-				actual.Write(file, fileIndex, delim);
+				actual.Write(file, delim);
 			}
 		}
 	}
@@ -675,13 +683,16 @@ void Busqueda::generarClientes(int cantidad) {
 		nuevo.set_region(ubicaciones[_aux].region.c_str());
 		nuevo.set_pais(ubicaciones[_aux].pais.c_str());
 
+		file.seekp(ios::ate);
+		nuevo.posicion = file.tellp();
+
 		DelimTextBuffer delim('^', 300);
-		ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary);
-		nuevo.Write(file, fileIndex, delim);
-		//nuevo.print();
+		nuevo.Write(file, delim);
+		TipoBusquedaSec _tipo = TipoBusquedaSec::tCliente;
+		browser.agregar(nuevo.codigo, nuevo.nombreCompleto(), nuevo.id, nuevo.posicion, _tipo);
+		browser.ordenar(_tipo);
 		cantidad--;
 		file.close();
-		fileIndex.close();
 	}
 }
 
@@ -987,12 +998,17 @@ void Busqueda::generarProductos(int cantidad) {
 		int _precio = minprecio + rand() % (maxprecio - minprecio);
 		nuevo.precio_actual = _precio;
 
+		file.seekp(ios::ate);
+		nuevo.posicion = file.tellp();
+
 		DelimTextBuffer delim('^', 300);
-		ofstream fileIndex("productos.index", ios::out | ios::app | ios::binary);
-		nuevo.Write(file, fileIndex, delim);
+		nuevo.Write(file, delim);
+
+		TipoBusquedaSec _tipo = TipoBusquedaSec::tProducto;
+		browser.agregar(nuevo.codigo, nuevo.nombre, nuevo.id, nuevo.posicion, _tipo);
+		browser.ordenar(_tipo);
 		cantidad--;
 		file.close();
-		fileIndex.close();
 	}
 }
 
@@ -1073,6 +1089,10 @@ vector<coordenada> Busqueda::extraerCoordenadas() {
 
 void Busqueda::generarFacturas(int cantidad) {
 	vector<coordenada> ubicaciones = extraerCoordenadas();
+	TipoBusquedaSec _tipoC = TipoBusquedaSec::tCliente;
+	TipoBusquedaSec _tipoP = TipoBusquedaSec::tProducto;
+	TipoBusquedaSec _tipoF = TipoBusquedaSec::tFactura;
+	TipoBusquedaSec _tipoD = TipoBusquedaSec::tDetalle;
 	
 	if (ubicaciones.empty()) {
 		cout << "\nANTES DE GENERAR FACTURAS, DEBE GENERAR EL ARCHIVO CON DATOS!!!";
@@ -1135,7 +1155,7 @@ void Busqueda::generarFacturas(int cantidad) {
 			fileC.seekg(0);
 			int _id = rand() % maxCliente - 1;
 
-			if (buscarClienteID(fileC, _id) == true) {
+			if (browser.buscarID(fileC, _id, _tipoC) == true) {
 				DelimTextBuffer delim('^', 300);
 				Cliente cliente;
 				cliente.Read(fileC, delim);
@@ -1172,7 +1192,7 @@ void Busqueda::generarFacturas(int cantidad) {
 				fileP.seekg(0);
 				int _id = rand() % maxProducto - 1;
 
-				if (buscarProductoID(fileP, _id)) {
+				if (browser.buscarID(fileP, _id, _tipoP)) {
 					DelimTextBuffer delim('^', 300);
 					Producto producto;
 					producto.Read(fileP, delim);
@@ -1209,13 +1229,17 @@ void Busqueda::generarFacturas(int cantidad) {
 		//Procesar las compras
 		if (!carrito.empty()) {
 			ofstream fileD("detalles.bin", ios::out | ios::app | ios::binary);
-			ofstream fileDIndex("detalles.index", ios::out | ios::app | ios::binary);
 
 			for (int i = 0; i < carrito.size(); i++) {
 				nueva.total_neto += (carrito[i].precio_unit * carrito[i].cantidad);
 				DelimTextBuffer delim('^', 300);
-				carrito[i].Write(fileD, fileDIndex, delim);
+				fileD.seekp(ios::ate);
+				carrito[i].posicion = fileD.tellp();
+				carrito[i].Write(fileD, delim);
+				carrito[i].print();
+				browser.agregar(nullptr, nullptr, carrito[i].id, carrito[i].posicion, _tipoD);
 			}
+			browser.ordenar(_tipoD);
 
 			if (nueva.total_neto != 0)
 				nueva.total_impuesto = (nueva.total_neto * 0.15);
@@ -1223,10 +1247,12 @@ void Busqueda::generarFacturas(int cantidad) {
 				nueva.total_impuesto = 0;
 
 			DelimTextBuffer delim2('^', 300);
-			nueva.Write(fileF, fileFIndex, delim2);
-			//nueva.print();
+			fileF.seekp(ios::ate);
+			nueva.posicion = fileF.tellp();
+			nueva.Write(fileF, delim2);
+			browser.agregar(nueva.codigo, nullptr, nueva.id, nueva.posicion, _tipoF);
+			browser.ordenar(_tipoF);
 			fileD.close();
-			fileDIndex.close();
 		}
 
 		fileF.close();

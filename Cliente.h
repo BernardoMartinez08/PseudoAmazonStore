@@ -50,6 +50,7 @@ public:
 
 	int posicion;
 	int size;
+	char* nombreCompleto();
 
 	int getNextId(bool next = true);
 	void setNextId(int);

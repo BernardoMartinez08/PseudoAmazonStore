@@ -14,7 +14,6 @@ class NodoPrincipal {
 	friend istream& operator>>(istream&, NodoPrincipal&);
 public:
 	NodoPrincipal();
-
 	int id;
 	long posicion;
 };

@@ -3,6 +3,16 @@
 #include<stdio.h>
 #include<windows.h>
 
+Amazon::Amazon() {
+	browser.cargarPrincipales();
+	browser.cargarSecundarios();
+}
+
+void Amazon::salir() {
+	browser.guardarPrincipales();
+	browser.guardarSecundarios();
+}
+
 void Amazon::agregarCliente(const char* _code) {
 	ofstream file("clientes.bin", ios::out | ios::app | ios::binary);
 
@@ -27,6 +37,7 @@ void Amazon::agregarCliente(const char* _code) {
 	DelimTextBuffer delim('^',300);
 
 	int _id = nuevo.getNextId();
+	nuevo.id = _id;
 	nuevo.set_codigo(_codigo);
 
 	char _primer_nombre[30];
@@ -70,12 +81,14 @@ void Amazon::agregarCliente(const char* _code) {
 	cout << "Indique su pais:";
 	cin.getline(_pais,50);
 	nuevo.set_pais(_pais);
-
-	nuevo.posicion = 0;
+	file.seekp(ios::ate);
+	nuevo.posicion = file.tellp();
 	nuevo.size = 0;
-	nuevo.id = _id;
 
 	nuevo.Write(file, delim);
+	TipoBusquedaSec _tipo = TipoBusquedaSec::tCliente;
+	browser.agregar(nuevo.codigo, nuevo.nombreCompleto(), nuevo.id, nuevo.posicion,_tipo);
+	browser.ordenar(_tipo);
 
 	file.close();
 	cout << "\nCLIENTE AGREGADO CON EXITO!!!\n";
@@ -98,7 +111,6 @@ void Amazon::agregarProducto()
 	DelimTextBuffer delim('^', 300);
 
 	int id = nuevo.getNextId();
-	cout << id;
 
 	char codigo[10];
 	char categoria[25];
@@ -133,11 +145,15 @@ void Amazon::agregarProducto()
 	nuevo.precio_actual = precio_actual;
 
 	nuevo.id = id;
-	nuevo.posicion = 0;
+	file.seekp(ios::ate);
+	nuevo.posicion = file.tellp();
 	nuevo.size = 0;
 
 	nuevo.Write(file, delim);
 
+	TipoBusquedaSec _tipo = TipoBusquedaSec::tProducto;
+	browser.agregar(nuevo.codigo,nuevo.nombre, nuevo.id, nuevo.posicion, _tipo);
+	browser.ordenar(_tipo);
 	file.close();
 	cout << "\nPRODUCTO AGREGADO CON EXITO!!!\n";
 }
@@ -570,7 +586,7 @@ void Amazon::navegacionProductos()
 
 void Amazon::modificarCliente(const char* _code) {
 	ifstream file("clientes.bin", ios::in | ios::binary);
-	Busqueda buscador;
+	TipoBusquedaSec _tipo = TipoBusquedaSec::tCliente;
 
 	if (!file) {
 		cout << "Error al intentar abrir el archivo .bin\n\n";
@@ -591,7 +607,7 @@ void Amazon::modificarCliente(const char* _code) {
 
 	Cliente actual;
 	int posicion = -1;
-	if (buscador.buscarClienteCodigo(file, code)) {
+	if (browser.buscarCodigo(file, code, _tipo)) {
 		DelimTextBuffer delim('^', 300);
 		posicion = file.tellg();
 		actual.Read(file, delim);
@@ -715,11 +731,18 @@ void Amazon::modificarCliente(const char* _code) {
 	}
 
 	if (modifico == true) {
+		char* nombreCompreto = new char[strlen(modificado.primer_nombre)];
+
 		eliminarClienteAux(actual, fileE, posicion);
 
-		fileE.seekp(0,ios::end);
+		fileE.seekp(ios::ate);
+		modificado.posicion = fileE.tellp();
 		DelimTextBuffer delim('^', 300);
 		modificado.Write(fileE, delim);
+
+		browser.borrar(actual.id, _tipo);
+		browser.agregar(modificado.codigo, modificado.nombreCompleto(), modificado.id, modificado.posicion, _tipo);
+		browser.ordenar(_tipo);
 		cout << "\nCambios Guardados!!!\nSaliendo.......\n";
 	}else {
 		cout << "\nNO SE REALIZARON CAMBIOS EN EL REGISTRO.......\n";
@@ -732,7 +755,7 @@ void Amazon::modificarCliente(const char* _code) {
 
 void Amazon::modificarProducto(const char* _code){
 	ifstream file("productos.bin",ios::in | ios::binary);
-	Busqueda buscador;
+	TipoBusquedaSec _tipo = TipoBusquedaSec::tProducto;
 
 	if (!file)
 	{
@@ -754,7 +777,7 @@ void Amazon::modificarProducto(const char* _code){
 
 	Producto actual;
 	int posicion = -1;
-	if (buscador.buscarProductoCodigo(file, code))
+	if (browser.buscarCodigo(file, code, _tipo))
 	{
 		DelimTextBuffer delim('^', 300);
 		posicion = file.tellg();
@@ -853,10 +876,14 @@ void Amazon::modificarProducto(const char* _code){
 
 	if (modifico == true) {
 		eliminarProductoAux(actual, fileE, posicion);
+		browser.borrar(actual.id, _tipo);
 
-		fileE.seekp(0,ios::end);
+		fileE.seekp(ios::ate);
+		modificado.posicion = fileE.tellp();
 		DelimTextBuffer delim('^', 300);
 		modificado.Write(fileE, delim);
+		browser.agregar(modificado.codigo, modificado.nombre, modificado.id, modificado.posicion, _tipo);
+		browser.ordenar(_tipo);
 		cout << "\nCambios Guardados!!!\nSaliendo.......\n";
 	}
 	else {
@@ -932,7 +959,7 @@ bool Amazon::listarProductos()
 void Amazon::eliminarClientes(const char* _code){
 	ifstream file("clientes.bin" ,ios::in | ios::binary | ios::_Nocreate);
 	fstream fileE("clientes.bin", ios::out | ios::in | ios::binary | ios::_Nocreate);
-	Busqueda buscador;
+	TipoBusquedaSec _tipo = TipoBusquedaSec::tCliente;
 
 	if (!file && !fileE)
 	{
@@ -957,7 +984,7 @@ void Amazon::eliminarClientes(const char* _code){
 	Cliente actual;
 	int posicion = -1;
 	int opcion;
-	if (buscador.buscarClienteCodigo(file, code))
+	if (browser.buscarCodigo(file, code, _tipo))
 	{
 		DelimTextBuffer delim('^', 300);
 		posicion = file.tellg();
@@ -978,6 +1005,8 @@ void Amazon::eliminarClientes(const char* _code){
 	{
 	case 1: {
 		eliminarClienteAux(actual, fileE, posicion);
+		browser.borrar(actual.id, _tipo);
+		browser.ordenar(_tipo);
 		cout << "... Cliente Eliminado....";
 
 		break;
@@ -1079,7 +1108,10 @@ void Amazon::eliminarProducto(const char* _code)
 }
 
 void Amazon::RegistrarCompra() {
-	Busqueda buscardor;
+	TipoBusquedaSec _tipoC = TipoBusquedaSec::tCliente;
+	TipoBusquedaSec _tipoP = TipoBusquedaSec::tProducto;
+	TipoBusquedaSec _tipoF = TipoBusquedaSec::tFactura;
+	TipoBusquedaSec _tipoD = TipoBusquedaSec::tDetalle;
 	Factura factura;
 
 	factura.id = factura.getNextId();
@@ -1127,7 +1159,7 @@ void Amazon::RegistrarCompra() {
 		ifstream fileC("clientes.bin", ios::in | ios::binary);
 		fileC.seekg(0);
 
-		if (buscardor.buscarClienteCodigo(fileC, _codigoCliente)) {
+		if (browser.buscarCodigo(fileC, _codigoCliente,_tipoC)) {
 			Cliente cliente;
 			DelimTextBuffer delim('^', 300);
 			cliente.Read(fileC, delim);
@@ -1171,7 +1203,7 @@ void Amazon::RegistrarCompra() {
 		cout << "\nIndique codigo del producto: ";
 		cin >> _codigoProducto;
 
-		if (buscardor.buscarProductoCodigo(fileP,_codigoProducto)) {
+		if (browser.buscarCodigo(fileP,_codigoProducto, _tipoP)) {
 			int cantidad =1;
 			cout << "\nIndique la cantidad del producto: ";
 			cin >> cantidad;
@@ -1219,9 +1251,13 @@ void Amazon::RegistrarCompra() {
 		for (int i = 0; i < carrito.size(); i++) {
 			factura.total_neto += (carrito[i].precio_unit * carrito[i].cantidad);
 			DelimTextBuffer delim('^', 300);
+			fileD.seekp(ios::ate);
+			carrito[i].posicion = fileD.tellp();
 			carrito[i].Write(fileD,delim);
 			carrito[i].print();
+			browser.agregar(nullptr,nullptr, carrito[i].id, carrito[i].posicion, _tipoD);
 		}
+		browser.ordenar(_tipoD);
 
 		if (factura.total_neto != 0)
 			factura.total_impuesto = (factura.total_neto * 0.15);
@@ -1229,8 +1265,12 @@ void Amazon::RegistrarCompra() {
 			factura.total_impuesto = 0;
 
 		DelimTextBuffer delim2('^', 300);
+		fileF.seekp(ios::ate);
+		factura.posicion = fileF.tellp();
 		factura.Write(fileF, delim2);
 		factura.print();
+		browser.agregar(factura.codigo, nullptr, factura.id, factura.posicion, _tipoF);
+		browser.ordenar(_tipoF);
 		
 		cout << "\nTotal a pagar: " << (factura.total_neto + factura.total_impuesto) << "\n\nFACTURA PROCESADA.!!!!!!!";
 	}
@@ -1262,7 +1302,7 @@ void Amazon::agregarAlCarrito(vector<Detalle>& _carrito, Detalle _producto) {
 void Amazon::eliminarFactura(const char* _code) {
 	ifstream file("facturas.bin", ios::in | ios::binary | ios::_Nocreate);
 	fstream fileE("facturas.bin", ios::out | ios::in | ios::binary | ios::_Nocreate);
-	Busqueda buscador;
+	TipoBusquedaSec _tipo = TipoBusquedaSec::tFactura;
 
 	if (!file && !fileE)
 	{
@@ -1287,7 +1327,7 @@ void Amazon::eliminarFactura(const char* _code) {
 	Factura actual;
 	int posicion = -1;
 	int opcion;
-	if (buscador.buscarFacturaCodigo(file, code))
+	if (browser.buscarCodigo(file, code, _tipo))
 	{
 		DelimTextBuffer delim('^', 300);
 		posicion = file.tellg();
@@ -1308,7 +1348,9 @@ void Amazon::eliminarFactura(const char* _code) {
 	{
 	case 1: {
 		eliminarFacturaAux(actual, fileE, posicion);
-		buscador.eliminarDetallesFactura(actual.id);
+		browser.borrar(actual.id, _tipo);
+		browser.eliminarDetallesFactura(actual.id);
+		browser.ordenar(_tipo);
 		cout << "... Factura Eliminado....";
 
 		break;

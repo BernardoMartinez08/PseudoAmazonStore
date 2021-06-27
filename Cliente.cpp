@@ -175,15 +175,28 @@ void Cliente::print() {
 
 //Funciones Prototipo de funciones mas avanzadas.
 
+char* Cliente::nombreCompleto()
+{
+	char* nombreCompreto = new char[strlen(primer_nombre)];
+	strcpy_s(nombreCompreto, strlen(primer_nombre) + 1, primer_nombre);
+	strcat_s(nombreCompreto, strlen(nombreCompreto) + 2, " ");
+	strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(segundo_nombre) + 1, segundo_nombre);
+	strcat_s(nombreCompreto, strlen(nombreCompreto) + 2, " ");
+	strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(primer_apellido) + 1, primer_apellido);
+	strcat_s(nombreCompreto, strlen(nombreCompreto) + 2, " ");
+	strcat_s(nombreCompreto, strlen(nombreCompreto) + strlen(segundo_apellido) + 1, segundo_apellido);
+	return nombreCompreto;
+}
+
 int Cliente::getNextId(bool next) {
-	ifstream auxID("clientes.index", ios::in | ios::binary | ios::_Nocreate);
+	ifstream auxID("identifiers.index", ios::in | ios::binary | ios::_Nocreate);
 	
 	if (!auxID) {
-		setNextId(0);
+		setNextId(1);
 	}
 	auxID.close();
 
-	ifstream indiceIds("clientes.index", ios::in | ios::binary);
+	ifstream indiceIds("identifiers.index", ios::in | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";
@@ -196,6 +209,11 @@ int Cliente::getNextId(bool next) {
 	indiceIds.read(reinterpret_cast<char*>(&_nextId), 4);
 
 	indiceIds.close();
+	
+	if (_nextId < 0) {
+		setNextId(1);
+		_nextId = 2;
+	}
 
 	if(next == true)
 		setNextId(_nextId);
@@ -204,7 +222,7 @@ int Cliente::getNextId(bool next) {
 }
 
 void Cliente::setNextId(int _lastId) {
-	ofstream indiceIds("clientes.index", ios::out | ios::binary);
+	fstream indiceIds("identifiers.index", ios::out | ios::in | ios::binary);
 
 	if (!indiceIds) {
 		cout << "Error al intentar abrir el archivo .index\n\n";

@@ -31,6 +31,8 @@ bool BusquedaIndexada::buscarCodigo(istream& file, const char* _codigo, TipoBusq
 		indice = IndiceFacturasCodigo;
 	else if (_tipo == TipoBusquedaSec::tDetalle)
 		return false;
+	else
+		return false;
 
 	for (int i = 0; i < indice->size(); i++ ) {
 		NodoSecundario actual = indice->at(i);
@@ -50,6 +52,8 @@ bool BusquedaIndexada::buscarNombre(istream& file, const char* _nombre , TipoBus
 	else if (_tipo == TipoBusquedaSec::tFactura)
 		return false;
 	else if (_tipo == TipoBusquedaSec::tDetalle)
+		return false;
+	else
 		return false;
 	
 	for (int i = 0; i < indice->size(); i++) {
@@ -72,6 +76,8 @@ bool BusquedaIndexada::buscarID(istream& file, int _id, TipoBusquedaSec _tipo) {
 		indice = IndiceFacturasId;
 	else if (_tipo == TipoBusquedaSec::tDetalle)
 		indice = IndiceDetallesId;
+	else
+		return false;
 	
 	int derecha = indice->size() - 1;
 	int izquierda = 0;
@@ -114,6 +120,16 @@ vector<long> BusquedaIndexada::buscarInvertidos(int _id, TipoBusquedaInv _tipo) 
 	return aux;
 }
 
+bool BusquedaIndexada::eliminarFacturasCliente(int _id_cliente)
+{
+	return false;
+}
+
+bool BusquedaIndexada::eliminarDetallesFactura(int _id_factura)
+{
+	return false;
+}
+
 bool BusquedaIndexada::borrar(int _id, TipoBusquedaSec _tipo)
 {
 	vector<NodoPrincipal>* indicePrincipal = new vector<NodoPrincipal>;
@@ -133,6 +149,8 @@ bool BusquedaIndexada::borrar(int _id, TipoBusquedaSec _tipo)
 		return borrarFacturas(_id);
 	else if (_tipo == TipoBusquedaSec::tDetalle)
 		return borrarDetalles(_id);
+	else
+		return false;
 
 	int derecha = indicePrincipal->size() - 1;
 	int izquierda = 0;
@@ -244,9 +262,9 @@ bool BusquedaIndexada::borrarDetalles(int _id)
 
 bool BusquedaIndexada::agregar(const char* _code, const char* _name, int _id, long _posicion, TipoBusquedaSec _tipo)
 {
-	vector<NodoPrincipal>* indicePrincipal = new vector<NodoPrincipal>;
-	vector<NodoSecundario>* indiceSecundarioCode = new vector<NodoSecundario>;
-	vector<NodoSecundario>* indiceSecundarioName = new vector<NodoSecundario>;
+	vector<NodoPrincipal>* indicePrincipal;
+	vector<NodoSecundario>* indiceSecundarioCode;
+	vector<NodoSecundario>* indiceSecundarioName;
 	if (_tipo == TipoBusquedaSec::tCliente) {
 		indicePrincipal = IndiceClientesId;
 		indiceSecundarioCode = IndiceClientesCodigo;
@@ -255,12 +273,14 @@ bool BusquedaIndexada::agregar(const char* _code, const char* _name, int _id, lo
 	else if (_tipo == TipoBusquedaSec::tProducto) {
 		indicePrincipal = IndiceProductosId;
 		indiceSecundarioCode = IndiceProductosCodigo;
-		indiceSecundarioName = IndiceClientesNombre;
+		indiceSecundarioName = IndiceProductosNombre;
 	}
 	else if (_tipo == TipoBusquedaSec::tFactura)
 		return agregraFacturas(_code,_id,_posicion);
 	else if (_tipo == TipoBusquedaSec::tDetalle)
 		return agregraDetalle(_id, _posicion);
+	else
+		return false;
 
 	NodoPrincipal NodoPrin;
 	NodoPrin.id = _id;
@@ -275,8 +295,8 @@ bool BusquedaIndexada::agregar(const char* _code, const char* _name, int _id, lo
 	NodoCode.set_key(_code);
 
 	indicePrincipal->push_back(NodoPrin);
-	indiceSecundarioName->push_back(NodoName);
 	indiceSecundarioCode->push_back(NodoCode);
+	indiceSecundarioName->push_back(NodoName);
 
 	return true;
 }
@@ -317,22 +337,27 @@ bool BusquedaIndexada::cargarPrincipales()
 {
 	string indicesFileNames[4] = {fileClientesPrincipalIndex,fileProductosPrincipalIndex,fileDetallesPrincipalIndex,fileFacturasPrincipalIndex};
 	for (int i = 0; i < 4; i++) {
-		ifstream file(indicesFileNames[i], ios::in || ios::binary);
+		ifstream file(indicesFileNames[i], ios::in | ios::binary | ios::_Nocreate);
+		if (!file)
+			return false;
+
 		vector<NodoPrincipal>* indicePrincipal = new vector<NodoPrincipal>;
 		if (i == 0)
 			indicePrincipal = IndiceClientesId;
-		else if (i == 2)
+		else if (i == 1)
 			indicePrincipal = IndiceProductosId;
-		else if (i == 3)
+		else if (i == 2)
 			indicePrincipal = IndiceFacturasId;
-		else if (i == 4)
+		else if (i == 3)
 			indicePrincipal = IndiceDetallesId;
+		else
+			return false;
 
-		file.ignore(4);
 		while (!file.eof()) {
 			NodoPrincipal nuevo;
 			file >> nuevo;
-			indicePrincipal->push_back(nuevo);
+			if (nuevo.id != 0)
+				indicePrincipal->push_back(nuevo);
 		}
 		file.close();
 	}
@@ -343,23 +368,27 @@ bool BusquedaIndexada::cargarSecundarios()
 {
 	string indicesFileNames[5] = { fileClieSecCodeIndex,fileClieSecNamesIndex,fileProdSecCodeIndex,fileProdSecNamesIndex,fileFactSecCodeIndex };
 	for (int i = 0; i < 5; i++) {
-		ifstream file(indicesFileNames[i], ios::in || ios::binary);
+		ifstream file(indicesFileNames[i], ios::in | ios::binary | ios::_Nocreate);
+		if (!file)
+			return false;
+
 		vector<NodoSecundario>* indiceSecundario = new vector<NodoSecundario>;
 		if (i == 0)
 			indiceSecundario = IndiceClientesCodigo;
-		else if (i == 2)
+		else if (i == 1)
 			indiceSecundario = IndiceClientesNombre;
-		else if (i == 3)
+		else if (i == 2)
 			indiceSecundario = IndiceProductosCodigo;
-		else if (i == 4)
+		else if (i == 3)
 			indiceSecundario = IndiceProductosNombre;
-		else if (i == 5)
+		else if (i == 4)
 			indiceSecundario = IndiceFacturasCodigo;
 
 		while (!file.eof()) {
 			NodoSecundario nuevo;
 			file >> nuevo;
-			indiceSecundario->push_back(nuevo);
+			if (nuevo.id != 0)
+				indiceSecundario->push_back(nuevo);
 		}
 		file.close();
 	}
@@ -381,10 +410,11 @@ bool BusquedaIndexada::guardarPrincipales()
 		else if (i == 4)
 			indicePrincipal = IndiceDetallesId;
 
-		while (!file.eof()) {
-			NodoPrincipal nuevo;
-			file << nuevo;
-			indicePrincipal->push_back(nuevo);
+		for (int j = 0; j < indicePrincipal->size(); j++) {
+			NodoPrincipal actual;
+			actual = indicePrincipal->at(j);
+			if(actual.id != 0)
+				file << actual;
 		}
 		file.close();
 	}
@@ -393,30 +423,74 @@ bool BusquedaIndexada::guardarPrincipales()
 
 bool BusquedaIndexada::guardarSecundarios()
 {
-	string indicesFileNames[5] = { fileClieSecCodeIndex,fileClieSecNamesIndex,fileProdSecCodeIndex,fileProdSecNamesIndex,fileFactSecCodeIndex };
-	for (int i = 0; i < 5; i++) {
-		ofstream file(indicesFileNames[i], ios::out | ios::trunc | ios::binary);
-		vector<NodoSecundario>* indiceSecundario = new vector<NodoSecundario>;
-		if (i == 0)
-			indiceSecundario = IndiceClientesCodigo;
-		else if (i == 2)
-			indiceSecundario = IndiceClientesNombre;
-		else if (i == 3)
-			indiceSecundario = IndiceProductosCodigo;
-		else if (i == 4)
-			indiceSecundario = IndiceProductosNombre;
-		else if (i == 5)
-			indiceSecundario = IndiceFacturasCodigo;
-
-		while (!file.eof()) {
-			NodoSecundario nuevo;
-			file << nuevo;
-			indiceSecundario->push_back(nuevo);
-		}
-		file.close();
-	}
+	guardarSecundariosCliente();
+	guardarSecundariosFactura();
+	guardarSecundariosProducto();
 	return true;
 }
+
+bool BusquedaIndexada::guardarSecundariosCliente()
+{
+	ofstream fileC(fileClieSecCodeIndex, ios::out | ios::trunc | ios::binary);
+	ofstream fileN(fileClieSecNamesIndex, ios::out | ios::trunc | ios::binary);
+
+	for (int j = 0; j < IndiceClientesCodigo->size(); j++) {
+		NodoSecundario actual;
+		actual = IndiceClientesCodigo->at(j);
+		if (actual.id != 0)
+			fileC << actual;
+	}
+
+	for (int j = 0; j < IndiceClientesNombre->size(); j++) {
+		NodoSecundario actual;
+		actual = IndiceClientesNombre->at(j);
+		if (actual.id != 0)
+			fileN << actual;
+	}
+
+	fileC.close();
+	fileN.close();
+	return true;
+}
+
+bool BusquedaIndexada::guardarSecundariosProducto()
+{
+	ofstream fileC(fileProdSecCodeIndex, ios::out | ios::trunc | ios::binary);
+	ofstream fileN(fileProdSecNamesIndex, ios::out | ios::trunc | ios::binary);
+
+	for (int j = 0; j < IndiceProductosCodigo->size(); j++) {
+		NodoSecundario actual;
+		actual = IndiceProductosCodigo->at(j);
+		fileC << actual;
+	}
+
+	for (int j = 0; j < IndiceProductosNombre->size(); j++) {
+		NodoSecundario actual;
+		actual = IndiceProductosNombre->at(j);
+		if (actual.id != 0)
+			fileN << actual;
+	}
+
+	fileC.close();
+	fileN.close();
+	return true;
+}
+
+bool BusquedaIndexada::guardarSecundariosFactura()
+{
+	ofstream fileC(fileFactSecCodeIndex, ios::out | ios::trunc | ios::binary);
+
+	for (int j = 0; j < IndiceFacturasCodigo->size(); j++) {
+		NodoSecundario actual;
+		actual = IndiceFacturasCodigo->at(j);
+		if (actual.id != 0)
+			fileC << actual;
+	}
+
+	fileC.close();
+	return true;
+}
+
 
 bool BusquedaIndexada::ordenar(TipoBusquedaSec _tipo)
 {
@@ -444,33 +518,12 @@ char* BusquedaIndexada::toLowerCase(const char* cadena) {
 }
 
 void BusquedaIndexada::imprimirVentasProducto(istream& fileDetalles, int _id_producto) {
-	vector<Detalle> ventas[12];
-	string meses[12] = { "Enero" "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
+	
+}
 
-	/*vector<long> posiciones = buscarInvertidos(_id_producto, TipoBusquedaInv::tDetalleProducto);
-	for(int i = 0; i < posiciones.size(); i++){
-		
-		buscarDetalleFactura(fileDetalles, actualF.id);
-		actualD.Read(fileDetalles, delim);
+void BusquedaIndexada::imprimirFacturasCliente(istream&, int _id_cliente)
+{
 
-		if (actualD.id != 0) {
-			if (actualD.producto_id == _id_producto)
-			{
-				if (actualF.mes >= 1 && actualF.mes <= 12) {
-					ventas[actualF.mes - 1].push_back(actualD);
-				}
-			}
-		}
-	}*/
-
-	for (int i = 0; i < 12; i++) {
-		cout << "\n\nVentas Correspondientes a: " << meses[i] << ":\n";
-		for (int j = 0; i < ventas[i].size(); j++) {
-			ventas[i][j].print();
-		}
-
-		cout << "\n\nEste producto se vendio: " << ventas[i].size() << " en el mes de: " << meses[i] << ".";
-	}
 }
 
 void BusquedaIndexada::quickSort(vector<NodoPrincipal>*& _datos, int primero, int ultimo) {
