@@ -96,7 +96,7 @@ bool Busqueda::buscarClienteID(istream& file, int _id) {
 
 void Busqueda::imprimirFacturasCliente(istream& file, int _id_cliente) {
 	file.seekg(0);
-
+	//codehjhkk
 	int total = 0;
 	while (!file.eof())
 	{
