@@ -16,11 +16,9 @@ using namespace std;
 int main()
 {
 	srand(time(NULL));
-	//Probando Commit 
 	Amazon tienda;
 	Cliente aux;
 	int opcion = 0;
-	//int cliente;
 	int producto;
 
 
@@ -70,7 +68,7 @@ void clientes()
 	int cliente = 0;
 	while (cliente != 7) {
 		cout << "\n***** SECCION CLIENTE  *****\n\n";
-		cout << "1.Agregar Cliente\n2.Consultar Clientes \n3.Navegacion de Clientes \n4.Modificar Clientes\n5.Listar Clientes\n6.Eliminar Cliente \n7. Volver al Menu Anterior";
+		cout << "1.Agregar Cliente\n2.Consultar Clientes (Secuenciales)\n3.Navegacion de Clientes \n4.Modificar Clientes\n5.Listar Clientes\n6.Eliminar Cliente \n7. Volver al Menu Anterior";
 
 		cout << "\nIngrese una opcion:";
 		cin >> cliente;
@@ -117,7 +115,7 @@ void productos()
 	int producto = 0;
 	while (producto != 7) {
 		cout << "\n**** SECCION PRODUCTO **** \n\n";
-		cout << "1. Agregar Producto\n2. Consultar Producto \n3. Modificar Producto \n4. Navegacion Producto\n5. Listar Productos \n6. Eliminar Producto \n7. Volver al Menu Anterior";
+		cout << "1. Agregar Producto\n2. Consultar Producto (Secuenciales) \n3. Modificar Producto \n4. Navegacion Producto\n5. Listar Productos \n6. Eliminar Producto \n7. Volver al Menu Anterior";
 
 		cout << "\nIngrese una opcion: ";
 		cin >> producto;
@@ -159,6 +157,73 @@ void productos()
 		}
 	}
 }
+
+
+void facturas() {
+	Amazon tienda;
+	int producto = 0;
+	while (producto != 5) {
+		cout << "\n**** SECCION FACTURAS **** \n\n";
+		cout << "1. Procesar un compra\n2. Navegacion de Facturas\n3. Listar Facturas \n4. Eliminar Facturas \n5. Volver al Menu Anterior";
+
+		cout << "\nIngrese una opcion: ";
+		cin >> producto;
+
+		switch (producto)
+		{
+		case 1:
+			tienda.RegistrarCompra();
+			break;
+
+		case 2:
+			tienda.navegacionFacturas();
+			break;
+
+		case 3:
+			
+			break;
+
+		case 4: {
+			cout << "\n\n*** ELIMINAR FACTURAS***\n\n1. Elimiar Facturas por codigo\n2.Eliminar Faturas de un Cliente\n3.Volver al menu anterior";
+			int opcElimi;
+			cout << "\nIngrese una opcion: ";
+			cin >> opcElimi;
+
+			switch (opcElimi) {
+			case 1:
+				tienda.eliminarFactura();
+				break;
+			case 2: {
+				cout << "\n\n*** ELIMINAR FACTURAS DE UN CLIENTE***\n\n";
+				Busqueda buscador;
+				int id;
+				cout << "\nIngrese el codigo del cliente: ";
+				cin >> id;
+
+				buscador.eliminarFacturasCliente(id);
+				break;
+			}
+			case 5:
+				cout << "\nVOLVIENDO AL MENU ANTERIOR";
+				break;
+
+			default:
+				cout << "\nOPCION NO VALIDA";
+				break;
+			}
+			break;
+		}
+		case 6:
+			cout << "\nVOLVIENDO AL MENU ANTERIOR";
+			break;
+
+		default:
+			cout << "\nOPCION NO VALIDA";
+			break;
+		}
+	}
+}
+
 
 void generadores() {
 	Busqueda buscador;

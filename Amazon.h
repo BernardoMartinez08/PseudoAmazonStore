@@ -15,6 +15,7 @@ using namespace std;
 
 class Amazon {
 public:
+
 	//Seccion Clientes
 	static void agregarCliente(const char* code = nullptr);
 	static void consultarCliente();

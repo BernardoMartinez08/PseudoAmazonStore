@@ -1145,9 +1145,9 @@ void Busqueda::generarFacturas(int cantidad) {
 					nueva.cliente_id = cliente.id;
 					for (int i = 0; i < ubicaciones.size(); i++) {
 						if (strcmp(toLowerCase(cliente.ciudad), toLowerCase((ubicaciones[i].ciudad).c_str())) == 0) {
-							cout << "\nESTA UBICACION:\n" << cliente.ciudad << " es igual a " << ubicaciones[i].ciudad;
 							nueva.ubicacion_X = ubicaciones[i]._x;
 							nueva.ubicacion_Y = ubicaciones[i]._y;
+							break;
 						}
 					}
 				}
@@ -1224,7 +1224,7 @@ void Busqueda::generarFacturas(int cantidad) {
 
 			DelimTextBuffer delim2('^', 300);
 			nueva.Write(fileF, fileFIndex, delim2);
-			nueva.print();
+			//nueva.print();
 			fileD.close();
 			fileDIndex.close();
 		}

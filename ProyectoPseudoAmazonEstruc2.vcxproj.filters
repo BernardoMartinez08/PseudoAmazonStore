@@ -5,62 +5,125 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Archivos de encabezado">
+    <Filter Include="Archivos de Indice">
+      <UniqueIdentifier>{1fc50c7e-e9a1-4c27-814e-4da49db86056}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de Indice\Archivos de Encabezado">
+      <UniqueIdentifier>{b63fd984-8605-40cc-9d92-83141b186070}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de Indice\Archivos de Codigo">
+      <UniqueIdentifier>{89f76998-660e-4c4a-a0f0-a7dd6fdcc1dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de Busquedas">
+      <UniqueIdentifier>{21134cc4-357e-4f44-870b-348609183b65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de Busquedas\Archivos de Encabezado">
+      <UniqueIdentifier>{52c841f4-aea6-4aa0-a889-d409e1b538e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de Busquedas\Archivos de Codigo">
+      <UniqueIdentifier>{c882f991-435d-4666-b9ba-0fda127c1b93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de Entidades">
+      <UniqueIdentifier>{54689713-03bc-4a8e-8795-719021d524af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de Entidades\Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Archivos de Entidades\Archivos de encabezado">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Archivos de recursos">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Archivos Principales">
+      <UniqueIdentifier>{e76028b2-6085-4e8b-90e5-f58a722ab63b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos Principales\Archivos de Encabezado">
+      <UniqueIdentifier>{7e6a1085-cef6-46f7-9768-dcc845430f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos Principales\Archivos de Codigo">
+      <UniqueIdentifier>{2e840d52-7233-424c-bbe7-bac11375f9b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Producto.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Amazon.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de Entidades\Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Cliente.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="DelimTextBuffer.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de Entidades\Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Factura.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de Entidades\Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Detalle.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de Entidades\Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="NodoInvertido.h">
+      <Filter>Archivos de Indice\Archivos de Encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="NodoInvertidoLista.h">
+      <Filter>Archivos de Indice\Archivos de Encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="NodoPrincipal.h">
+      <Filter>Archivos de Indice\Archivos de Encabezado</Filter>
     </ClInclude>
     <ClInclude Include="BusquedasSecuenciales.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de Busquedas\Archivos de Encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="DelimTextBuffer.h">
+      <Filter>Archivos Principales\Archivos de Encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Amazon.h">
+      <Filter>Archivos Principales\Archivos de Encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="BusquedasIndexadas.h">
+      <Filter>Archivos de Busquedas\Archivos de Encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="NodoSecundario.h">
+      <Filter>Archivos de Indice\Archivos de Encabezado</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Producto.cpp">
-      <Filter>Archivos de recursos</Filter>
+      <Filter>Archivos de Entidades\Archivos de recursos</Filter>
     </ClCompile>
     <ClCompile Include="Cliente.cpp">
-      <Filter>Archivos de recursos</Filter>
-    </ClCompile>
-    <ClCompile Include="DelimTextBuffer.cpp">
-      <Filter>Archivos de recursos</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Archivos de recursos</Filter>
-    </ClCompile>
-    <ClCompile Include="Amazon.cpp">
-      <Filter>Archivos de recursos</Filter>
+      <Filter>Archivos de Entidades\Archivos de recursos</Filter>
     </ClCompile>
     <ClCompile Include="Factura.cpp">
-      <Filter>Archivos de recursos</Filter>
+      <Filter>Archivos de Entidades\Archivos de recursos</Filter>
     </ClCompile>
     <ClCompile Include="Detalle.cpp">
-      <Filter>Archivos de recursos</Filter>
+      <Filter>Archivos de Entidades\Archivos de recursos</Filter>
+    </ClCompile>
+    <ClCompile Include="NodoInvertido.cpp">
+      <Filter>Archivos de Indice\Archivos de Codigo</Filter>
+    </ClCompile>
+    <ClCompile Include="NodoInvertidoLista.cpp">
+      <Filter>Archivos de Indice\Archivos de Codigo</Filter>
+    </ClCompile>
+    <ClCompile Include="NodoPrincipal.cpp">
+      <Filter>Archivos de Indice\Archivos de Codigo</Filter>
     </ClCompile>
     <ClCompile Include="BusquedasSecuenciales.cpp">
-      <Filter>Archivos de recursos</Filter>
+      <Filter>Archivos de Busquedas\Archivos de Codigo</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Archivos Principales\Archivos de Codigo</Filter>
+    </ClCompile>
+    <ClCompile Include="DelimTextBuffer.cpp">
+      <Filter>Archivos Principales\Archivos de Codigo</Filter>
+    </ClCompile>
+    <ClCompile Include="Amazon.cpp">
+      <Filter>Archivos Principales\Archivos de Codigo</Filter>
+    </ClCompile>
+    <ClCompile Include="NodoSecundario.cpp">
+      <Filter>Archivos de Indice\Archivos de Codigo</Filter>
+    </ClCompile>
+    <ClCompile Include="BusquedasIndexadas.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Busquedas Indexadas.cpp">
+      <Filter>Archivos de Busquedas\Archivos de Codigo</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

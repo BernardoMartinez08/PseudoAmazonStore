@@ -1258,7 +1258,7 @@ void Amazon::agregarAlCarrito(vector<Detalle>& _carrito, Detalle _producto) {
 	bool existe = false;
 	if (_carrito.empty()) {
 		_carrito.push_back(_producto);
-		cout << "\nAgregado al Carrito!!!\n";
+		//cout << "\nAgregado al Carrito!!!\n";
 		return;
 	}
 
@@ -1274,7 +1274,7 @@ void Amazon::agregarAlCarrito(vector<Detalle>& _carrito, Detalle _producto) {
 	if (!existe)
 		_carrito.push_back(_producto);
 
-	cout << "\nAgregado al Carrito!!!\n";
+	//cout << "\nAgregado al Carrito!!!\n";
 }
 
 void Amazon::eliminarFactura(const char* _code) {

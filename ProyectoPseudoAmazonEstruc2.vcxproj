@@ -140,21 +140,32 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Amazon.h" />
+    <ClInclude Include="BusquedasIndexadas.h" />
     <ClInclude Include="BusquedasSecuenciales.h" />
     <ClInclude Include="Cliente.h" />
     <ClInclude Include="DelimTextBuffer.h" />
     <ClInclude Include="Detalle.h" />
     <ClInclude Include="Factura.h" />
+    <ClInclude Include="NodoInvertido.h" />
+    <ClInclude Include="NodoInvertidoLista.h" />
+    <ClInclude Include="NodoSecundario.h" />
+    <ClInclude Include="NodoPrincipal.h" />
     <ClInclude Include="Producto.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Amazon.cpp" />
+    <ClCompile Include="Busquedas Indexadas.cpp" />
+    <ClCompile Include="BusquedasIndexadas.cpp" />
     <ClCompile Include="BusquedasSecuenciales.cpp" />
     <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="DelimTextBuffer.cpp" />
     <ClCompile Include="Detalle.cpp" />
     <ClCompile Include="Factura.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NodoInvertido.cpp" />
+    <ClCompile Include="NodoInvertidoLista.cpp" />
+    <ClCompile Include="NodoSecundario.cpp" />
+    <ClCompile Include="NodoPrincipal.cpp" />
     <ClCompile Include="Producto.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
