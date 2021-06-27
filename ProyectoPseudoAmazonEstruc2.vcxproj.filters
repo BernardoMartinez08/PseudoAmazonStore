@@ -120,9 +120,6 @@
       <Filter>Archivos de Indice\Archivos de Codigo</Filter>
     </ClCompile>
     <ClCompile Include="BusquedasIndexadas.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="Busquedas Indexadas.cpp">
       <Filter>Archivos de Busquedas\Archivos de Codigo</Filter>
     </ClCompile>
   </ItemGroup>

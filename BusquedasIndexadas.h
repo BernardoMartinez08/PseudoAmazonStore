@@ -103,9 +103,18 @@ public:
 	bool cargarSecundarios();
 
 	//Guardar Indices En Disco
+	bool guardarPrincipales();
+	bool guardarSecundarios();
+
+	//OrdenarIndicesPrincipales
+	bool ordenar(TipoBusquedaSec _tipo);
 
 	//Seccion de Extras
 	char* toLowerCase(const char*);
+
+private:
+	void quickSort(vector<NodoPrincipal>*& _datos, int primero, int ultimo);
+	void quickSort(vector<NodoPrincipal>*& _datos);
 };
 
 #endif // !BUSQUEDAS_INDEXADAS_H

@@ -6,21 +6,27 @@
 #include <ctime> 
 #include <windows.h>
 #include <string>
-
+#include "BusquedasIndexadas.h"
 void clientes();
 void productos();
 void facturas();
 void generadores();
-
+Amazon tienda;
+Busqueda buscador;
 using namespace std;
 int main()
 {
 	srand(time(NULL));
-	Amazon tienda;
 	Cliente aux;
 	int opcion = 0;
 	int producto;
 
+	tienda.browser = new BusquedaIndexada();
+
+	tienda.browser->cargarPrincipales();
+	tienda.browser->cargarSecundarios();
+
+	buscador.browser = tienda.browser;
 
 	while (opcion != 5) {
 		cout << "\n********* TIENDA VIRTUAL DE AMAZON *********\n\n";
@@ -64,7 +70,6 @@ int main()
 
 void clientes()
 {
-	Amazon tienda;
 	int cliente = 0;
 	while (cliente != 7) {
 		cout << "\n***** SECCION CLIENTE  *****\n\n";
@@ -111,7 +116,6 @@ void clientes()
 
 void productos()
 {
-	Amazon tienda;
 	int producto = 0;
 	while (producto != 7) {
 		cout << "\n**** SECCION PRODUCTO **** \n\n";
@@ -160,7 +164,6 @@ void productos()
 
 
 void facturas() {
-	Amazon tienda;
 	int producto = 0;
 	while (producto != 5) {
 		cout << "\n**** SECCION FACTURAS **** \n\n";
@@ -195,7 +198,6 @@ void facturas() {
 				break;
 			case 2: {
 				cout << "\n\n*** ELIMINAR FACTURAS DE UN CLIENTE***\n\n";
-				Busqueda buscador;
 				int id;
 				cout << "\nIngrese el codigo del cliente: ";
 				cin >> id;
@@ -226,7 +228,6 @@ void facturas() {
 
 
 void generadores() {
-	Busqueda buscador;
 	int opcionMenu = 0;
 	while (opcionMenu != 4) {
 		cout << "\n\n**** GENERADORES DE DATOS **** \n\n";

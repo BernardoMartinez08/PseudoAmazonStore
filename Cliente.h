@@ -29,22 +29,11 @@ public:
 	bool set_region(const char*);
 	bool set_pais(const char*);
 
-	//Obtener la posicion del cliente en el indice
-	vector<int> searchCliente(int);
-
-	bool WriteDataonIndex(ostream& fileIndex);
-	bool WriteDataonIndexByCode();
-	bool WriteDataonIndexByName();
-
 	//Funciones de Lectura y Escritura con Buffers
-	int Write(ostream&, ostream&, DelimTextBuffer&);
+	int Write(ostream&, DelimTextBuffer&);
 	int Read(istream&, DelimTextBuffer&);
 	int Pack(DelimTextBuffer&);
 	int Unpack(DelimTextBuffer&);
-
-	//Buscar en los indices por codigo y por nombre.
-	int searchClienteByCode(int);
-	int searchClienteByName(const char*);
 
 	void print();
 	//Atributos
@@ -67,8 +56,6 @@ public:
 private:
 	bool set_id(int);
 	//Obtener siguiente id autoIncremental
-
-	vector<vector<int>>* getIndiceID();
 };
 
 #endif // !CLIENTE_H

@@ -97,12 +97,11 @@ int Producto::Read(istream& file, DelimTextBuffer& _delim) {
 	return resultado;
 }
 
-int Producto::Write(ostream& file, ostream& fileIndex, DelimTextBuffer& _delim) {
+int Producto::Write(ostream& file, DelimTextBuffer& _delim) {
 	int resultado = 0;
 	resultado = this->Pack(_delim);
 	posicion = file.tellp();
 	resultado = resultado && _delim.Write(file);
-	resultado = resultado && WriteDataonIndex(fileIndex);
 	return resultado;
 }
 
@@ -190,49 +189,6 @@ long Producto::searchProducto(int _id) {
 
 	indiceIds.close();
 	return -1;
-}
-
-bool Producto::WriteDataonIndex(ostream& fileIndex)
-{
-	int resultado = 0;
-	//Revision && doble 
-	resultado = resultado && fileIndex << "|";
-	resultado = resultado && fileIndex << id;
-	resultado = resultado && fileIndex << "|";
-	resultado = resultado && fileIndex << posicion;
-
-	//resultado = resultado && WriteDataonIndexByCode();
-	//resultado = resultado && WriteDataonIndexByName();
-	return resultado;
-
-}
-
-bool Producto::WriteDataonIndexByCode()
-{
-	ofstream fileIndex("productos.index", ios::out | ios::app | ios::binary);
-
-	fileIndex << codigo;
-	fileIndex << "|";
-	fileIndex << id;
-	fileIndex << "|";
-
-	fileIndex.close();
-	return fileIndex.good();
-}
-
-bool Producto::WriteDataonIndexByName()
-{
-	ofstream fileIndex("productos.index", ios::out | ios::app | ios::binary);
-
-
-	fileIndex << (char)categoria;
-	fileIndex << "|";
-	fileIndex << (char)nombre;
-	fileIndex << "|";
-	fileIndex.close();
-	return fileIndex.good();
-
-
 }
 
 void Producto::print() {

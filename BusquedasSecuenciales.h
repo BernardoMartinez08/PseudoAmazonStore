@@ -16,6 +16,7 @@
 #include <ctime>
 #include <sstream>
 #include "Amazon.h"
+#include "BusquedasIndexadas.h"
 using namespace std;
 
 struct ubicacion{
@@ -37,6 +38,8 @@ struct coordenada {
 
 class Busqueda {
 public:
+	BusquedaIndexada* browser;
+
 	//Seccion Clientes
 	static bool buscarClienteCodigo(istream&, const char* _codigo);
 	static bool buscarClienteNombre(istream&, const char* _nombreCompleto);

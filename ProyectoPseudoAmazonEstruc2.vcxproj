@@ -154,7 +154,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Amazon.cpp" />
-    <ClCompile Include="Busquedas Indexadas.cpp" />
     <ClCompile Include="BusquedasIndexadas.cpp" />
     <ClCompile Include="BusquedasSecuenciales.cpp" />
     <ClCompile Include="Cliente.cpp" />

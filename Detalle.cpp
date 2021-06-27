@@ -48,7 +48,7 @@ int Detalle::Read(istream& file, DelimTextBuffer& _delim) {
 	return resultado;
 }
 
-int Detalle::Write(ostream& file, ostream& fileIndex, DelimTextBuffer& _delim) {
+int Detalle::Write(ostream& file, DelimTextBuffer& _delim) {
 	int resultado = 0;
 	posicion = file.tellp();
 	resultado = this->Pack(_delim);
@@ -115,34 +115,4 @@ void Detalle::setNextId(int _lastId) {
 	indiceIds.write(reinterpret_cast<const char*>(&newID), sizeof(newID));
 
 	indiceIds.close();
-}
-
-vector<vector<int>>* Detalle::getIndiceID() {
-	ifstream indiceIds("detalles.index", ios::in | ios::binary);
-
-	if (!indiceIds) {
-		cout << "Error al intentar abrir el archivo .index\n\n";
-		return nullptr;
-	}
-
-	indiceIds.seekg(0, ios::beg);
-
-	int _id = 0;
-	long _posicion = 0;
-
-	indiceIds.read(reinterpret_cast<char*>(&_id), 4);
-
-	vector<vector<int>>* aux = new vector<vector<int>>;
-	while (!indiceIds.eof()) {
-		indiceIds.read(reinterpret_cast<char*>(&_id), 4);
-		indiceIds.read(reinterpret_cast<char*>(&_posicion), 8);
-
-		vector<int> auxDato;
-		auxDato.push_back(_id);
-		auxDato.push_back(_posicion);
-
-		aux->push_back(auxDato);
-	}
-
-	return aux;
 }

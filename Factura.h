@@ -21,14 +21,10 @@ public:
 	bool set_hora(const char*);
 
 	//Funciones de Lectura y Escritura con Buffers
-	int Write(ostream&, ostream&, DelimTextBuffer&);
+	int Write(ostream&, DelimTextBuffer&);
 	int Read(istream&, DelimTextBuffer&);
 	int Pack(DelimTextBuffer&);
 	int Unpack(DelimTextBuffer&);
-
-	//Buscar en los indices por codigo y por cliente.
-	int searchFacturaByCode(const char*);
-	int searchFacturaByCliente(int);
 
 	void print();
 	//Atributos
@@ -51,8 +47,6 @@ public:
 private:
 	bool set_id(int);
 	void setNextId(int);
-
-	vector<vector<int>>* getIndiceID();
 };
 
 #endif // !FACTURA_H

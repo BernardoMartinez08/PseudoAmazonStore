@@ -21,25 +21,17 @@ public:
 	//Obtener la posicion del producto en el indice
 	long searchProducto(int);
 	
-	bool WriteDataonIndexByCode();
-	bool WriteDataonIndexByName();
-
-
 	bool set_codigo(const char*);
 	bool set_categoria(const char*);
 	bool set_sub_categoria(const char*);
 	bool set_nombre(const char*);
 	bool set_descripcion(const char*);
 
-
 	//Funciones de Lectura y Escritura con Buffers
-	int Write(ostream&, ostream&, DelimTextBuffer&);
+	int Write(ostream&, DelimTextBuffer&);
 	int Read(istream& file,DelimTextBuffer&);
 	int Pack(DelimTextBuffer&);
 	int Unpack(DelimTextBuffer&);
-
-	bool WriteDataonIndex(ostream& fileIndex);
-
 
 	void print();
 	//Atributos de la clase

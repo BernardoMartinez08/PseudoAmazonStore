@@ -75,12 +75,9 @@ void Amazon::agregarCliente(const char* _code) {
 	nuevo.size = 0;
 	nuevo.id = _id;
 
-	ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary);
-	nuevo.Write(file, fileIndex, delim);
+	nuevo.Write(file, delim);
 
 	file.close();
-	fileIndex.close();
-
 	cout << "\nCLIENTE AGREGADO CON EXITO!!!\n";
 }
 
@@ -139,13 +136,9 @@ void Amazon::agregarProducto()
 	nuevo.posicion = 0;
 	nuevo.size = 0;
 
-	ofstream fileIndex("producto.index", ios::out | ios::app | ios::binary);
-	nuevo.Write(file, fileIndex, delim);
+	nuevo.Write(file, delim);
 
 	file.close();
-	fileIndex.close();
-
-
 	cout << "\nPRODUCTO AGREGADO CON EXITO!!!\n";
 }
 
@@ -609,7 +602,6 @@ void Amazon::modificarCliente(const char* _code) {
 	}
 
 	fstream fileE("clientes.bin", ios::out | ios::in | ios::binary);
-	ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary);
 	Cliente modificado = actual;
 
 	int opc = 0;
@@ -723,11 +715,11 @@ void Amazon::modificarCliente(const char* _code) {
 	}
 
 	if (modifico == true) {
-		eliminarClienteAux(actual, fileE, posicion, fileIndex);
+		eliminarClienteAux(actual, fileE, posicion);
 
 		fileE.seekp(0,ios::end);
 		DelimTextBuffer delim('^', 300);
-		modificado.Write(fileE, fileIndex, delim);
+		modificado.Write(fileE, delim);
 		cout << "\nCambios Guardados!!!\nSaliendo.......\n";
 	}else {
 		cout << "\nNO SE REALIZARON CAMBIOS EN EL REGISTRO.......\n";
@@ -736,7 +728,6 @@ void Amazon::modificarCliente(const char* _code) {
 
 	file.close();
 	fileE.close();
-	fileIndex.close();
 }
 
 void Amazon::modificarProducto(const char* _code){
@@ -776,7 +767,6 @@ void Amazon::modificarProducto(const char* _code){
 	}
 
 	fstream fileE("productos.bin", ios::out | ios::in | ios::binary);
-	ofstream fileIndex("productos.bin", ios::out | ios::app | ios::binary);
 	Producto modificado = actual;
 
 	int opcion = 0;
@@ -862,11 +852,11 @@ void Amazon::modificarProducto(const char* _code){
 	}
 
 	if (modifico == true) {
-		eliminarProductoAux(actual, fileE, posicion, fileIndex);
+		eliminarProductoAux(actual, fileE, posicion);
 
 		fileE.seekp(0,ios::end);
 		DelimTextBuffer delim('^', 300);
-		modificado.Write(fileE, fileIndex, delim);
+		modificado.Write(fileE, delim);
 		cout << "\nCambios Guardados!!!\nSaliendo.......\n";
 	}
 	else {
@@ -876,7 +866,6 @@ void Amazon::modificarProducto(const char* _code){
 
 	file.close();
 	fileE.close();
-	fileIndex.close();
 }
 
 bool Amazon::listarClientes() {
@@ -943,10 +932,9 @@ bool Amazon::listarProductos()
 void Amazon::eliminarClientes(const char* _code){
 	ifstream file("clientes.bin" ,ios::in | ios::binary | ios::_Nocreate);
 	fstream fileE("clientes.bin", ios::out | ios::in | ios::binary | ios::_Nocreate);
-	ofstream fileIndex("clientes.index", ios::out | ios::app | ios::binary | ios::_Nocreate);
 	Busqueda buscador;
 
-	if (!file && !fileE && !fileIndex)
+	if (!file && !fileE)
 	{
 		cout << "Error al intentar abrir el archivo .bin\n\n";
 		return;
@@ -989,7 +977,7 @@ void Amazon::eliminarClientes(const char* _code){
 	switch (opcion)
 	{
 	case 1: {
-		eliminarClienteAux(actual, fileE, posicion, fileIndex);
+		eliminarClienteAux(actual, fileE, posicion);
 		cout << "... Cliente Eliminado....";
 
 		break;
@@ -1002,23 +990,22 @@ void Amazon::eliminarClientes(const char* _code){
 
 	file.close();
 	fileE.close();
-	fileIndex.close();
 }
 
-void Amazon::eliminarClienteAux(Cliente actual, fstream& fileE, long posicion, ofstream& fileIndex) {
+void Amazon::eliminarClienteAux(Cliente actual, fstream& fileE, long posicion) {
 	actual.id = 0;
 	fileE.seekp(posicion, ios::beg);
 
 	DelimTextBuffer delim('^', 300);
-	actual.Write(fileE, fileIndex, delim);
+	actual.Write(fileE, delim);
 }
 
-void Amazon::eliminarProductoAux(Producto actual, fstream& fileE, long posicion, ofstream& fileIndex) {
+void Amazon::eliminarProductoAux(Producto actual, fstream& fileE, long posicion) {
 	actual.id = 0;
 	fileE.seekp(posicion, ios::beg);
 
 	DelimTextBuffer delim('^', 300);
-	actual.Write(fileE, fileIndex, delim);
+	actual.Write(fileE, delim);
 }
 
 void Amazon::eliminarProducto(const char* _code)
@@ -1026,11 +1013,10 @@ void Amazon::eliminarProducto(const char* _code)
 	ifstream file("productos.bin", ios::in | ios::binary | ios::_Nocreate);
 	ifstream fileDetalles("detalles.bin", ios::in | ios::binary | ios::_Nocreate);
 	fstream fileE("productos.bin", ios::out | ios::in | ios::binary | ios::_Nocreate);
-	ofstream fileIndex("prodcutos.index", ios::out | ios::app | ios::binary | ios::_Nocreate);
 
 	Busqueda buscador;
 
-	if (!file && !fileDetalles && !fileE && !fileIndex)
+	if (!file && !fileDetalles && !fileE)
 	{
 		cout << "Error al intentar abrir el archivo .bin\n\n";
 		return;
@@ -1078,7 +1064,7 @@ void Amazon::eliminarProducto(const char* _code)
 	switch (opcion)
 	{
 	case 1: {
-		eliminarProductoAux(actual, fileE, posicion, fileIndex);
+		eliminarProductoAux(actual, fileE, posicion);
 		cout << "... Producto  Eliminado....\n";
 		break;
 	}
@@ -1090,7 +1076,6 @@ void Amazon::eliminarProducto(const char* _code)
 	file.close();
 	fileE.close();
 	fileDetalles.close();
-	fileIndex.close();
 }
 
 void Amazon::RegistrarCompra() {
@@ -1098,11 +1083,9 @@ void Amazon::RegistrarCompra() {
 	Factura factura;
 
 	factura.id = factura.getNextId();
-
 	ofstream fileF("facturas.bin", ios::out | ios::app | ios::binary);
-	ofstream fileFIndex("facturas.index", ios::out | ios::app | ios::binary);
 
-	if (!fileF && !fileFIndex) {
+	if (!fileF) {
 		cout << "\nError al intentar abrir los archivos :(\n";
 		return;
 	}
@@ -1232,12 +1215,11 @@ void Amazon::RegistrarCompra() {
 	if (!carrito.empty()) {
 		cout << "\n\nRESUMEN DE COMPRAS: ";
 		ofstream fileD("detalles.bin", ios::out | ios::app | ios::binary);
-		ofstream fileDIndex("detalles.index", ios::out | ios::binary);
 
 		for (int i = 0; i < carrito.size(); i++) {
 			factura.total_neto += (carrito[i].precio_unit * carrito[i].cantidad);
 			DelimTextBuffer delim('^', 300);
-			carrito[i].Write(fileD,fileDIndex,delim);
+			carrito[i].Write(fileD,delim);
 			carrito[i].print();
 		}
 
@@ -1247,7 +1229,7 @@ void Amazon::RegistrarCompra() {
 			factura.total_impuesto = 0;
 
 		DelimTextBuffer delim2('^', 300);
-		factura.Write(fileF, fileFIndex, delim2);
+		factura.Write(fileF, delim2);
 		factura.print();
 		
 		cout << "\nTotal a pagar: " << (factura.total_neto + factura.total_impuesto) << "\n\nFACTURA PROCESADA.!!!!!!!";
@@ -1280,10 +1262,9 @@ void Amazon::agregarAlCarrito(vector<Detalle>& _carrito, Detalle _producto) {
 void Amazon::eliminarFactura(const char* _code) {
 	ifstream file("facturas.bin", ios::in | ios::binary | ios::_Nocreate);
 	fstream fileE("facturas.bin", ios::out | ios::in | ios::binary | ios::_Nocreate);
-	ofstream fileIndex("facturas.index", ios::out | ios::app | ios::binary | ios::_Nocreate);
 	Busqueda buscador;
 
-	if (!file && !fileE && !fileIndex)
+	if (!file && !fileE)
 	{
 		cout << "Error al intentar abrir el archivo .bin\n\n";
 		return;
@@ -1326,7 +1307,7 @@ void Amazon::eliminarFactura(const char* _code) {
 	switch (opcion)
 	{
 	case 1: {
-		eliminarFacturaAux(actual, fileE, posicion, fileIndex);
+		eliminarFacturaAux(actual, fileE, posicion);
 		buscador.eliminarDetallesFactura(actual.id);
 		cout << "... Factura Eliminado....";
 
@@ -1340,15 +1321,14 @@ void Amazon::eliminarFactura(const char* _code) {
 
 	file.close();
 	fileE.close();
-	fileIndex.close();
 }
 
-void Amazon::eliminarFacturaAux(Factura actual, fstream& fileE, long posicion, ofstream& fileIndex) {
+void Amazon::eliminarFacturaAux(Factura actual, fstream& fileE, long posicion) {
 	actual.id = 0;
 	fileE.seekp(posicion, ios::beg);
 
 	DelimTextBuffer delim('^', 300);
-	actual.Write(fileE, fileIndex, delim);
+	actual.Write(fileE, delim);
 }
 
 void Amazon::navegacionFacturas() {

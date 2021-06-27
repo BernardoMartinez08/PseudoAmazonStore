@@ -10,19 +10,21 @@
 #include <vector>
 #include "Detalle.h"
 #include "Factura.h"
+#include "BusquedasIndexadas.h"
 using namespace std;
 
 
 class Amazon {
 public:
-
+	BusquedaIndexada* browser;
+	Amazon();
 	//Seccion Clientes
 	static void agregarCliente(const char* code = nullptr);
 	static void consultarCliente();
 	static void modificarCliente(const char* code = nullptr);
 	static void navegacionClientes();
 	static void eliminarClientes(const char* code = nullptr);
-	static void eliminarClienteAux(Cliente actual, fstream& fileE, long posicion, ofstream& fileIndex);
+	static void eliminarClienteAux(Cliente actual, fstream& fileE, long posicion);
 
 	//Seccion Productos
 	static void agregarProducto();
@@ -30,7 +32,7 @@ public:
 	static void modificarProducto(const char* code = nullptr);
 	static void navegacionProductos();
 	static void eliminarProducto(const char* code = nullptr);
-	static void eliminarProductoAux(Producto actual, fstream& fileE, long posicion, ofstream& fileIndex);
+	static void eliminarProductoAux(Producto actual, fstream& fileE, long posicion);
 	
 	//Seccion Clientes
 	static bool listarClientes();
@@ -42,7 +44,7 @@ public:
 	static void RegistrarCompra();
 	static void navegacionFacturas();
 	static void eliminarFactura(const char* code = nullptr);
-	static void eliminarFacturaAux(Factura actual, fstream& fileE, long posicion, ofstream& fileIndex);
+	static void eliminarFacturaAux(Factura actual, fstream& fileE, long posicion);
 	static bool listarDetallesDeFactura(int _id_factura);
 
 	static void agregarAlCarrito(vector<Detalle>&, Detalle);
